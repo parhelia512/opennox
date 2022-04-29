@@ -426,12 +426,12 @@ func serverSetAllBeastScrolls(p *Player, enable bool) {
 	if enable {
 		lvl = 1
 	}
-	C.nox_xxx_playerResetProtectionCRC_56F7D0(C.int(*(*uintptr)(p.field(4640))), 0)
+	nox_xxx_playerResetProtectionCRC_56F7D0(C.int(*(*uintptr)(p.field(4640))), 0)
 	for i := 1; i < len(p.beast_scroll_lvl); i++ {
 		p.beast_scroll_lvl[i] = C.uint(lvl)
-		C.nox_xxx_playerAwardSpellProtectionCRC_56FCE0(C.int(*(*uintptr)(p.field(4640))), C.int(i), C.int(lvl))
+		nox_xxx_playerAwardSpellProtectionCRC_56FCE0(C.int(*(*uintptr)(p.field(4640))), C.int(i), C.int(lvl))
 	}
-	C.nox_xxx_playerApplyProtectionCRC_56FD50(C.int(*(*uintptr)(p.field(4640))), unsafe.Pointer(&p.beast_scroll_lvl[0]), C.int(len(p.beast_scroll_lvl)))
+	nox_xxx_playerApplyProtectionCRC_56FD50(C.int(*(*uintptr)(p.field(4640))), unsafe.Pointer(&p.beast_scroll_lvl[0]), C.int(len(p.beast_scroll_lvl)))
 }
 
 func serverSetAllSpells(p *Player, enable bool, max int) {
@@ -442,25 +442,25 @@ func serverSetAllSpells(p *Player, enable bool, max int) {
 			lvl = 3
 		}
 	}
-	C.nox_xxx_playerResetProtectionCRC_56F7D0(C.int(*(*uintptr)(p.field(4636))), 0)
+	nox_xxx_playerResetProtectionCRC_56F7D0(C.int(*(*uintptr)(p.field(4636))), 0)
 	// set max level for all possible spells
 	// the engine will automatically allow only ones that have WIS_USE, CON_USE or COMMON_USE set
 	for i := 1; i < len(p.spell_lvl); i++ {
 		p.spell_lvl[i] = C.uint(lvl)
-		C.nox_xxx_playerAwardSpellProtectionCRC_56FCE0(C.int(*(*uintptr)(p.field(4636))), C.int(i), C.int(lvl))
+		nox_xxx_playerAwardSpellProtectionCRC_56FCE0(C.int(*(*uintptr)(p.field(4636))), C.int(i), C.int(lvl))
 	}
 	if !enable && noxflags.HasGame(noxflags.GameModeQuest) {
 		u := p.UnitC()
 		// grant default spells for Quest when disabling the cheat
 		switch p.PlayerClass() {
 		case player.Wizard:
-			C.nox_xxx_spellGrantToPlayer_4FB550(u.CObj(), C.int(things.SPELL_FIREBALL), 1, 1, 1)
+			nox_xxx_spellGrantToPlayer_4FB550(u.CObj(), C.int(things.SPELL_FIREBALL), 1, 1, 1)
 		case player.Conjurer:
-			C.nox_xxx_spellGrantToPlayer_4FB550(u.CObj(), C.int(things.SPELL_CHARM), 1, 1, 1)
-			C.nox_xxx_spellGrantToPlayer_4FB550(u.CObj(), C.int(things.SPELL_LESSER_HEAL), 1, 1, 1)
+			nox_xxx_spellGrantToPlayer_4FB550(u.CObj(), C.int(things.SPELL_CHARM), 1, 1, 1)
+			nox_xxx_spellGrantToPlayer_4FB550(u.CObj(), C.int(things.SPELL_LESSER_HEAL), 1, 1, 1)
 		}
 	}
-	C.nox_xxx_playerApplyProtectionCRC_56FD50(C.int(*(*uintptr)(p.field(4636))), unsafe.Pointer(&p.spell_lvl[0]), C.int(len(p.spell_lvl)))
+	nox_xxx_playerApplyProtectionCRC_56FD50(C.int(*(*uintptr)(p.field(4636))), unsafe.Pointer(&p.spell_lvl[0]), C.int(len(p.spell_lvl)))
 }
 
 func serverSetAllWarriorAbilities(p *Player, enable bool, max int) {
@@ -476,13 +476,13 @@ func serverSetAllWarriorAbilities(p *Player, enable bool, max int) {
 	}
 	for i := 1; i < 6; i++ {
 		p.spell_lvl[i] = C.uint(lvl)
-		C.nox_xxx_playerAwardSpellProtectionCRC_56FCE0(C.int(*(*uintptr)(p.field(4636))), C.int(i), C.int(lvl))
+		nox_xxx_playerAwardSpellProtectionCRC_56FCE0(C.int(*(*uintptr)(p.field(4636))), C.int(i), C.int(lvl))
 	}
 }
 
 func nox_xxx_spellBookReact_4FCB70() {
-	C.nox_xxx_spellCastByBook_4FCB80()
-	C.nox_xxx_spellCastByPlayer_4FEEF0()
+	nox_xxx_spellCastByBook_4FCB80()
+	nox_xxx_spellCastByPlayer_4FEEF0()
 }
 
 func (s *Server) SpellDefs() []*SpellDef {
@@ -579,7 +579,7 @@ func nox_xxx_spellAccept4FD400(spellID things.SpellID, a2, obj3, obj4 *Unit, arg
 	if noxServer.spellHasFlags(spellID, things.SpellFlagUnk8) && obj5 != nil && !obj5.Class().Has(object.MaskUnits) {
 		return false
 	}
-	if !(obj5 == nil || C.nox_xxx_gameCaptureMagic_4FDC10(C.int(spellID), obj5.CObj()) != 0) {
+	if !(obj5 == nil || nox_xxx_gameCaptureMagic_4FDC10(C.int(spellID), obj5.CObj()) != 0) {
 		nox_xxx_aud_501960(231, obj5, 0, 0)
 		return false
 	}
@@ -863,7 +863,7 @@ func nox_xxx_castMissilesOM_540160(spellID things.SpellID, a2, owner, caster *Un
 		cnt = maxCnt - curCnt
 	}
 	if cnt <= 0 {
-		C.nox_xxx_netPriMsgToPlayer_4DA2C0(owner.CObj(), internCStr("mmissile.c:TooManyMissiles"), 0)
+		nox_xxx_netPriMsgToPlayer_4DA2C0(owner.CObj(), internCStr("mmissile.c:TooManyMissiles"), 0)
 		return 0
 	}
 	opts.Count = cnt
@@ -959,15 +959,15 @@ func nox_xxx_castSpellByUser_4FDD20(a1 C.int, a2 *nox_object_t, a3 unsafe.Pointe
 }
 
 func nox_xxx_castSpellByUser4FDD20(spellInd things.SpellID, u *Unit, a3 *spellAcceptArg) bool {
-	lvl := int(C.nox_xxx_spellGetPower_4FE7B0(C.int(spellInd), u.CObj()))
+	lvl := int(nox_xxx_spellGetPower_4FE7B0(C.int(spellInd), u.CObj()))
 	if noxServer.spellHasFlags(spellInd, things.SpellOffensive) {
-		C.nox_xxx_spellBuffOff_4FF5B0(u.CObj(), 0)
-		C.nox_xxx_spellBuffOff_4FF5B0(u.CObj(), 23)
-		C.nox_xxx_spellCancelDurSpell_4FEB10(67, u.CObj())
+		nox_xxx_spellBuffOff_4FF5B0(u.CObj(), 0)
+		nox_xxx_spellBuffOff_4FF5B0(u.CObj(), 23)
+		nox_xxx_spellCancelDurSpell_4FEB10(67, u.CObj())
 	}
 	if !noxServer.spellHasFlags(spellInd, things.SpellTargeted) || u.CObj() == a3.Obj {
 		return nox_xxx_spellAccept4FD400(spellInd, u, u, u, a3, lvl)
 	}
-	C.nox_xxx_createSpellFly_4FDDA0(u.CObj(), a3.Obj, C.int(spellInd))
+	nox_xxx_createSpellFly_4FDDA0(u.CObj(), a3.Obj, C.int(spellInd))
 	return true
 }

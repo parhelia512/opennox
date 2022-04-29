@@ -30,7 +30,7 @@ func scanMaps() (maps.MapList, error) {
 }
 
 func nox_common_scanAllMaps_4D07F0() error {
-	C.nox_common_list_clear_425760(&C.nox_common_maplist)
+	nox_common_list_clear_425760(&C.nox_common_maplist)
 	list, err := scanMaps()
 	if err != nil && len(list) == 0 {
 		return err
@@ -51,13 +51,13 @@ func nox_common_scanAddMap(filename string) {
 		return
 	}
 	mp, _ := alloc.New(C.nox_map_list_item{})
-	C.sub_425770(unsafe.Pointer(mp))
+	sub_425770(unsafe.Pointer(mp))
 	StrCopy(&mp.name[0], 12, name)
 	mp.field_6 = 1
 	mp.field_7 = C.uint(memmap.Uint32(0x973F18, 3800))
 	mp.field_8_0 = C.uchar(memmap.Uint8(0x973F18, 3804))
 	mp.field_8_1 = C.uchar(memmap.Uint8(0x973F18, 3805))
-	C.nox_common_maplist_add_4D0760(mp)
+	nox_common_maplist_add_4D0760(mp)
 }
 
 //export nox_xxx_checkHasSoloMaps_40ABD0

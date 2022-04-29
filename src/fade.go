@@ -55,7 +55,7 @@ func nox_xxx_cliPlayMapIntro_44E0B0(a1 C.int) {
 	sub_44E070()
 	sub_44E090()
 	C.nox_gameDisableMapDraw_5d4594_2650672 = 1
-	C.nox_client_fadeXxx_44DA60(a1)
+	nox_client_fadeXxx_44DA60(a1)
 }
 
 //export sub_44E0D0

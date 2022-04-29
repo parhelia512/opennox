@@ -73,8 +73,8 @@ func nox_game_showLegal_4CC4E0() {
 	win.SetAllFuncs(sub_4CC660, nil, nil)
 	nox_xxx_wndShowModalMB(win)
 	v0 := win.ChildByID(9980)
-	v8 := GoWString(C.sub_46AF00(unsafe.Pointer(v0.C())))
-	v1 := asFont(C.sub_46AF40(unsafe.Pointer(v0.C())))
+	v8 := GoWString(sub_46AF00(unsafe.Pointer(v0.C())))
+	v1 := asFont(sub_46AF40(unsafe.Pointer(v0.C())))
 	v9 := noxrend.GetStringSizeWrapped(v1, v8, 640).Y
 	v0.SetPos(image.Pt(0, 477-v9))
 	vers := version.ClientVersion()
@@ -91,7 +91,7 @@ func nox_game_showLegal_4CC4E0() {
 		v6 := win.ChildByID(9901)
 		win.Func94(&WindowEvent0x4007{Win: v6})
 	}
-	C.sub_43D9B0(14, 100)
+	sub_43D9B0(14, 100)
 	nox_client_onShowLegal(win)
 }
 

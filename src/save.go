@@ -33,7 +33,7 @@ func sub4DB790(a1 string) int {
 	nox_xxx_mapLoadOrSaveMB_4DCC70(1)
 	noxflags.SetGame(noxflags.GameFlag28)
 	noxAudioServeT(500)
-	v1 := int(C.nox_xxx_soloLoadGame_4DB7E0_savegame(internCStr(a1)))
+	v1 := int(nox_xxx_soloLoadGame_4DB7E0_savegame(internCStr(a1)))
 	noxAudioServe()
 	noxflags.UnsetGame(noxflags.GameFlag28)
 	*memmap.PtrUint32(0x5D4594, 1563068) = gameFrame()
@@ -178,6 +178,6 @@ func sub_41A000_check0(path string) byte {
 	defer StrFree(cstr)
 	save, freeSave := alloc.Make([]byte{}, 1280)
 	defer freeSave()
-	C.sub_41A000(cstr, (*C.nox_savegame_xxx)(unsafe.Pointer(&save[0])))
+	sub_41A000(cstr, (*C.nox_savegame_xxx)(unsafe.Pointer(&save[0])))
 	return save[0]
 }

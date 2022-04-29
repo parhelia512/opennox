@@ -12,7 +12,7 @@ import (
 )
 
 func protectInt(v int) uint32 { // nox_xxx_protectionCreateInt_56F400
-	if C.nox_xxx_protectionCreateStructForInt_56F280(C.int(C.dword_5d4594_2516356), C.int(v)) != 0 {
+	if nox_xxx_protectionCreateStructForInt_56F280(C.int(C.dword_5d4594_2516356), C.int(v)) != 0 {
 		cur := uint32(C.dword_5d4594_2516356)
 		C.dword_5d4594_2516356++
 		return cur
@@ -21,7 +21,7 @@ func protectInt(v int) uint32 { // nox_xxx_protectionCreateInt_56F400
 }
 
 func protectFloat32(v float32) uint32 { // nox_xxx_protectionCreateFloat_56F440
-	if C.nox_xxx_protectionCreateStructForFloat_56F480(C.int(C.dword_5d4594_2516356), C.float(v)) != 0 {
+	if nox_xxx_protectionCreateStructForFloat_56F480(C.int(C.dword_5d4594_2516356), C.float(v)) != 0 {
 		cur := uint32(C.dword_5d4594_2516356)
 		C.dword_5d4594_2516356++
 		return cur

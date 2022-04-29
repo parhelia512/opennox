@@ -34,7 +34,7 @@ func (g *mapGroup) C() unsafe.Pointer {
 }
 
 func (g *mapGroup) Type() int {
-	return int(C.nox_server_scriptGetGroupId_57C2D0((**C.int)(g.C())))
+	return int(nox_server_scriptGetGroupId_57C2D0((**C.int)(g.C())))
 }
 
 func (g *mapGroup) ID() string {

@@ -1,11 +1,11 @@
-package main
+package refactor
 
 import (
 	"testing"
 )
 
 func TestNoxFactor(t *testing.T) {
-	if err := run("../../"); err != nil {
+	if err := Run("../../"); err != nil {
 		t.Fatal(err)
 	}
 }

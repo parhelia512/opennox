@@ -76,7 +76,7 @@ func noxCmdLoad(ctx context.Context, c *console.Console, tokens []string) bool {
 		}
 		if noxflags.HasGame(noxflags.GameModeChat) {
 			if mode.Has(noxflags.GameModeCTF|noxflags.GameModeFlagBall) && nox_xxx_getTeamCounter_417DD0() != 2 {
-				C.nox_xxx_wndGuiTeamCreate_4185B0()
+				nox_xxx_wndGuiTeamCreate_4185B0()
 			}
 		} else if !noxflags.GetGame().Has(mode) {
 			v6 := strMan.GetStringInFile("NoMapLoadNewMode", "parsecmd.c")
@@ -104,7 +104,7 @@ func noxCmdLoad(ctx context.Context, c *console.Console, tokens []string) bool {
 	}
 	nox_xxx_mapLoadOrSaveMB_4DCC70(1)
 	noxServer.switchMap(fname)
-	C.sub_41D650()
+	sub_41D650()
 	str := strMan.GetStringInFile("maploaded", "parsecmd.c")
 	nox_xxx_printCentered_445490(fmt.Sprintf(str, fname))
 	return true

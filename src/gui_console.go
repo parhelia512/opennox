@@ -310,7 +310,7 @@ func (c *guiConsole) Toggle() {
 		c.Hide()
 		return
 	}
-	if C.nox_gui_xxx_check_446360() == 0 {
+	if nox_gui_xxx_check_446360() == 0 {
 		nox_xxx_wndShowModalMB(c.root)
 		c.root.flags |= 8
 		c.scrollbox.flags |= 8
@@ -338,7 +338,7 @@ func (c *guiConsole) inputProc(win *Window, ev WindowEvent) WindowEventResp {
 		switch ev.Key {
 		case keybind.KeyEsc:
 			if ev.Pressed {
-				C.nox_xxx_consoleEsc_49B7A0()
+				nox_xxx_consoleEsc_49B7A0()
 			}
 			return RawEventResp(1)
 		case keybind.KeyEnter:

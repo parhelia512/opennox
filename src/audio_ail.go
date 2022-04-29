@@ -104,17 +104,17 @@ func sub_43EFD0(a1 unsafe.Pointer) C.int {
 func sub_43E940(a1 unsafe.Pointer) C.int {
 	ail.Startup()
 	audioTimer93944 = ail.RegisterTimer(func(u uint32) {
-		C.sub_486EF0()
-		C.sub_43D2D0()
-		C.sub_486620((*C.uint32_t)(C.dword_587000_127004))
+		sub_486EF0()
+		sub_43D2D0()
+		sub_486620((*C.uint32_t)(C.dword_587000_127004))
 	})
 	if audioTimer93944 == math.MaxUint32 {
 		return -2147221504 // 0x80040000
 	}
 	audioTimer93944.SetFrequency(30)
 	audioTimer93944.Start()
-	C.sub_42EBB0(1, (*[0]byte)(C.sub_43E910), 0, internCStr("Audio"))
-	C.sub_42EBB0(2, (*[0]byte)(C.sub_43E8E0), 0, internCStr("Audio"))
+	sub_42EBB0(1, (*[0]byte)(C.sub_43E910), 0, internCStr("Audio"))
+	sub_42EBB0(2, (*[0]byte)(C.sub_43E8E0), 0, internCStr("Audio"))
 	*(*uint32)(unsafe.Add(a1, 20)) = 1
 	return 0
 }
@@ -265,7 +265,7 @@ func sub_43ED00(a1p *C.uint32_t) C.int {
 	if v2 == 0 {
 		v1[4] = a1[33] + 60
 	}
-	v3 := int32(C.sub_43F0E0((*C.uint)(unsafe.Pointer(uintptr(v1[4])))))
+	v3 := int32(sub_43F0E0((*C.uint)(unsafe.Pointer(uintptr(v1[4])))))
 	smp.SetType(v3, 0)
 	v4 := unsafe.Pointer(uintptr(v1[4]))
 	if *(*uint32)(unsafe.Add(v4, 4)) == 2 {
@@ -276,12 +276,12 @@ func sub_43ED00(a1p *C.uint32_t) C.int {
 	v1[3] = 0
 	smp.RegisterEOBCallback(func() {
 		v := smp.UserData(0)
-		C.sub_43EE00(C.int(v))
+		sub_43EE00(C.int(v))
 	})
 	smp.RegisterEOSCallback(func() {
-		C.sub_43EDB0(C.HSAMPLE(unsafe.Pointer(smp)))
+		sub_43EDB0(C.HSAMPLE(unsafe.Pointer(smp)))
 	})
-	C.sub_43EE00(C.int(uintptr(unsafe.Pointer(&v1[0]))))
+	sub_43EE00(C.int(uintptr(unsafe.Pointer(&v1[0]))))
 	return 0
 }
 
@@ -321,7 +321,7 @@ func sub_44D7E0(a1 C.int) C.int {
 	if C.dword_5d4594_831088 == 0 {
 		return 0
 	}
-	C.sub_44D5C0(C.int(C.dword_5d4594_831088), a1)
+	sub_44D5C0(C.int(C.dword_5d4594_831088), a1)
 	ail.Stream(C.dword_5d4594_831088).Start()
 	return 1
 }
@@ -356,7 +356,7 @@ func nox_xxx_musicStartPlay_43D6C0(a1p *C.int) C.int {
 		if C.dword_587000_122856 != 0 && sub_44D930() {
 			return 0
 		}
-		v5 := GoString(C.sub_413890())
+		v5 := GoString(sub_413890())
 		if v5 == "" {
 			return 0
 		}
@@ -368,9 +368,9 @@ func nox_xxx_musicStartPlay_43D6C0(a1p *C.int) C.int {
 		}
 	}
 	s.SetPosition(int(a1[2]))
-	C.sub_486320((*C.uint)(memmap.PtrOff(0x5D4594, 816148)), 0)
-	C.sub_486350(memmap.PtrOff(0x5D4594, 816148), 0x4000)
-	C.sub_43D3C0(C.int(s), C.int(a1[1]))
+	sub_486320((*C.uint)(memmap.PtrOff(0x5D4594, 816148)), 0)
+	sub_486350(memmap.PtrOff(0x5D4594, 816148), 0x4000)
+	sub_43D3C0(C.int(s), C.int(a1[1]))
 	s.Start()
 	C.dword_5d4594_816092 = C.uint(ind)
 	*memmap.PtrUint32(0x5D4594, 816096) = a1[1]
@@ -401,7 +401,7 @@ func sub_44D660(a1 *C.char) C.int {
 	if C.dword_5d4594_831088 != 0 {
 		return 1
 	}
-	v4 := GoString(C.sub_413890())
+	v4 := GoString(sub_413890())
 	if v4 == "" {
 		return C.int(bool2int(C.dword_5d4594_831088 != 0))
 	}
@@ -419,7 +419,7 @@ func sub_43F060(a1p *C.uint32_t) C.int {
 	smp.SetVolume(int((127 * (a1[45] >> 16)) >> 14))
 	smp.SetPan(int((127 * (a1[61] >> 16)) >> 14))
 	p2 := *(*unsafe.Pointer)(unsafe.Add(v1, 16))
-	v2 := C.sub_486640(unsafe.Pointer(&a1[44]), C.int(*(*uint32)(unsafe.Add(p2, 8))))
+	v2 := sub_486640(unsafe.Pointer(&a1[44]), C.int(*(*uint32)(unsafe.Add(p2, 8))))
 	smp.SetPlaybackRate(int(v2))
 	return 0
 }

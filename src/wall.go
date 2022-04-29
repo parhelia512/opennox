@@ -21,7 +21,7 @@ func asWall(p unsafe.Pointer) *Wall {
 }
 
 func (s *Server) getWallAtGrid(pos image.Point) *Wall {
-	p := C.nox_server_getWallAtGrid_410580(C.int(pos.X), C.int(pos.Y))
+	p := nox_server_getWallAtGrid_410580(C.int(pos.X), C.int(pos.Y))
 	return asWall(p)
 }
 
@@ -126,13 +126,13 @@ func (w *Wall) IsEnabled() bool {
 // Enable or disable (close or open) the wall.
 func (w *Wall) Enable(close bool) {
 	if close {
-		C.nox_xxx_wallClose_512070(C.int(uintptr(w.C())))
+		nox_xxx_wallClose_512070(C.int(uintptr(w.C())))
 	} else {
-		C.nox_xxx_wallOpen_511F80(C.int(uintptr(w.C())))
+		nox_xxx_wallOpen_511F80(C.int(uintptr(w.C())))
 	}
 }
 
 // Destroy (break) the wall.
 func (w *Wall) Destroy() {
-	C.nox_xxx_wallPreDestroyByPtr_5122C0(C.int(uintptr(w.C())))
+	nox_xxx_wallPreDestroyByPtr_5122C0(C.int(uintptr(w.C())))
 }

@@ -43,7 +43,7 @@ func nox_xxx_loadAllBinFiles_415470() error {
 	}
 	buf, freeBuf := alloc.Malloc(256 * 1024)
 	defer freeBuf()
-	if C.nox_xxx_parseModifierBin_412930(internCStr("modifier.bin"), (*C.char)(buf)) == 0 {
+	if nox_xxx_parseModifierBin_412930(internCStr("modifier.bin"), (*C.char)(buf)) == 0 {
 		return fmt.Errorf("failed to load modifiers")
 	}
 
@@ -82,30 +82,30 @@ func loadAllBinFileSections(thg *MemFile, buf unsafe.Pointer) error {
 			}
 		case 0x41554420: // AUD
 			if noxflags.HasGame(noxflags.GameFlag22) {
-				C.nox_thing_skip_AUD_414D40(thg.C())
-			} else if C.nox_thing_read_audio_415660(thg.C(), (*C.char)(buf)) == 0 {
+				nox_thing_skip_AUD_414D40(thg.C())
+			} else if nox_thing_read_audio_415660(thg.C(), (*C.char)(buf)) == 0 {
 				return fmt.Errorf("failed to load audio")
 			}
 		case 0x41564E54: // AVNT
 			if noxflags.HasGame(noxflags.GameFlag22) {
-				C.nox_thing_skip_AVNT_452B00(thg.C())
-			} else if C.nox_thing_read_AVNT_452890(thg.C(), buf) == 0 {
+				nox_thing_skip_AVNT_452B00(thg.C())
+			} else if nox_thing_read_AVNT_452890(thg.C(), buf) == 0 {
 				return fmt.Errorf("failed to load AVNT")
 			}
 		case 0x57414C4C: // WALL
-			if C.nox_thing_read_WALL_410900(thg.C(), (*C.char)(buf)) == 0 {
+			if nox_thing_read_WALL_410900(thg.C(), (*C.char)(buf)) == 0 {
 				return fmt.Errorf("failed to load walls")
 			}
 		case 0x464C4F52: // FLOR
-			if C.nox_thing_read_FLOR_411540(thg.C(), (*C.uchar)(buf)) == 0 {
+			if nox_thing_read_FLOR_411540(thg.C(), (*C.uchar)(buf)) == 0 {
 				return fmt.Errorf("failed to load floor")
 			}
 		case 0x45444745: // EDGE
-			if C.nox_thing_read_EDGE_411850(thg.C(), (*C.uchar)(buf)) == 0 {
+			if nox_thing_read_EDGE_411850(thg.C(), (*C.uchar)(buf)) == 0 {
 				return fmt.Errorf("failed to load edges")
 			}
 		case 0x4142494C: // ABIL
-			if C.nox_thing_read_ABIL_415750(thg.C(), buf) == 0 {
+			if nox_thing_read_ABIL_415750(thg.C(), buf) == 0 {
 				return fmt.Errorf("failed to load abilities")
 			}
 		case 0x494D4147: // IMAG

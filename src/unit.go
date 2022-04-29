@@ -54,7 +54,7 @@ func (u *Unit) String() string {
 }
 
 func (u *Unit) move(cp *C.float2) {
-	C.nox_xxx_unitMove_4E7010(u.CObj(), cp)
+	nox_xxx_unitMove_4E7010(u.CObj(), cp)
 }
 
 func (u *Unit) SetPos(p types.Pointf) {
@@ -80,7 +80,7 @@ func (u *Unit) PushTo(p types.Pointf) {
 
 func (u *Unit) Destroy() {
 	panic("implement me")
-	C.nox_xxx_delayedDeleteObject_4E5CC0(u.CObj())
+	nox_xxx_delayedDeleteObject_4E5CC0(u.CObj())
 }
 
 func (u *Unit) CanSee(obj script.Object) bool {
@@ -134,9 +134,9 @@ func (u *Unit) SetHealth(v int) {
 		v = max
 	}
 	// TODO: if 0, trigger death
-	C.nox_xxx_unitSetHP_4E4560(u.CObj(), C.ushort(v))
+	nox_xxx_unitSetHP_4E4560(u.CObj(), C.ushort(v))
 	if u.Class().Has(object.ClassMonster) {
-		C.nox_xxx_mobInformOwnerHP_4EE4C0(u.CObj())
+		nox_xxx_mobInformOwnerHP_4EE4C0(u.CObj())
 	}
 }
 
@@ -192,7 +192,7 @@ func (u *Unit) SetMana(v int) {
 	p.mana_prev = C.ushort(cur)
 	p.mana_cur = C.ushort(v)
 	pt := asPlayer(p.player)
-	C.nox_xxx_protectMana_56F9E0(C.int(pt.prot_unit_mana_cur), C.short(v-cur))
+	nox_xxx_protectMana_56F9E0(C.int(pt.prot_unit_mana_cur), C.short(v-cur))
 }
 
 func (u *Unit) SetMaxMana(v int) {
@@ -218,7 +218,7 @@ func (u *Unit) MoveTo(p types.Pointf) {
 }
 
 func (u *Unit) WalkTo(p types.Pointf) {
-	C.nox_xxx_monsterWalkTo_514110(u.CObj(), C.float(p.X), C.float(p.Y))
+	nox_xxx_monsterWalkTo_514110(u.CObj(), C.float(p.X), C.float(p.Y))
 }
 
 func (u *Unit) look(v int16) {
@@ -233,7 +233,7 @@ func (u *Unit) LookAt(p types.Pointf) {
 }
 
 func (u *Unit) LookAtDir(dir int) {
-	C.nox_xxx_monsterLookAt_5125A0(u.CObj(), C.int(dir))
+	nox_xxx_monsterLookAt_5125A0(u.CObj(), C.int(dir))
 }
 
 func (u *Unit) LookAngle(ang int) {
@@ -243,22 +243,22 @@ func (u *Unit) LookAngle(ang int) {
 
 func (u *Unit) Freeze(freeze bool) {
 	if freeze {
-		C.nox_xxx_unitFreeze_4E79C0(u.CObj(), 1)
+		nox_xxx_unitFreeze_4E79C0(u.CObj(), 1)
 	} else {
-		C.nox_xxx_unitUnFreeze_4E7A60(u.CObj(), 1)
+		nox_xxx_unitUnFreeze_4E7A60(u.CObj(), 1)
 	}
 }
 
 func (u *Unit) Wander() {
-	C.nox_xxx_scriptMonsterRoam_512930(u.CObj())
+	nox_xxx_scriptMonsterRoam_512930(u.CObj())
 }
 
 func (u *Unit) Return() {
-	C.nox_server_gotoHome(u.CObj())
+	nox_server_gotoHome(u.CObj())
 }
 
 func (u *Unit) Idle() {
-	C.nox_xxx_unitIdle_515820(u.CObj())
+	nox_xxx_unitIdle_515820(u.CObj())
 }
 
 func (u *Unit) Follow(obj script.Positioner) {
@@ -266,7 +266,7 @@ func (u *Unit) Follow(obj script.Positioner) {
 		obj = v.GetObject()
 	}
 	cobj := obj.(noxObject)
-	C.nox_xxx_unitSetFollow_5158C0(u.CObj(), cobj.CObj())
+	nox_xxx_unitSetFollow_5158C0(u.CObj(), cobj.CObj())
 }
 
 func (u *Unit) Flee(obj script.Positioner, dur script.Duration) {
@@ -314,7 +314,7 @@ func (u *Unit) Guard() {
 }
 
 func (u *Unit) Hunt() {
-	C.nox_xxx_unitHunt_5157A0(u.CObj())
+	nox_xxx_unitHunt_5157A0(u.CObj())
 }
 
 func (u *Unit) Say(text string, dur script.Duration) {
@@ -327,26 +327,26 @@ func (u *Unit) Mute() {
 
 func (u *Unit) AddGold(v int) {
 	if v < 0 {
-		C.nox_xxx_playerSubGold_4FA5D0(C.int(uintptr(unsafe.Pointer(u.CObj()))), C.uint(v))
+		nox_xxx_playerSubGold_4FA5D0(C.int(uintptr(unsafe.Pointer(u.CObj()))), C.uint(v))
 	} else {
-		C.nox_xxx_playerAddGold_4FA590(C.int(uintptr(unsafe.Pointer(u.CObj()))), C.int(v))
+		nox_xxx_playerAddGold_4FA590(C.int(uintptr(unsafe.Pointer(u.CObj()))), C.int(v))
 	}
 }
 
 func (u *Unit) dropAllItems() {
-	C.nox_xxx_dropAllItems_4EDA40((*C.uint)(unsafe.Pointer(u.CObj())))
+	nox_xxx_dropAllItems_4EDA40((*C.uint)(unsafe.Pointer(u.CObj())))
 }
 
 func (u *Unit) clearActionStack() { // aka nox_xxx_monsterClearActionStack_50A3A0
 	if u.Class().Has(object.ClassMonster) {
-		for C.sub_5341F0(u.CObj()) == 0 {
+		for sub_5341F0(u.CObj()) == 0 {
 			nox_xxx_monsterPopAction_50A160(u)
 		}
 	}
 }
 
 func (u *Unit) monsterPushAction(act ai.ActionType, args ...any) *aiStack { // aka nox_xxx_monsterPushAction_50A260
-	st := (*aiStack)(unsafe.Pointer(C.nox_xxx_monsterPushAction_50A260_impl(u.CObj(), C.int(act), internCStr("go"), 0)))
+	st := (*aiStack)(unsafe.Pointer(nox_xxx_monsterPushAction_50A260_impl(u.CObj(), C.int(act), internCStr("go"), 0)))
 	if len(args) != 0 {
 		st.SetArgs(args...)
 	}

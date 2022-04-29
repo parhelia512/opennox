@@ -18,7 +18,7 @@ import (
 func (s *Server) getObjectTypeByID(id string) *ObjectType { // nox_xxx_objectTypeByID_4E3830
 	cstr := CString(id)
 	defer StrFree(cstr)
-	p := C.nox_xxx_objectTypeByID_4E3830(cstr)
+	p := nox_xxx_objectTypeByID_4E3830(cstr)
 	if p == nil {
 		return nil
 	}
@@ -37,10 +37,10 @@ func (s *Server) getObjectTypeByInd(ind int) *ObjectType { // nox_xxx_objectType
 	if ind == math.MaxUint16 {
 		return nil
 	}
-	if ind < 0 || ind >= int(C.nox_xxx_unitDefGetCount_4E3AC0()) {
+	if ind < 0 || ind >= int(nox_xxx_unitDefGetCount_4E3AC0()) {
 		return nil
 	}
-	p := C.nox_xxx_objectTypeByInd_4E3B70(C.int(ind))
+	p := nox_xxx_objectTypeByInd_4E3B70(C.int(ind))
 	if p == nil {
 		return nil
 	}
@@ -48,7 +48,7 @@ func (s *Server) getObjectTypeByInd(ind int) *ObjectType { // nox_xxx_objectType
 }
 
 func (s *Server) getObjectTypes() (out []*ObjectType) {
-	for i := 0; i < int(C.nox_xxx_unitDefGetCount_4E3AC0()); i++ {
+	for i := 0; i < int(nox_xxx_unitDefGetCount_4E3AC0()); i++ {
 		typ := s.getObjectTypeByInd(i)
 		if typ == nil {
 			continue
@@ -115,7 +115,7 @@ func (t *ObjectType) String() string {
 }
 
 func (t *ObjectType) newObject() *Object { // nox_xxx_newObjectWithType_4E3470
-	cobj := C.nox_xxx_newObjectWithType_4E3470(t.C())
+	cobj := nox_xxx_newObjectWithType_4E3470(t.C())
 	if cobj == nil {
 		return nil
 	}

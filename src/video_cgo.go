@@ -343,13 +343,13 @@ func drawInitAll(sz image.Point, flags int) error {
 	if err := nox_video_setBackBufferCopyFunc_4AD100(); err != nil {
 		return err
 	}
-	if res := C.nox_client_initFade2_44D9A0(); res == 0 {
+	if res := nox_client_initFade2_44D9A0(); res == 0 {
 		return errors.New("nox_client_initFade2_44D9A0 failed")
 	}
 	noxrend.initParticles()
 	nox_video_initLineDrawingFuncs_49E3F0()
 	sub_4B02D0()
-	if res := C.sub_4AF8D0(); res == 0 {
+	if res := sub_4AF8D0(); res == 0 {
 		return errors.New("sub_4AF8D0 failed")
 	}
 	sub_4AE520()
@@ -387,7 +387,7 @@ func sub4B0640(fnc func()) {
 
 func sub_4B05D0() {
 	if C.dword_5d4594_1311936 != 0 {
-		C.sub_555500(1)
+		sub_555500(1)
 		C.dword_5d4594_1311936 = 0
 		*memmap.PtrUint32(0x5D4594, 1311928) = 0
 		if func_5d4594_1311924 != nil {
@@ -422,7 +422,7 @@ func gameUpdateVideoMode(inMenu bool) error {
 }
 
 func recreateBuffersAndTarget(sz image.Point) error {
-	C.nox_video_freeFloorBuffer_430EC0()
+	nox_video_freeFloorBuffer_430EC0()
 	if err := recreateRenderTarget(sz); err != nil {
 		videoLog.Println("recreate render target:", err)
 		return err
@@ -455,10 +455,10 @@ func recreateRenderTarget(sz image.Point) error {
 	if memmap.Uint32(0x5D4594, 805864) != 0 {
 		flags |= 0x200
 	}
-	C.nox_xxx_setSomeFunc_48A210(C.int(uintptr(C.sub_47FCE0))) // TODO: another callback
+	nox_xxx_setSomeFunc_48A210(C.int(uintptr(C.sub_47FCE0))) // TODO: another callback
 	v1 := nox_client_getCursorType()
 	nox_client_setCursorType(gui.CursorSelect)
-	v2 := C.sub_48B3E0(0)
+	v2 := sub_48B3E0(0)
 	if err := videoInit(videoGetWindowSize(), int(flags)); err != nil {
 		v9 := strMan.GetStringInFile("result:ERROR", "C:\\NoxPost\\src\\Client\\Io\\Win95\\dxvideo.c")
 		v4 := strMan.GetStringInFile("gfxDdraw.c:DXWarning", "C:\\NoxPost\\src\\Client\\Io\\Win95\\dxvideo.c")
@@ -468,15 +468,15 @@ func recreateRenderTarget(sz image.Point) error {
 	}
 	nox_xxx_cursorLoadAll_477710()
 	nox_client_setCursorType(v1)
-	C.sub_48B3E0(v2)
+	sub_48B3E0(v2)
 	noxrend.ClearScreen()
-	C.nox_xxx_setupSomeVideo_47FEF0()
-	C.sub_49F6D0(1)
+	nox_xxx_setupSomeVideo_47FEF0()
+	sub_49F6D0(1)
 	noxrend.setRectFullScreen()
 	//videoSet16Bit(C.nox_video_modeXxx_3801780 != 0)
 	*memmap.PtrUint32(0x973F18, 6060) = uint32(2 * sz.X * sz.Y)
 	*memmap.PtrUint32(0x973F18, 7696) = uint32(bool2int(C.nox_video_modeXxx_3801780 == 1))
-	C.sub_430B50(0, 0, noxDefaultWidth-1, noxDefaultHeight-1)
+	sub_430B50(0, 0, noxDefaultWidth-1, noxDefaultHeight-1)
 	return nil
 }
 
@@ -517,14 +517,14 @@ func drawGeneral_4B0340(a1 int) error {
 		sub_4B05D0()
 		return nil
 	}
-	C.sub_431290()
-	C.sub_43DBD0()
+	sub_431290()
+	sub_43DBD0()
 	sub_44D8F0()
-	for C.sub_43DC40() != 0 || sub_44D930() {
+	for sub_43DC40() != 0 || sub_44D930() {
 		sub_4312C0()
 	}
 	sub_43E8E0(0)
-	v12 := C.sub_48B3E0(0)
+	v12 := sub_48B3E0(0)
 	//inpHandler.UnacquireMouse()
 	//sub_48A7F0()
 	v2 := C.nox_video_modeXxx_3801780
@@ -577,16 +577,16 @@ func drawGeneral_4B0340(a1 int) error {
 		noxrend.noxDrawCursor(v11, vpos)
 	}
 	sub_43E910(0)
-	C.sub_43DBE0()
+	sub_43DBE0()
 	//inpHandler.AcquireMouse()
-	C.sub_48B3E0(v12)
+	sub_48B3E0(v12)
 	sub_4B05D0()
 	return nil
 }
 
 func nox_video_initFloorBuffer_430BA0(sz image.Point) error {
-	C.nox_xxx___cfltcvt_init_430CC0()
-	if C.nox_xxx_tileInitBuf_430DB0(C.int(sz.X), C.int(sz.Y)) == 0 {
+	nox_xxx___cfltcvt_init_430CC0()
+	if nox_xxx_tileInitBuf_430DB0(C.int(sz.X), C.int(sz.Y)) == 0 {
 		return errors.New("VideoInit: error initializing floor buffer")
 	}
 	if lightsOutBuf == nil {
@@ -631,7 +631,7 @@ func sub_4AE540() {
 
 func sub_4AE520() {
 	sub_4AEDF0()
-	C.sub_4AEE30()
+	sub_4AEE30()
 }
 
 //export sub_4AEBD0
@@ -913,12 +913,12 @@ func nox_client_drawXxx_444AC0(w, h int, flags int) error {
 func sub_48B800(a1 uint32) {
 	p, pfree := alloc.Make([]uint32{}, 3)
 	defer pfree()
-	C.sub_434480(C.int(a1), (*C.int)(unsafe.Pointer(&p[0])), (*C.int)(unsafe.Pointer(&p[1])), (*C.int)(unsafe.Pointer(&p[2])))
+	sub_434480(C.int(a1), (*C.int)(unsafe.Pointer(&p[0])), (*C.int)(unsafe.Pointer(&p[1])), (*C.int)(unsafe.Pointer(&p[2])))
 	sub_48B6B0(byte(p[0]), byte(p[1]), byte(p[2]))
 }
 
 func sub_48B6B0(a1, a2, a3 byte) {
-	C.sub_433CD0(C.uchar(a1), C.uchar(a2), C.uchar(a3))
+	sub_433CD0(C.uchar(a1), C.uchar(a2), C.uchar(a3))
 }
 
 func sub_48B590() (a1 *Image, pos image.Point) {
@@ -929,7 +929,7 @@ func sub_48B680(a1 int) {
 	p := noxrend.Data()
 	if a1 != int(p.field_15) {
 		p.field_14 = C.uint(a1)
-		C.sub_48BD90(1)
+		sub_48BD90(1)
 	}
 }
 
@@ -947,7 +947,7 @@ func nox_video_cursorDrawImpl_477A30(r *NoxRender, inp *input.Handler, pos image
 	}
 	r.SetTextColor(uint32(C.nox_color_yellow_2589772))
 	fh := r.FontHeight(nil)
-	if C.nox_xxx_guiSpell_460650() != 0 || C.sub_4611A0() != 0 {
+	if nox_xxx_guiSpell_460650() != 0 || sub_4611A0() != 0 {
 		r.nox_video_drawAnimatedImageOrCursorAt(noxCursors.Target, pos)
 		nox_xxx_cursorTypePrev_587000_151528 = gui.CursorTarget
 		*memmap.PtrUint32(0x973F18, 68) = v18
@@ -1013,7 +1013,7 @@ func nox_video_cursorDrawImpl_477A30(r *NoxRender, inp *input.Handler, pos image
 		}
 		if v16 := nox_xxx_spriteGetMB_476F80(); v16 != nil {
 			sub_48B680(1)
-			if v16.Flags28()&6 == 0 || C.sub_495A80(C.int(v16.Field32())) != 0 {
+			if v16.Flags28()&6 == 0 || sub_495A80(C.int(v16.Field32())) != 0 {
 				sub_48B800(uint32(C.nox_color_blue_2650684))
 			} else {
 				sub_48B800(memmap.Uint32(0x85B3FC, 940))
@@ -1098,7 +1098,7 @@ func nox_client_drawCursorAndTooltips_477830(r *NoxRender, inp *input.Handler) {
 				r.DrawImageAt(asImageP(unsafe.Pointer(v2)), mpos.Sub(image.Point{X: 15, Y: 15}))
 			}
 		} else {
-			v2 := C.nox_xxx_spellGetAbilityIcon_425310(C.int(nox_client_spellDragnDrop_1097192), 0) // Ability icon
+			v2 := nox_xxx_spellGetAbilityIcon_425310(C.int(nox_client_spellDragnDrop_1097192), 0) // Ability icon
 			if v2 != nil {
 				r.DrawImageAt(asImageP(unsafe.Pointer(v2)), mpos.Sub(image.Point{X: 15, Y: 15}))
 			}
@@ -1152,12 +1152,12 @@ func sub_444C50() {
 		nox_video_stopCursorDrawThread_48B350()
 		nox_free_pixbuffers_486110()
 		nox_draw_freeColorTables_433C20()
-		C.nox_client_initFade_44D9D0()
+		nox_client_initFade_44D9D0()
 		noxrend.freeParticles()
-		C.sub_4AF950()
+		sub_4AF950()
 		sub_4AE540()
 		nox_xxx_FontDestroy_43F2E0()
-		C.sub_49F4D0()
+		sub_49F4D0()
 		C.dword_5d4594_823776 = 0
 		if memmap.Uint32(0x5D4594, 823780) != 0 {
 			nox_mutex_freeP(memmap.PtrOff(0x973F18, 168))
@@ -1168,7 +1168,7 @@ func sub_444C50() {
 
 //export sub_478000
 func sub_478000() C.int {
-	C.sub_467CD0()
+	sub_467CD0()
 	if nox_client_spellDragnDrop_type_1097196 != 0 {
 		v1 := nox_xxx_wndGetCaptureMain()
 		nox_xxx_wndClearCaptureMain(v1)

@@ -276,8 +276,8 @@ func (s *Server) nox_xxx_createCoopTeam_417E10() {
 	if t == nil {
 		t = s.teamCreate(1)
 	}
-	if v1 := C.nox_xxx_objGetTeamByNetCode_418C80(C.int(C.nox_player_netCode_85319C)); v1 != nil {
-		C.nox_xxx_createAtImpl_4191D0(t.field_57, unsafe.Pointer(v1), 0, C.int(C.nox_player_netCode_85319C), 0)
+	if v1 := nox_xxx_objGetTeamByNetCode_418C80(C.int(C.nox_player_netCode_85319C)); v1 != nil {
+		nox_xxx_createAtImpl_4191D0(t.field_57, unsafe.Pointer(v1), 0, C.int(C.nox_player_netCode_85319C), 0)
 	}
 	if t != nil {
 		text := s.Strings().GetStringInFile("COOP", "C:\\NoxPost\\src\\common\\System\\team.c")
@@ -315,7 +315,7 @@ func (s *Server) teamCreate(ind byte) *Team {
 	}
 	t.field_57 = C.uchar(ci)
 	*memmap.PtrUint8(0x5D4594, 526280)++
-	C.sub_459CD0() // TODO: GUI callback
+	sub_459CD0() // TODO: GUI callback
 	if !noxflags.HasGame(noxflags.GameModeSolo10) {
 		text := s.Strings().GetStringInFile("teamcreate", "C:\\NoxPost\\src\\common\\System\\team.c")
 		s.Printf(console.ColorRed, text)
@@ -384,12 +384,12 @@ func (s *Server) teamsZzz(a1 int) int {
 	for i := 1; i < len(s.teams.arr); i++ {
 		t := asTeam(&s.teams.arr[i])
 		if t.Active() {
-			C.sub_418F20(t.C(), 0)
+			sub_418F20(t.C(), 0)
 		}
 	}
 	if a1 == 0 {
 		return 0
 	}
-	C.sub_456FA0() // TODO: GUI callback?
+	sub_456FA0() // TODO: GUI callback?
 	return s.sendTeamPacket(0x07)
 }

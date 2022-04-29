@@ -220,11 +220,11 @@ func clientGetServerHost() string {
 }
 
 func clientGetServerPort() int {
-	return int(C.nox_client_getServerPort_43B320())
+	return int(clientGetServerPort())
 }
 
 func clientGetClientPort() int {
-	return int(C.nox_client_getClientPort_40A420())
+	return int(nox_client_getClientPort_40A420())
 }
 
 //export nox_client_setServerConnectAddr_435720
@@ -565,7 +565,7 @@ func (s *Server) nox_xxx_netAddPlayerHandler_4DEBC0(port int) (ind, cport int, _
 		funcyyy:   C.nox_xxx_netlist_ServRecv_4DEC30,
 		funcxxx:   C.nox_xxx_netFn_UpdateStream_4DF630,
 	}
-	C.nox_xxx_allocNetGQueue_5520B0(200, 1024)
+	nox_xxx_allocNetGQueue_5520B0(200, 1024)
 	ind, err := nox_xxx_netInit_554380(narg)
 	if err != nil {
 		return ind, 0, err
@@ -779,13 +779,13 @@ func (s *Server) nox_xxx_netStructReadPackets(ind int) int {
 		if ns2 == nil || ns2.ID() != v4 {
 			continue
 		}
-		C.nox_xxx_netSendReadPacket_5528B0(C.uint(i), 1)
+		nox_xxx_netSendReadPacket_5528B0(C.uint(i), 1)
 		var buf [1]byte
 		buf[0] = 11
 		nox_xxx_netSendSock_552640(i, buf[:], 0)
-		C.nox_xxx_netSendReadPacket_5528B0(C.uint(i), 1)
+		nox_xxx_netSendReadPacket_5528B0(C.uint(i), 1)
 		getNetStructByInd(v4).field_21--
-		C.sub_555360(C.uint(v1), 0, 2)
+		sub_555360(C.uint(v1), 0, 2)
 		ns2.FreeXxx()
 		setNetStructByInd(i, nil)
 	}
@@ -1017,7 +1017,7 @@ func nox_xxx_cliSendCancelMap_43CAB0() C.int {
 	if nox_xxx_cliWaitServerResponse_5525B0(id, v0, 20, 6) != 0 {
 		return 0
 	}
-	C.nox_netlist_resetByInd_40ED10(31, 0)
+	nox_netlist_resetByInd_40ED10(31, 0)
 	return 1
 }
 
@@ -1029,7 +1029,7 @@ func nox_xxx_netSendIncomingClient_43CB00() int {
 	if nox_xxx_cliWaitServerResponse_5525B0(id, v0, 20, 6) != 0 {
 		return 0
 	}
-	C.nox_netlist_resetByInd_40ED10(31, 0)
+	nox_netlist_resetByInd_40ED10(31, 0)
 	return 1
 }
 
@@ -1041,8 +1041,8 @@ func nox_xxx_cliSendOutgoingClient_43CB50() int {
 	if nox_xxx_cliWaitServerResponse_5525B0(id, v0, 20, 6) != 0 {
 		return 0
 	}
-	C.nox_xxx_servNetInitialPackets_552A80(C.uint(id), 3)
-	C.nox_netlist_resetByInd_40ED10(31, 0)
+	nox_xxx_servNetInitialPackets_552A80(C.uint(id), 3)
+	nox_netlist_resetByInd_40ED10(31, 0)
 	return 1
 }
 
@@ -1063,8 +1063,8 @@ func nox_xxx_cliWaitServerResponse_5525B0(a1 int, a2 int, a3 int, a4 byte) int {
 	}
 	for v6 := 0; v6 <= 20*a3; v6++ {
 		platform.Sleep(50 * time.Millisecond)
-		C.nox_xxx_servNetInitialPackets_552A80(C.uint(a1), C.char(a4|1))
-		C.nox_xxx_netMaybeSendAll_552460()
+		nox_xxx_servNetInitialPackets_552A80(C.uint(a1), C.char(a4|1))
+		nox_xxx_netMaybeSendAll_552460()
 		if int(ns.field_28_1) >= a2 {
 			return 0
 		}

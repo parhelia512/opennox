@@ -69,8 +69,8 @@ func gameResetVideoMode(inMenu, force bool) error {
 	if err := recreateBuffersAndTarget(mode); err != nil {
 		return err
 	}
-	C.nox_xxx_loadPal_4A96C0_video_read_palette(internCStr("default.pal"))
-	C.sub_461520()
+	nox_xxx_loadPal_4A96C0_video_read_palette(internCStr("default.pal"))
+	sub_461520()
 	return nil
 }
 

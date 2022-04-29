@@ -48,7 +48,7 @@ func drawAndPresent() {
 }
 
 func map_download_start() {
-	C.nox_xxx_gameClearAll_467DF0(1)
+	nox_xxx_gameClearAll_467DF0(1)
 	nox_xxx_gameDownloadShowDialog_4CC770()
 	nox_xxx_mapSetDownloadInProgress(true)
 	nox_xxx_mapSetDownloadOK(true)
@@ -65,13 +65,13 @@ func mapDownloadLoop(first bool) (bool, error) {
 		return true, nil
 	}
 
-	if C.nox_xxx_check_flag_aaa_43AF70() == 1 {
-		C.sub_40D250()
-		C.sub_40DF90()
+	if nox_xxx_check_flag_aaa_43AF70() == 1 {
+		sub_40D250()
+		sub_40DF90()
 	}
 	nox_framerate_limit_416C70(30)
 	inp := processInput()
-	C.sub_43CCA0()
+	sub_43CCA0()
 
 	if first {
 		ctx, cancel := context.WithCancel(context.Background())
@@ -167,7 +167,7 @@ func mainloopDrawAndPresent(inp *input.Handler) {
 	if !noxflags.HasEngine(noxflags.EngineNoRendering) || noxflags.HasEngine(noxflags.EngineFlag9) || C.nox_client_gui_flag_815132 != 0 {
 		nox_client_drawCursorAndTooltips_477830(noxrend, inp) // Draw cursor
 	}
-	C.nox_client_procFade_44D9F0(1)
+	nox_client_procFade_44D9F0(1)
 	maybeScreenshot()
 	if !noxflags.HasEngine(noxflags.EngineNoRendering) || noxflags.HasEngine(noxflags.EngineFlag9) || C.nox_client_gui_flag_815132 != 0 {
 		// C.nox_xxx_directDrawBlitMB_48A220() // does nothing
@@ -186,10 +186,10 @@ func DrawSparks() {
 		rdr.y2 = C.int(sz.Y)
 		rdr.width = C.int(sz.X)
 		rdr.height = C.int(sz.Y)
-		C.nox_client_screenParticlesDraw_431720(rdr)
+		nox_client_screenParticlesDraw_431720(rdr)
 	} else {
 		vp := getViewport()
-		C.nox_client_screenParticlesDraw_431720(vp.C())
+		nox_client_screenParticlesDraw_431720(vp.C())
 	}
 }
 
@@ -214,7 +214,7 @@ func generateMouseSparks(inp *input.Handler) {
 			v22 := randomIntMinMax(2, 5)
 			v21 := randomIntMinMax(-7, 2)
 			v10 := randomIntMinMax(-5, 5)
-			C.nox_client_newScreenParticle_431540(4, C.int(v7), C.int(v9), C.int(v10), C.int(v21), 1, C.char(v22), C.char(v23), 2, 1)
+			nox_client_newScreenParticle_431540(4, C.int(v7), C.int(v9), C.int(v10), C.int(v21), 1, C.char(v22), C.char(v23), 2, 1)
 		}
 		if r2 < 10 {
 			*memmap.PtrUint32(0x5D4594, 816428) = 0
@@ -237,7 +237,7 @@ func generateMouseSparks(inp *input.Handler) {
 				pos := sincosTable16[v12].Mul(v13).Div(16).Add(image.Point{Y: -6})
 				v24 := randomIntMinMax(2, 5)
 				v16 := randomIntMinMax(2, 5)
-				C.nox_client_newScreenParticle_431540(4, C.int(pos.X+mpos.X), C.int(pos.Y+mpos.Y), C.int(pos.X), C.int(pos.Y), 1, C.char(v16), C.char(v24), 2, 1)
+				nox_client_newScreenParticle_431540(4, C.int(pos.X+mpos.X), C.int(pos.Y+mpos.Y), C.int(pos.X), C.int(pos.Y), 1, C.char(v16), C.char(v24), 2, 1)
 			}
 		}
 	} else {

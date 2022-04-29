@@ -621,7 +621,7 @@ func (win *Window) drawRecursive() bool {
 	}
 	win.Draw()
 	if (win.flags & 0x1000) != 0 {
-		C.sub_4AA030(win.C(), win.DrawData().C())
+		sub_4AA030(win.C(), win.DrawData().C())
 	}
 
 	for sub := asWindow(win.field_100); sub != nil; sub = sub.Prev() {

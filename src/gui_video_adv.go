@@ -141,7 +141,7 @@ func nox_client_advVideoOptsProc_4CB5D0(win *Window, ev WindowEvent) WindowEvent
 			v := C.nox_client_texturedFloors2_154960 != 0
 			C.nox_client_texturedFloors2_154960 = C.uint(bool2int(!v))
 			C.nox_client_texturedFloors_154956 = C.uint(bool2int(!v))
-			C.nox_xxx_tileSetDrawFn_481420()
+			nox_xxx_tileSetDrawFn_481420()
 			C.dword_5d4594_1193156 = 0
 			return nil
 		case 2099:

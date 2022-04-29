@@ -191,9 +191,9 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 				ud.field_101 = C.uint(gameFrame() + gameFPS())
 			}
 		case ai.DEPENDENCY_UNDER_ATTACK:
-			if C.sub_5347A0(u.CObj()) != 0 {
+			if sub_5347A0(u.CObj()) != 0 {
 				if u.field_130 != 0 {
-					v26 := asObjectC(C.sub_534160(C.int(u.field_130)))
+					v26 := asObjectC(sub_534160(C.int(u.field_130)))
 					if v26 != nil && v26.Class().HasAny(object.MaskUnits) {
 						st.arg_1 = gameFrame()
 					}
@@ -201,13 +201,13 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 			}
 			ok = gameFrame()-st.ArgU32(0) <= 10*gameFPS()
 		case ai.DEPENDENCY_NOT_UNDER_ATTACK:
-			if C.sub_5347A0(u.CObj()) == 0 {
+			if sub_5347A0(u.CObj()) == 0 {
 				break
 			}
 			if u.field_130 == 0 {
 				break
 			}
-			v27 := asObjectC(C.sub_534160(C.int(u.field_130)))
+			v27 := asObjectC(sub_534160(C.int(u.field_130)))
 			if v27 == nil {
 				break
 			}
@@ -221,7 +221,7 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 			}
 		case ai.DEPENDENCY_CANNOT_SEE:
 			obj := st.ArgObj(0)
-			if obj == nil || C.sub_533360(u.CObj(), obj.CObj()) != 0 {
+			if obj == nil || sub_533360(u.CObj(), obj.CObj()) != 0 {
 				ok = false
 			}
 		case ai.DEPENDENCY_BLOCKED_LINE_OF_FIRE:
@@ -272,7 +272,7 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 			if noxflags.HasGame(noxflags.GameModeQuest) {
 				r = 640.0
 			}
-			ok = C.nox_xxx_mobSearchEdible_544A00(u.CObj(), C.float(r)) == 0
+			ok = nox_xxx_mobSearchEdible_544A00(u.CObj(), C.float(r)) == 0
 		case ai.DEPENDENCY_NO_INTERESTING_SOUND:
 			if ud.field_97 != 0 && gameFrame()-uint32(ud.field_101) < 3*gameFPS() {
 				ok = false
@@ -317,7 +317,7 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 				ok = false
 			}
 		case ai.DEPENDENCY_WAIT_FOR_STAMINA:
-			if C.int(ud.field_282_0) >= C.nox_xxx_weaponGetStaminaByType_4F7E80(C.int(ud.field_514)) {
+			if C.int(ud.field_282_0) >= nox_xxx_weaponGetStaminaByType_4F7E80(C.int(ud.field_514)) {
 				ok = false
 			}
 		case ai.DEPENDENCY_ENEMY_FARTHER_THAN:
@@ -327,14 +327,14 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 			}
 		case ai.DEPENDENCY_UNDER_CURSOR:
 			hu := HostPlayerUnit()
-			if hu == nil || C.nox_xxx_findObjectAtCursor_54AF40(hu.CObj()) != u.CObj() {
+			if hu == nil || nox_xxx_findObjectAtCursor_54AF40(hu.CObj()) != u.CObj() {
 				ok = false
 			}
 		case ai.DEPENDENCY_NOT_CORNERED:
-			ok = C.nox_xxx_mobGetMoveAttemptTime_534810(u.CObj()) == 0
+			ok = nox_xxx_mobGetMoveAttemptTime_534810(u.CObj()) == 0
 		case ai.DEPENDENCY_LOCATION_IS_SAFE:
 			C.dword_5d4594_2489460 = 1
-			C.nox_xxx_unitsGetInCircle_517F90((*C.float2)(unsafe.Pointer(&st.arg_1)), 50.0, C.nox_xxx_unitIsDangerous_547120, u.CObj())
+			nox_xxx_unitsGetInCircle_517F90((*C.float2)(unsafe.Pointer(&st.arg_1)), 50.0, C.nox_xxx_unitIsDangerous_547120, u.CObj())
 			if C.dword_5d4594_2489460 == 0 {
 				ok = false
 			}
@@ -369,7 +369,7 @@ func nox_xxx_mobActionDependency_546A70(uc *C.nox_object_t) {
 		}
 		for {
 			nox_xxx_monsterPopAction_50A160(u)
-			if !(ud.getAIStackInd() >= i && C.sub_5341F0(u.CObj()) == 0) {
+			if !(ud.getAIStackInd() >= i && sub_5341F0(u.CObj()) == 0) {
 				break
 			}
 		}

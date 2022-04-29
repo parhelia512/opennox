@@ -435,7 +435,7 @@ func nox_xxx_windowUpdateKeysMB_46B6B0(inp *input.Handler, key keybind.Key) {
 //var dword_5d4594_2618912 *noxKeyEventInt
 
 func keyBindingsCheckActive(inp *input.Handler) int {
-	if C.sub_46A4A0() != 0 {
+	if sub_46A4A0() != 0 {
 		return 1
 	}
 	for _, key := range inp.KeyboardKeys() {

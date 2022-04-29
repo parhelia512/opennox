@@ -125,7 +125,7 @@ func sub_468480(win *Window, ev WindowEvent) WindowEventResp {
 //export sub_4683B0
 func sub_4683B0() C.int {
 	gameSetCliDrawFunc(func() bool {
-		return C.sub_41E210() != 0
+		return sub_41E210() != 0
 	})
 	win := newWindowFromFile("wolreg.wnd", wrapWindowFuncC(C.sub_4685D0))
 	C.dword_5d4594_1064816 = unsafe.Pointer(win.C())
@@ -148,10 +148,10 @@ func sub_4684C0() {
 	switch C.dword_5d4594_1064296 {
 	case 0:
 		sub_41E300(5)
-		C.sub_4207F0(1)
+		sub_4207F0(1)
 		nox_xxx_wnd_46ABB0(v0, 1)
 		sub_4A1BE0(1)
-		C.sub_4A1A40(0)
+		sub_4A1A40(0)
 	case 1:
 		C.dword_5d4594_1064296 = 0
 		asWindowP(C.dword_5d4594_1064824).Hide()
@@ -166,7 +166,7 @@ func sub_4684C0() {
 		asWindowP(C.dword_5d4594_1064824).Show()
 	case 4:
 		sub_41E300(5)
-		C.sub_4207F0(1)
+		sub_4207F0(1)
 		nox_xxx_wnd_46ABB0(v0, 1)
 		sub_4A1BE0(1)
 	}
@@ -176,15 +176,15 @@ func sub_4684C0() {
 func sub_41E300(a1 C.int) C.int {
 	if a1 == 11 && noxflags.HasGame(noxflags.GameFlag29) {
 		if C.dword_5d4594_528256 != 0 {
-			C.sub_41E470()
+			sub_41E470()
 		} else {
-			C.nox_xxx_reconStart_41E400()
+			nox_xxx_reconStart_41E400()
 		}
 		return 0
 	}
 	if C.int(C.dword_5d4594_527988) != a1 {
 		C.dword_5d4594_527988 = C.uint(a1)
-		C.sub_41DA10(a1)
+		sub_41DA10(a1)
 		if C.dword_5d4594_527988 == 11 {
 			sub_40E0A0()
 		}
@@ -241,11 +241,11 @@ func sub_4A50D0() C.int {
 		nox_client_guiXxxDestroy_4A24A0()
 		return 1
 	}
-	if C.nox_xxx_check_flag_aaa_43AF70() == 0 {
+	if nox_xxx_check_flag_aaa_43AF70() == 0 {
 		nox_xxx_serverHost_43B4D0()
 		return 1
 	}
-	if C.nox_xxx_check_flag_aaa_43AF70() == 1 {
+	if nox_xxx_check_flag_aaa_43AF70() == 1 {
 		sub_43B670()
 		return 1
 	}
@@ -299,15 +299,15 @@ func sub_43B670() {
 	v0 := sub_416640()
 	if C.nox_game_createOrJoin_815048 != 0 {
 		sub_44A400()
-		C.nox_client_xxx_switchChatMap_43B510()
-		C.nox_client_guiXxx_43A9D0()
+		nox_client_xxx_switchChatMap_43B510()
+		nox_client_guiXxx_43A9D0()
 		nox_client_guiXxxDestroy_4A24A0()
-		C.nox_xxx_gameSetAudioFadeoutMb_501AC0(C.int(*(*uint32)(unsafe.Pointer(&v0[74]))))
+		nox_xxx_gameSetAudioFadeoutMb_501AC0(C.int(*(*uint32)(unsafe.Pointer(&v0[74]))))
 	} else {
-		C.sub_43B630()
-		C.sub_40D350(C.int(*(*uint32)(unsafe.Add(C.dword_5d4594_814624, 32))))
+		sub_43B630()
+		sub_40D350(C.int(*(*uint32)(unsafe.Add(C.dword_5d4594_814624, 32))))
 	}
-	C.sub_49FF20()
+	sub_49FF20()
 }
 
 //export sub_46D6F0
@@ -344,31 +344,31 @@ func sub_448640() { sub_44A400() }
 //export sub_477530
 func sub_477530(a1 C.int) {
 	if a1 == 1 {
-		*memmap.PtrUint32(0x5D4594, 1096652) = uint32(C.nox_xxx_bookHideMB_45ACA0(0))
-		*memmap.PtrUint32(0x5D4594, 1096664) = uint32(C.sub_467C10())
-		*memmap.PtrUint32(0x5D4594, 1096660) = uint32(C.nox_xxx_guiServerOptionsTryHide_4574D0())
+		*memmap.PtrUint32(0x5D4594, 1096652) = uint32(nox_xxx_bookHideMB_45ACA0(0))
+		*memmap.PtrUint32(0x5D4594, 1096664) = uint32(sub_467C10())
+		*memmap.PtrUint32(0x5D4594, 1096660) = uint32(nox_xxx_guiServerOptionsTryHide_4574D0())
 		C.nox_client_renderGUI_80828 = 0
 		*memmap.PtrUint32(0x5D4594, 1096656) = uint32(sub_473670())
 		if *memmap.PtrUint32(0x5D4594, 1096656) == 1 {
 			nox_client_toggleMap_473610()
 		}
 		guiCon.Hide()
-		C.sub_446780()
-		C.sub_4AD9B0(1)
-		C.sub_4C35B0(1)
+		sub_446780()
+		sub_4AD9B0(1)
+		sub_4C35B0(1)
 		sub_46D6F0()
-		C.sub_460660()
+		sub_460660()
 		*memmap.PtrUint32(0x5D4594, 1096672) = 1
 	} else {
 		*memmap.PtrUint32(0x5D4594, 1096672) = 0
 		if *memmap.PtrUint32(0x5D4594, 1096652) != 0 {
-			C.nox_xxx_bookShowMB_45AD70(0)
+			nox_xxx_bookShowMB_45AD70(0)
 		}
 		if *memmap.PtrUint32(0x5D4594, 1096664) != 0 {
-			C.sub_467BB0()
+			sub_467BB0()
 		}
 		if *memmap.PtrUint32(0x5D4594, 1096660) != 0 {
-			C.nox_xxx_guiServerOptsLoad_457500()
+			nox_xxx_guiServerOptsLoad_457500()
 		}
 		if *memmap.PtrUint32(0x5D4594, 1096656) != 0 {
 			nox_client_toggleMap_473610()
@@ -469,7 +469,7 @@ func nox_game_showSelChar4A4DB0() bool {
 		noxflags.SetEngine(noxflags.EngineAdmin)
 	} else {
 		noxflags.UnsetEngine(noxflags.EngineAdmin)
-		C.sub_4602F0()
+		sub_4602F0()
 	}
 	if noxflags.HasGame(noxflags.GameFlag26) {
 		wload := win.ChildByID(502)
@@ -509,7 +509,7 @@ func nox_xxx_findAutosaves_4A5150() {
 		}
 		s := filepath.Join(PathName, f.Name())
 		sv := &nox_xxx_saves_arr[v9]
-		if C.sub_41A000(internCStr(s), sv) == 0 {
+		if sub_41A000(internCStr(s), sv) == 0 {
 			saveLog.Printf("%q: failed", f.Name())
 		}
 		if sub_4A5690(sv) == 1 {
@@ -617,12 +617,12 @@ func nox_savegame_sub_46CE40(wlist, wnames, wstyles *Window, sarr []C.nox_savega
 	wstyles.Func94(asWindowEvent(0x400F, 0, 0))
 	v45 := filepath.Join(PathName, common.SaveAuto, common.PlayerFile)
 	var v4 int32 = 0
-	if C.sub_41A000(internCStr(v45), &sarr[0]) != 0 {
+	if sub_41A000(internCStr(v45), &sarr[0]) != 0 {
 		v4++
 	}
 	for i := int32(1); i < NOX_SAVEGAME_XXX_MAX; i++ {
 		v45 = filepath.Join(PathName, fmt.Sprintf(common.SaveFormat, i), common.PlayerFile)
-		if C.sub_41A000(internCStr(v45), &sarr[i]) != 0 {
+		if sub_41A000(internCStr(v45), &sarr[i]) != 0 {
 			v4++
 		}
 	}
@@ -871,7 +871,7 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *Window, e WindowEvent) WindowEventResp
 			v20 := datapath.SaveNameFromPath(spath)
 			saveLog.Printf("loading slot %d: %q (%q, %q)", v10, v20, spath, GoString(&sv.map_name[0]))
 			var v23 C.nox_savegame_xxx
-			if (!noxflags.HasGame(noxflags.GameModeCoop) || nox_client_copySave(v20, common.SaveTmp) == nil) && C.sub_41A000(&sv.path[0], &v23) != 0 {
+			if (!noxflags.HasGame(noxflags.GameModeCoop) || nox_client_copySave(v20, common.SaveTmp) == nil) && sub_41A000(&sv.path[0], &v23) != 0 {
 
 				v23d := (*C.nox_savegame_xxx)(memmap.PtrOff(0x85B3FC, 10980))
 				*v23d = v23
@@ -884,15 +884,15 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *Window, e WindowEvent) WindowEventResp
 					noxServer.nox_xxx_gameSetMapPath_409D70("con01a.map")
 				}
 				if noxflags.HasGame(noxflags.GameModeCoop) {
-					C.nox_xxx_gameSetSwitchSolo_4DB220(1)
-					C.nox_xxx_gameSetNoMPFlag_4DB230(1)
+					nox_xxx_gameSetSwitchSolo_4DB220(1)
+					nox_xxx_gameSetNoMPFlag_4DB230(1)
 					mname := GoString(&sv.map_name[0])
 					fbase := fmt.Sprintf("%s.map", mname)
 					v22, err := nox_client_checkSaveMapExistsTmp(fbase)
 					if err != nil {
 						v22 = datapath.Maps(mname, fbase)
 					}
-					C.nox_xxx_gameSetSoloSavePath_4DB270(internCStr(v22))
+					nox_xxx_gameSetSoloSavePath_4DB270(internCStr(v22))
 					noxServer.nox_xxx_gameSetMapPath_409D70(fbase)
 					nox_xxx_mapLoadOrSaveMB_4DCC70(1)
 					v13, _ := sub41D090(GoString(&sv.path[0]))
@@ -1102,7 +1102,7 @@ func nox_savegame_sub_46C920(win1 *Window, ev WindowEvent) WindowEventResp {
 		case 502:
 			v6 := *(*int32)(unsafe.Add(dword_5d4594_1082864.widget_data, 48))
 			if v6 >= 0 && GoString(&nox_savegame_arr_1064948[v6].path[0]) != "" {
-				if C.nox_xxx_playerAnimCheck_4372B0() != 0 {
+				if nox_xxx_playerAnimCheck_4372B0() != 0 {
 					nox_savegame_sub_46CBD0()
 					return nil
 				}
@@ -1157,14 +1157,14 @@ func sub_4505B0() {
 	C.nox_gameDisableMapDraw_5d4594_2650672 = 0
 	v0 := nox_client_getIntroScreenDuration_44E3B0()
 	_ = sub_44E320
-	C.nox_client_screenFadeTimeout_44DAB0(v0, 1, (*[0]byte)(C.sub_44E320))
+	nox_client_screenFadeTimeout_44DAB0(v0, 1, (*[0]byte)(C.sub_44E320))
 	C.nox_gameDisableMapDraw_5d4594_2650672 = 1
 }
 
 //export sub_43DDA0
 func sub_43DDA0() {
 	*memmap.PtrUint32(0x5D4594, 816344) = 0
-	C.sub_43D9E0((*C.int4)(memmap.PtrOff(0x5D4594, 816060)))
+	sub_43D9E0((*C.int4)(memmap.PtrOff(0x5D4594, 816060)))
 }
 
 //export sub_450580

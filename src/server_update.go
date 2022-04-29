@@ -17,8 +17,8 @@ import (
 func (s *Server) updateUnitsAAA() { // nox_xxx_updateUnits_51B100_A
 	for _, u := range s.getPlayerUnits() {
 		ud := u.updateDataPlayer()
-		C.nox_xxx_itemApplyUpdateEffect_4FA490(u.CObj())
-		ud.cursor_obj = C.nox_xxx_findObjectAtCursor_54AF40(u.CObj())
+		nox_xxx_itemApplyUpdateEffect_4FA490(u.CObj())
+		ud.cursor_obj = nox_xxx_findObjectAtCursor_54AF40(u.CObj())
 	}
 }
 
@@ -28,9 +28,9 @@ func (s *Server) updateUnitsCallUpdate() { // nox_xxx_updateUnits_51B100_callUpd
 			continue
 		}
 		obj.callUpdate()
-		C.nox_xxx_updateFallLogic_51B870(obj.CObj())
-		C.sub_51B810(obj.CObj())
-		C.sub_537770(obj.CObj())
+		nox_xxx_updateFallLogic_51B870(obj.CObj())
+		sub_51B810(obj.CObj())
+		sub_537770(obj.CObj())
 		prev := obj.Pos()
 		obj.field_31_0 = obj.direction
 		npos := obj.newPos()

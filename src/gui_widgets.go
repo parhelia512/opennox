@@ -80,11 +80,11 @@ func guiNewWidget(typ string, parent *Window, status gui.StatusFlags, px, py, w,
 	case "VERTSLIDER":
 		tdata, _ := data.(*sliderData)
 		draw.style |= C.int(gui.StyleVertSlider)
-		return asWindow(C.nox_gui_newSlider_4B4EE0(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h), (*C.uint)(udraw), (*C.float)(unsafe.Pointer(tdata))))
+		return asWindow(nox_gui_newSlider_4B4EE0(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h), (*C.uint)(udraw), (*C.float)(unsafe.Pointer(tdata))))
 	case "HORZSLIDER":
 		tdata, _ := data.(*sliderData)
 		draw.style |= C.int(gui.StyleHorizSlider)
-		return asWindow(C.nox_gui_newSlider_4B4EE0(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h), (*C.uint)(udraw), (*C.float)(unsafe.Pointer(tdata))))
+		return asWindow(nox_gui_newSlider_4B4EE0(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h), (*C.uint)(udraw), (*C.float)(unsafe.Pointer(tdata))))
 	case "SCROLLLISTBOX":
 		tdata, _ := data.(*scrollListBoxData)
 		draw.style |= C.int(gui.StyleScrollListBox)
@@ -99,7 +99,7 @@ func guiNewWidget(typ string, parent *Window, status gui.StatusFlags, px, py, w,
 		return newStaticText(parent, status, px, py, w, h, draw, tdata)
 	case "PROGRESSBAR":
 		draw.style |= C.int(gui.StyleProgressBar)
-		return asWindow(C.nox_gui_newProgressBar_4CAF10(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h), (*C.uint)(udraw)))
+		return asWindow(nox_gui_newProgressBar_4CAF10(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h), (*C.uint)(udraw)))
 	}
 	return nil
 }
@@ -372,7 +372,7 @@ func NewHorizontalSlider(par *Window, id uint, px, py, w, h int, min, max int) *
 	data.field_3 = 0
 
 	iparent := unsafePtrToInt(unsafe.Pointer(par.C()))
-	win := asWindow(C.nox_gui_newSlider_4B4EE0(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h),
+	win := asWindow(nox_gui_newSlider_4B4EE0(iparent, C.int(status), C.int(px), C.int(py), C.int(w), C.int(h),
 		(*C.uint)(unsafe.Pointer(draw)), (*C.float)(unsafe.Pointer(data))))
 	win.SetID(id)
 	if par != nil {
@@ -442,7 +442,7 @@ func newButtonOrCheckbox(parent *Window, status gui.StatusFlags, px, py, w, h in
 		if btn == nil {
 			return nil
 		}
-		C.nox_xxx_wndButtonInit_4A8340(unsafePtrToInt(unsafe.Pointer(btn.C())))
+		nox_xxx_wndButtonInit_4A8340(unsafePtrToInt(unsafe.Pointer(btn.C())))
 		if draw.win == nil {
 			draw.win = btn.C()
 		}
@@ -453,7 +453,7 @@ func newButtonOrCheckbox(parent *Window, status gui.StatusFlags, px, py, w, h in
 		if btn == nil {
 			return nil
 		}
-		C.nox_xxx_wndCheckBoxInit_4A8E60(unsafePtrToInt(unsafe.Pointer(btn.C())))
+		nox_xxx_wndCheckBoxInit_4A8E60(unsafePtrToInt(unsafe.Pointer(btn.C())))
 		if draw.win == nil {
 			draw.win = btn.C()
 		}
@@ -471,7 +471,7 @@ func newRadioButton(parent *Window, status gui.StatusFlags, px, py, w, h int, dr
 	if win == nil {
 		return nil
 	}
-	C.nox_xxx_wndRadioButtonSetAllFn_4A87E0(unsafePtrToInt(unsafe.Pointer(win.C())))
+	nox_xxx_wndRadioButtonSetAllFn_4A87E0(unsafePtrToInt(unsafe.Pointer(win.C())))
 	if draw.win == nil {
 		draw.win = win.C()
 	}

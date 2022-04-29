@@ -295,9 +295,9 @@ func RunArgs(args []string) (gerr error) {
 	})
 	noxflags.OnGameSet(func(f noxflags.GameFlag) {
 		log.Printf("game flag set: %v", f)
-		C.nox_xxx_guiChatShowHide_445730(C.int(bool2int(noxflags.GetGame().Mode() != noxflags.GameModeChat)))
+		nox_xxx_guiChatShowHide_445730(C.int(bool2int(noxflags.GetGame().Mode() != noxflags.GameModeChat)))
 		if f.Has(noxflags.GameSuddenDeath) && noxflags.HasGame(noxflags.GameHost) {
-			C.nox_xxx_netPrintLineToAll_4DA390(CString("Settings.c:SuddenDeathStart"))
+			nox_xxx_netPrintLineToAll_4DA390(CString("Settings.c:SuddenDeathStart"))
 		}
 	})
 	noxflags.OnGameUnset(func(f noxflags.GameFlag) {
@@ -331,13 +331,13 @@ func RunArgs(args []string) (gerr error) {
 		noxflags.SetEngine(noxflags.EngineSleep)
 	}
 	if v := *fDrop; v != 0 {
-		C.nox_net_setPacketDrop_552010(C.int(v))
+		nox_net_setPacketDrop_552010(C.int(v))
 	}
 	if *fNoText {
 		noxflags.SetEngine(noxflags.EngineNoTextRendering)
 	}
 	if *fNoLog {
-		C.nox_xxx_log_4_close_413C00()
+		nox_xxx_log_4_close_413C00()
 	}
 	if *fLock {
 		noxflags.SetEngine(noxflags.EngineLockResolution)
@@ -378,7 +378,7 @@ func RunArgs(args []string) (gerr error) {
 		noxServer.setServerPort(v)
 	}
 	if v := *fClientPort; v > 0 {
-		C.nox_xxx_setClientNetPort_40A410(C.int(v))
+		nox_xxx_setClientNetPort_40A410(C.int(v))
 	}
 	if *fNoSoft {
 		noxflags.SetEngine(noxflags.EngineNoSoftLights)
@@ -394,7 +394,7 @@ func RunArgs(args []string) (gerr error) {
 	}
 	// C.nox_common_readSKU_fromRegistry_4D78C0()
 	// C.fesetround(C.FE_TOWARDZERO)
-	C.nox_xxx_servSetPlrLimit_409F80(32)
+	nox_xxx_servSetPlrLimit_409F80(32)
 
 	// manual spell cast timeout (in seconds)
 	msmul := viper.GetFloat64(configManualSpellCastDelay)
@@ -402,13 +402,13 @@ func RunArgs(args []string) (gerr error) {
 	*memmap.PtrUint32(0x852978, 16) = uint32(float64(gameFPS()) * msmul)
 
 	nox_binfile_reset_4093A0()
-	C.nox_ensure_thing_bin()
+	nox_ensure_thing_bin()
 	if err := nox_common_scanAllMaps_4D07F0(); err != nil {
 		return fmt.Errorf("cannot find maps: %w", err)
 	}
 	keyBinding = keybind.New(strMan)
-	C.nox_init_sound_index_40AED0()
-	C.nox_xxx_mapSetDataDefault_416500()
+	nox_init_sound_index_40AED0()
+	nox_xxx_mapSetDataDefault_416500()
 	if err := nox_common_readcfgfile("nox.cfg", false); err != nil {
 		return fmt.Errorf("failed to load config file: %w", err)
 	}
@@ -425,10 +425,10 @@ func RunArgs(args []string) (gerr error) {
 	}
 	inputClearKeyTimeouts()
 	noxCommonInitRandom()
-	C.nox_xxx_loadLook_415D50()
-	C.nox_xxx_loadModifyers_4158C0()
+	nox_xxx_loadLook_415D50()
+	nox_xxx_loadModifyers_4158C0()
 	initConsole(strMan)
-	C.sub_4D11A0()
+	sub_4D11A0()
 	if !isDedicatedServer {
 		videoResizeView(image.Point{})
 		if err := gameResetVideoMode(true, true); err != nil {
@@ -443,10 +443,10 @@ func RunArgs(args []string) (gerr error) {
 	if err := nox_video_read_videobag(); err != nil {
 		return err
 	}
-	if C.sub_431370() == 0 {
+	if sub_431370() == 0 {
 		return fmt.Errorf("sub_431370 failed")
 	}
-	if C.nox_audio_initall(C.nox_enable_audio) == 0 && C.nox_enable_audio != 0 {
+	if nox_audio_initall(C.nox_enable_audio) == 0 && C.nox_enable_audio != 0 {
 		return fmt.Errorf("failed to init audio")
 	}
 	if err := nox_xxx_loadAllBinFiles_415470(); err != nil {
@@ -456,23 +456,23 @@ func RunArgs(args []string) (gerr error) {
 	if err := nox_xxx_initInput_430190(); err != nil {
 		return fmt.Errorf("failed to init input: %w", err)
 	}
-	if C.nox_xxx_mapAlloc_4101D0() == 0 {
+	if nox_xxx_mapAlloc_4101D0() == 0 {
 		return fmt.Errorf("failed to init map")
 	}
-	if C.nox_xxx_tileAlloc_410F60_init() == 0 {
+	if nox_xxx_tileAlloc_410F60_init() == 0 {
 		return fmt.Errorf("failed to init tiles")
 	}
-	C.nox_xxx_initSinCosTables_414C90()
-	C.nox_xxx_loadMapCycle_4D0A30()
-	C.nox_xxx_mapSelectFirst_4D0E00()
-	C.nox_netlist_init_40EA10()
-	C.sub_40B890(32)
-	C.sub_40B170(32)
-	C.sub_4134D0()
+	nox_xxx_initSinCosTables_414C90()
+	nox_xxx_loadMapCycle_4D0A30()
+	nox_xxx_mapSelectFirst_4D0E00()
+	nox_netlist_init_40EA10()
+	sub_40B890(32)
+	sub_40B170(32)
+	sub_4134D0()
 	if v := strMan.Lang(); v == 6 || v == 8 {
 		noxrend.SetBold(false)
 	}
-	C.sub_413920()
+	sub_413920()
 	nox_client_initScreenParticles_431390()
 	mainloopNoSkip = *fNoSkip
 	if host := *fRcon; host != "" {
@@ -545,7 +545,7 @@ func sub_4AA9C0() C.int {
 	if !env.IsE2E() {
 		videoUpdateGameMode(guiOptionsRes)
 	}
-	C.nox_common_writecfgfile(internCStr("nox.cfg"))
+	nox_common_writecfgfile(internCStr("nox.cfg"))
 	C.nox_wnd_xxx_1309740.state = C.nox_gui_anim_state(NOX_GUI_ANIM_OUT)
 	sub_43BE40(2)
 	clientPlaySoundSpecial(923, 100)
@@ -555,33 +555,33 @@ func sub_4AA9C0() C.int {
 func cleanup() {
 	log.Println("cleanup")
 	if noxflags.HasGame(noxflags.GameFlag26) {
-		C.nox_xxx_networkLog_close_413D00()
+		nox_xxx_networkLog_close_413D00()
 	}
-	C.nox_common_writecfgfile(internCStr("nox.cfg"))
+	nox_common_writecfgfile(internCStr("nox.cfg"))
 	nox_xxx_freeScreenParticles_4314D0()
-	C.sub_413960()
-	C.sub_431380()
-	C.nox_xxx_freeWeaponArmorDefAndModifs_413060()
+	sub_413960()
+	sub_431380()
+	nox_xxx_freeWeaponArmorDefAndModifs_413060()
 	sub_4311B0()
-	C.nox_xxx_freeFloorBuffer_430EF0()
+	nox_xxx_freeFloorBuffer_430EF0()
 	nox_xxx_freeKeyboard_430210()
-	C.nox_xxx_tileFree_410FC0_free()
-	C.sub_4106C0()
+	nox_xxx_tileFree_410FC0_free()
+	sub_4106C0()
 	nox_video_bagFree_42F4D0()
-	C.sub_42EDC0()
+	sub_42EDC0()
 	ctrlEvent.Reset()
 	nox_strman_free_410020()
-	C.nox_netlist_free_40EA70()
-	C.sub_40D0F0()
-	C.sub_40E070()
-	C.sub_4D11D0()
-	C.sub_4D0DA0()
-	C.sub_40C0D0()
-	C.sub_40B740()
-	C.nox_common_maplist_free_4D0970()
+	nox_netlist_free_40EA70()
+	sub_40D0F0()
+	sub_40E070()
+	sub_4D11D0()
+	sub_4D0DA0()
+	sub_40C0D0()
+	sub_40B740()
+	nox_common_maplist_free_4D0970()
 	nox_binfile_disable_409560()
-	C.sub_40AF30()
-	C.nox_free_thing_bin()
+	sub_40AF30()
+	nox_free_thing_bin()
 	ail.Shutdown()
 }
 
@@ -589,24 +589,24 @@ func sub_4311B0() {
 	sub_43DCC0()
 	sub_4312B0()
 	sub_43D970()
-	C.sub_44D8C0()
-	C.sub_451970()
+	sub_44D8C0()
+	sub_451970()
 	if C.dword_5d4594_805980 != 0 {
-		C.sub_4869C0(unsafe.Pointer(uintptr(C.dword_5d4594_805980)))
+		sub_4869C0(unsafe.Pointer(uintptr(C.dword_5d4594_805980)))
 	}
 	C.dword_587000_81128 = nil
-	C.sub_431270()
+	sub_431270()
 	if C.dword_5d4594_1193336 != 0 {
-		C.sub_4875F0()
-		C.sub_4870A0()
+		sub_4875F0()
+		sub_4870A0()
 		C.dword_5d4594_1193336 = 0
 	}
 }
 
 func sub_4312B0() {
-	C.sub_431290()
+	sub_431290()
 	sub_44D8F0()
-	C.sub_43D990()
+	sub_43D990()
 }
 
 func sub_43D970() {
@@ -623,7 +623,7 @@ func sub_43DCC0() {
 	if C.dword_5d4594_816340 == 0 {
 		return
 	}
-	C.sub_43D990()
+	sub_43D990()
 	for C.dword_5d4594_816348 != 0 {
 		if C.dword_5d4594_816348 == 3 {
 			sub_43D650()
@@ -643,8 +643,8 @@ func sub_4312C0() {
 	v1 := platformTicks()
 	v3 := int64(v1) - int64(memmap.Uint64(0x5D4594, 805996))
 	if v3 > 33 {
-		C.sub_44D3A0()
-		C.sub_43D440()
+		sub_44D3A0()
+		sub_43D440()
 		*memmap.PtrUint64(0x5D4594, 805996) = v1
 	}
 	C.dword_5d4594_805988 = 0

@@ -24,11 +24,11 @@ func noxConfigRead(path string, skip bool) error {
 	defer cfile.Close()
 
 	if !skip {
-		if C.nox_common_parsecfg_all(file) == 0 {
+		if nox_common_parsecfg_all(file) == 0 {
 			return errors.New("config parsing failed")
 		}
 	}
-	if C.nox_common_skipcfgfile_4331E0(file, C.int(bool2int(skip))) == 0 {
+	if nox_common_skipcfgfile_4331E0(file, C.int(bool2int(skip))) == 0 {
 		return errors.New("config parsing failed")
 	}
 	return nil
@@ -49,6 +49,6 @@ func nox_common_readcfgfile(path string, skip bool) error {
 	} else if err != nil {
 		return err
 	}
-	C.nox_common_writecfgfile(internCStr("nox.cfg"))
+	nox_common_writecfgfile(internCStr("nox.cfg"))
 	return nil
 }

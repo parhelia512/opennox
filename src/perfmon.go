@@ -63,9 +63,9 @@ func (m *Perfmon) Draw(r *NoxRender) {
 		m.prevTicks = ticks
 	}
 
-	C.sub_436AA0(C.int(m.fps))
-	C.nox_xxx_drawTimingMB_436C40()
-	C.nox_xxx_drawPing_436DF0(C.int(C.nox_perfmon_ping_2614264))
+	sub_436AA0(C.int(m.fps))
+	nox_xxx_drawTimingMB_436C40()
+	nox_xxx_drawPing_436DF0(C.int(C.nox_perfmon_ping_2614264))
 	y += 10
 
 	frame := gameFrame()
@@ -78,10 +78,10 @@ func (m *Perfmon) Draw(r *NoxRender) {
 	format = strMan.GetStringInFile("PacketSize", "client.c")
 	r.Data().SetTextColor(uint32(C.nox_color_white_2523948))
 	r.DrawString(nil, fmt.Sprintf(format, packSz), image.Pt(x, y))
-	C.nox_xxx_drawBandwith_436970(C.int(packSz))
+	nox_xxx_drawBandwith_436970(C.int(packSz))
 	y += 10
 
-	dcnt := C.nox_get_drawable_count()
+	dcnt := nox_get_drawable_count()
 	format = strMan.GetStringInFile("DrawCount", "client.c")
 	r.Data().SetTextColor(uint32(C.nox_color_white_2523948))
 	r.DrawString(nil, fmt.Sprintf(format, dcnt), image.Pt(x, y))
@@ -179,5 +179,5 @@ func noxPerfMonPacketSize() int {
 	if !noxflags.HasGame(noxflags.GameHost) {
 		return int(memmap.Uint32(0x5D4594, 815712))
 	}
-	return int(C.nox_netlist_sizeByInd_40E9F0(31, 1) + C.nox_netlist_sizeByInd2_40F0D0(31))
+	return int(nox_netlist_sizeByInd_40E9F0(31, 1) + nox_netlist_sizeByInd2_40F0D0(31))
 }

@@ -1,0 +1,226 @@
+root: ./src
+out: ./gonox
+package: opennox
+int_size: 4
+ptr_size: 4
+wchar_size: 2
+use_go_int: false
+unexported_fields: true
+define:
+  - name: NOX_CGO
+skip:
+  - nox_common_gameFlags_check_40A5C0
+  - nox_xxx_setGameFlags_40A4D0
+  - nox_common_gameFlags_unset_40A540
+  - sub_413E10
+replace:
+  - old: 'mem_getPtr'
+    new: 'memmap.PtrOff'
+  - old: 'mem_getU32Ptr'
+    new: 'memmap.PtrUint32'
+  - old: 'mem_getI32Ptr'
+    new: 'memmap.PtrInt32'
+  - old: 'mem_getU16Ptr'
+    new: 'memmap.PtrUint16'
+  - old: 'mem_getU8Ptr'
+    new: 'memmap.PtrUint8'
+  - old: 'libc.Free'
+    new: 'CFree'
+  - old: 'libc.Malloc'
+    new: 'CMalloc'
+  - old: 'libc.Calloc'
+    new: 'CCalloc'
+  - old: 'libc.CString'
+    new: 'CString'
+  - old: 'libc.BoolToInt'
+    new: 'bool2int'
+  - old: 'stdio.File'
+    new: 'File'
+file_pref: 'zzz_'
+files:
+#  - name: '*.c'
+  - name: GAME1.c
+    skip:
+      - nox_xxx_checkGameFlagPause_413A50
+  - name: GAME1_1.c
+  - name: GAME1_2.c
+  - name: GAME1_3.c
+  - name: GAME2.c
+  - name: GAME2_1.c
+  - name: GAME2_2.c
+  - name: GAME2_3.c
+  - name: GAME3.c
+  - name: GAME3_1.c
+  - name: GAME3_2.c
+  - name: GAME3_3.c
+  - name: GAME4.c
+  - name: GAME4_1.c
+  - name: GAME4_2.c
+  - name: GAME4_3.c
+  - name: GAME5.c
+  - name: GAME5_2.c
+  - name: GameEx.c
+  - name: MixPatch.c
+  - name: cdrom.c
+  - name: client__audio__auddiag.c
+  - name: client__audio__audevent.c
+  - name: client__draw__animdraw.c
+  - name: client__draw__armordraw.c
+  - name: client__draw__arrowdraw.c
+  - name: client__draw__basedraw.c
+  - name: client__draw__boulderdraw.c
+  - name: client__draw__bubbledraw.c
+  - name: client__draw__canidraw.c
+  - name: client__draw__debugdraw.c
+  - name: client__draw__doordraw.c
+  - name: client__draw__drawrays.c
+  - name: client__draw__flagdraw.c
+  - name: client__draw__fx.c
+  - name: client__draw__glowdraw.c
+  - name: client__draw__glyphdraw.c
+  - name: client__draw__harpoondraw.c
+  - name: client__draw__lightning.c
+  - name: client__draw__lvupdraw.c
+  - name: client__draw__magicdrw.c
+  - name: client__draw__maidendraw.c
+  - name: client__draw__mgendraw.c
+  - name: client__draw__mondraw.c
+  - name: client__draw__npcdraw.c
+  - name: client__draw__parse__parse.c
+  - name: client__draw__partrain.c
+  - name: client__draw__partscrn.c
+  - name: client__draw__plasma.c
+  - name: client__draw__playerdraw.c
+  - name: client__draw__powderdraw.c
+  - name: client__draw__pressureplatedraw.c
+  - name: client__draw__selectdw.c
+  - name: client__draw__slavedraw.c
+  - name: client__draw__souldraw.c
+  - name: client__draw__spiderspitdraw.c
+  - name: client__draw__staticdraw.c
+  - name: client__draw__summondraw.c
+  - name: client__draw__triggerdraw.c
+  - name: client__draw__udeddraw.c
+  - name: client__draw__vectdraw.c
+  - name: client__draw__vortexdraw.c
+  - name: client__draw__weapondraw.c
+  - name: client__drawable__drawable.c
+  - name: client__drawable__drawdb.c
+  - name: client__drawable__update__charmup.c
+  - name: client__drawable__update__cloud.c
+  - name: client__drawable__update__dball.c
+  - name: client__drawable__update__drainup.c
+  - name: client__drawable__update__fireball.c
+  - name: client__drawable__update__healup.c
+  - name: client__drawable__update__manabomb.c
+  - name: client__drawable__update__mmislup.c
+  - name: client__drawable__update__mtailup.c
+  - name: client__drawable__update__sparklup.c
+  - name: client__drawable__update__telwake.c
+  - name: client__drawable__update__vortexup.c
+  - name: client__gui__chathelp.c
+  - name: client__gui__chaticon.c
+  - name: client__gui__conntype.c
+  - name: client__gui__gadgets__listbox.c
+  - name: client__gui__gamewin__gamewin.c
+  - name: client__gui__gamewin__psscript.c
+  - name: client__gui__gui_ctf.c
+  - name: client__gui__guibook.c
+  - name: client__gui__guibrief.c
+  - name: client__gui__guidlg.c
+  - name: client__gui__guifb.c
+  - name: client__gui__guigen.c
+  - name: client__gui__guiggovr.c
+  - name: client__gui__guiinput.c
+  - name: client__gui__guiinv.c
+  - name: client__gui__guijourn.c
+  - name: client__gui__guimeter.c
+  - name: client__gui__guimsg.c
+  - name: client__gui__guiobs.c
+  - name: client__gui__guiquit.c
+  - name: client__gui__guirank.c
+  - name: client__gui__guishop.c
+  - name: client__gui__guispell.c
+  - name: client__gui__guisumn.c
+  - name: client__gui__guitrade.c
+  - name: client__gui__guivote.c
+  - name: client__gui__servopts__access.c
+  - name: client__gui__servopts__advserv.c
+  - name: client__gui__servopts__general.c
+  - name: client__gui__servopts__guiserv.c
+  - name: client__gui__servopts__objlst.c
+  - name: client__gui__servopts__playrlst.c
+  - name: client__gui__servopts__spelllst.c
+  - name: client__gui__tooltip.c
+  - name: client__gui__window.c
+  - name: client__gui__woldisc.c
+  - name: client__io__console.c
+  - name: client__io__win95__dxinput.c
+  - name: client__io__win95__focus.c
+  - name: client__io__win95__jstick.c
+  - name: client__light__light16.c
+  - name: client__network__cdecode.c
+  - name: client__network__deathmsg.c
+  - name: client__network__inform.c
+  - name: client__network__netclint.c
+  - name: client__shell__arnamain.c
+  - name: client__shell__inputcfg__inputcfg.c
+  - name: client__shell__mainmenu.c
+  - name: client__shell__noxworld.c
+  - name: client__shell__options.c
+  - name: client__shell__selclass.c
+  - name: client__shell__selcolor.c
+  - name: client__shell__wolapi__locale.c
+  - name: client__shell__wolapi__wolchat.c
+  - name: client__shell__wolapi__woldlgs.c
+  - name: client__shell__wolapi__wollogin.c
+  - name: client__shell__wolapi__wolprog.c
+  - name: client__shell__wolapi__wolreg.c
+  - name: client__system__client.c
+  - name: client__system__npcinfo.c
+  - name: client__system__parsecmd.c
+  - name: client__video__draw_common.c
+  - name: common__ability__comablty.c
+  - name: common__config.c
+  - name: common__gamemech__pausefx.c
+  - name: common__log.c
+  - name: common__magic__comguide.c
+  - name: common__net_list.c
+  - name: common__object__armrlook.c
+  - name: common__object__modifier.c
+  - name: common__object__weaplook.c
+  - name: common__system__group.c
+  - name: common__system__settings.c
+  - name: common__system__team.c
+  - name: common__wolapi__wol.c
+  - name: common__wolapi__wolchnl.c
+  - name: common__wolapi__wolpatch.c
+  - name: common__wolapi__wolstate.c
+  - name: common__wolapi__woluser.c
+  - name: common__xfer__savegame__xferplyr.c
+  - name: comw32__comlib.c
+  - name: memfile.c
+  - name: movie.c
+  - name: server__ability__ability.c
+  - name: server__dbase__objdb.c
+  - name: server__gamemech__explevel.c
+  - name: server__magic__plyrgide.c
+  - name: server__magic__plyrspel.c
+  - name: server__magic__spell__execdur.c
+  - name: server__mapgen__generate__populate.c
+  - name: server__network__mapsend.c
+  - name: server__network__sdecode.c
+  - name: server__object__die__die.c
+  - name: server__object__health.c
+  - name: server__object__objutil.c
+  - name: server__object__pickdrop__pickup.c
+  - name: server__script__builtin.c
+  - name: server__script__file.c
+  - name: server__script__panic.c
+  - name: server__script__script.c
+  - name: server__system__cscrfunc.c
+  - name: server__system__server.c
+  - name: server__system__trade.c
+  - name: server__xfer__savegame__savegame.c
+  - name: thing.c
+  - name: vardefs.c

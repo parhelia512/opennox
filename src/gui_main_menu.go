@@ -78,14 +78,14 @@ func sub_4A1AA0(a1 *Window, ev WindowEvent) WindowEventResp {
 							sub_4D6F90(2)
 						}
 						if gameGetStateCode() == gameStateColorSelect {
-							C.sub_4A7A60(1)
+							sub_4A7A60(1)
 						}
 						nox_game_checkStateSwitch_43C1E0()
 					}
 				}
 			} else {
 				if gameGetStateCode() == gameStateColorSelect {
-					C.sub_4A7A60(0)
+					sub_4A7A60(0)
 				}
 				nox_game_checkStateOptions_43C220()
 			}
@@ -149,16 +149,16 @@ func sub_44E320() {
 	C.nox_gameDisableMapDraw_5d4594_2650672 = 0
 	if C.dword_5d4594_831220 == 255 {
 		if C.nox_client_gui_flag_815132 == 1 {
-			C.sub_4505E0()
+			sub_4505E0()
 			sub_4A2500()
-			C.sub_578E00()
+			sub_578E00()
 		}
 	} else if memmap.Uint8(0x5D4594, 832472)&0x5 != 0 {
-		C.nox_client_lockScreenBriefing_450160(254, 1, 2)
+		nox_client_lockScreenBriefing_450160(254, 1, 2)
 		return
 	}
 	v0 := nox_client_getIntroScreenDuration_44E3B0()
-	C.nox_client_screenFadeXxx_44DB30(v0, 1, (*[0]byte)(C.sub_44E3C0))
+	nox_client_screenFadeXxx_44DB30(v0, 1, (*[0]byte)(C.sub_44E3C0))
 }
 
 func sub_4A2500() {
@@ -202,7 +202,7 @@ func sub4A24C0(a1 bool) {
 		v1.Show()
 	}
 	if !a1 {
-		C.sub_43E8C0(1)
+		sub_43E8C0(1)
 	}
 }
 
@@ -246,8 +246,8 @@ func nox_game_showMainMenu4A1C00() bool {
 	}
 	sub4A19F0("OptsBack.wnd:Quit")
 	nox_xxx_unknown_libname_11_4D1650()
-	C.sub_578CD0()
-	C.sub_43D9B0(25, 100)
+	sub_578CD0()
+	sub_43D9B0(25, 100)
 	if noxflags.HasGame(noxflags.GameFlag26) {
 		v3 := win.ChildByID(112)
 		win.Func94(&WindowEvent0x4007{Win: v3})
@@ -307,7 +307,7 @@ func sub4A18E0(a1 *Window, ev WindowEvent) WindowEventResp {
 				NewDialogWindow(asWindowP(C.dword_5d4594_1307292), v5, v6, 56, sub_4A19D0, nil)
 			} else {
 				if gameGetStateCode() == gameStateColorSelect {
-					C.sub_4A7A60(1)
+					sub_4A7A60(1)
 				}
 				nox_game_checkStateSwitch_43C1E0()
 			}
@@ -322,7 +322,7 @@ func sub4A18E0(a1 *Window, ev WindowEvent) WindowEventResp {
 
 func nox_xxx_unknown_libname_11_4D1650() {
 	nox_xxx_gamedataFree_419DB0()
-	C.nox_xxx_monsterListFree_5174F0()
+	nox_xxx_monsterListFree_5174F0()
 }
 
 //export nox_client_drawGeneralCallback_4A2200
@@ -347,27 +347,27 @@ func nox_xxx_windowMainMenuProc_4A1DC0(a1 *Window, ev WindowEvent) WindowEventRe
 				noxflags.SetGame(noxflags.GameModeCoop)
 				noxflags.UnsetGame(noxflags.GameOnline)
 				noxflags.UnsetGame(noxflags.GameNotQuest)
-				C.nox_xxx_gameSetAudioFadeoutMb_501AC0(0)
+				nox_xxx_gameSetAudioFadeoutMb_501AC0(0)
 				noxflags.UnsetEngine(noxflags.EngineAdmin | noxflags.EngineGodMode)
 				sub_4D6F40(0)
 				sub_4D6F90(0)
 				noxServer.nox_xxx_setQuest_4D6F60(0)
-				C.sub_4D6F80(0)
-				C.nox_xxx_cliShowHideTubes_470AA0(0)
-				C.sub_461440(0)
+				sub_4D6F80(0)
+				nox_xxx_cliShowHideTubes_470AA0(0)
+				sub_461440(0)
 				sub_4A1D40()
-				C.nox_xxx_cliSetMinimapZoom_472520(1110)
-				if C.nox_xxx_parseGamedataBinPre_4D1630() == 0 {
+				nox_xxx_cliSetMinimapZoom_472520(1110)
+				if nox_xxx_parseGamedataBinPre_4D1630() == 0 {
 					nox_xxx_setContinueMenuOrHost_43DDD0(0)
 					C.nox_client_gui_flag_815132 = 0
 					return nil
 				}
-				if C.nox_client_countSaveFiles_4DC550() != 0 {
-					C.sub_4A7A70(1)
+				if nox_client_countSaveFiles_4DC550() != 0 {
+					sub_4A7A70(1)
 					_ = nox_game_showSelChar_4A4DB0
 					nox_wnd_xxx_1307308.field_13 = (*[0]byte)(C.nox_game_showSelChar_4A4DB0)
 				} else {
-					C.sub_4A7A70(0)
+					sub_4A7A70(0)
 					nox_wnd_xxx_1307308.field_13 = (*[0]byte)(C.nox_game_showSelClass_4A4840)
 				}
 				clientPlaySoundSpecial(921, 100)
@@ -389,24 +389,24 @@ func nox_xxx_windowMainMenuProc_4A1DC0(a1 *Window, ev WindowEvent) WindowEventRe
 			noxflags.SetGame(noxflags.GameOnline)
 			noxflags.SetGame(noxflags.GameNotQuest)
 			noxflags.UnsetGame(noxflags.GameModeCoop)
-			C.sub_461440(0)
+			sub_461440(0)
 			sub_4D6F40(0)
 			sub_4D6F90(0)
 			noxServer.nox_xxx_setQuest_4D6F60(0)
-			C.sub_4D6F80(0)
+			sub_4D6F80(0)
 			if sub_473670() == 0 {
 				nox_client_toggleMap_473610()
 			}
-			C.nox_xxx_cliShowHideTubes_470AA0(0)
-			C.nox_xxx_cliSetMinimapZoom_472520(2300)
-			if C.nox_xxx_parseGamedataBinPre_4D1630() == 0 {
+			nox_xxx_cliShowHideTubes_470AA0(0)
+			nox_xxx_cliSetMinimapZoom_472520(2300)
+			if nox_xxx_parseGamedataBinPre_4D1630() == 0 {
 				nox_xxx_setContinueMenuOrHost_43DDD0(0)
 				C.nox_client_gui_flag_815132 = 0
 				return nil
 			}
 			// sub_4AA450();
 			nox_wnd_xxx_1307308.field_13 = (*[0]byte)(C.nox_game_showGameSel_4379F0)
-			C.sub_43AF50(0)
+			sub_43AF50(0)
 			clientPlaySoundSpecial(921, 100)
 		case 121:
 			ptr, free := alloc.Malloc(128)
@@ -416,7 +416,7 @@ func nox_xxx_windowMainMenuProc_4A1DC0(a1 *Window, ev WindowEvent) WindowEventRe
 				break
 			}
 			sub_4A1D40()
-			C.sub_4B0300((*C.char)(ptr))
+			sub_4B0300((*C.char)(ptr))
 			sub4B0640(func() {
 				nox_game_state.Switch()
 			})
@@ -425,8 +425,8 @@ func nox_xxx_windowMainMenuProc_4A1DC0(a1 *Window, ev WindowEvent) WindowEventRe
 			clientPlaySoundSpecial(921, 100)
 			return RawEventResp(1)
 		case 122:
-			if C.sub_44E560() != nil {
-				C.nox_client_lockScreenBriefing_450160(255, 1, 0)
+			if sub_44E560() != nil {
+				nox_client_lockScreenBriefing_450160(255, 1, 0)
 				sub_4A2530()
 			}
 			ev.Win.DrawData().field_0 &= 0xFFFFFFFD
@@ -442,20 +442,20 @@ func nox_xxx_windowMainMenuProc_4A1DC0(a1 *Window, ev WindowEvent) WindowEventRe
 			sub_4D6F40(1)
 			sub_4D6F90(1)
 			noxServer.nox_game_setQuestStage_4E3CD0(0)
-			C.sub_4D7440(0)
-			C.nox_xxx_cliSetMinimapZoom_472520(2300)
+			sub_4D7440(0)
+			nox_xxx_cliSetMinimapZoom_472520(2300)
 			if sub_473670() == 0 {
 				nox_client_toggleMap_473610()
 			}
-			C.sub_461440(0)
-			if C.nox_xxx_parseGamedataBinPre_4D1630() == 0 {
+			sub_461440(0)
+			if nox_xxx_parseGamedataBinPre_4D1630() == 0 {
 				nox_xxx_setContinueMenuOrHost_43DDD0(0)
 				C.nox_client_gui_flag_815132 = 0
 				return nil
 			}
 			// sub_4AA450();
 			nox_wnd_xxx_1307308.field_13 = (*[0]byte)(C.nox_game_showGameSel_4379F0)
-			C.sub_43AF50(0)
+			sub_43AF50(0)
 			clientPlaySoundSpecial(921, 100)
 		default:
 			clientPlaySoundSpecial(921, 100)

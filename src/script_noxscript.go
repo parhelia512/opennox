@@ -206,7 +206,7 @@ func (s *Server) nox_script_activatorRun_51ADF0() {
 				s.nox_script_push(it.arg)
 			}
 			it = s.nox_script_activatorDoneNext_51AD90(it)
-			C.nox_script_callByIndex_507310(C.int(callback), unsafe.Pointer(caller.CObj()), unsafe.Pointer(trigger.CObj()))
+			nox_script_callByIndex_507310(C.int(callback), unsafe.Pointer(caller.CObj()), unsafe.Pointer(trigger.CObj()))
 		}
 	}
 }
@@ -263,7 +263,7 @@ func (s *Server) noxscriptOnEvent(event script.EventType) {
 		sc := (*C.nox_script_xxx_t)(unsafe.Add(unsafe.Pointer(C.nox_script_arr_xxx_1599636), unsafe.Sizeof(C.nox_script_xxx_t{})*uintptr(i)))
 		name := GoString(sc.field_0)
 		if strings.HasPrefix(name, string(event)) {
-			C.nox_script_callByIndex_507310(C.int(i), nil, nil)
+			nox_script_callByIndex_507310(C.int(i), nil, nil)
 		}
 	}
 }
@@ -275,38 +275,38 @@ func nox_server_scriptValToObjectPtr_511B60(val C.int) *C.nox_object_t {
 
 func (s *Server) nox_server_scriptValToObjectPtr(val int) *Object {
 	if val == -1 {
-		obj := asObject(C.nox_script_get_caller())
+		obj := asObject(nox_script_get_caller())
 		if obj == nil || obj.Flags().Has(object.FlagDestroyed) {
 			return nil
 		}
 		return obj
 	}
 	if val == -2 {
-		obj := asObject(C.nox_script_get_trigger())
+		obj := asObject(nox_script_get_trigger())
 		if obj == nil || obj.Flags().Has(object.FlagDestroyed) {
 			return nil
 		}
 		return obj
 	}
-	if obj := asObjectC(C.nox_xxx_script_511C50(C.int(val))); obj != nil {
+	if obj := asObjectC(nox_xxx_script_511C50(C.int(val))); obj != nil {
 		return obj
 	}
 
 	for obj := s.firstServerObject(); obj != nil; obj = obj.Next() {
 		if !obj.Flags().Has(object.FlagDestroyed) && obj.ScriptID() == val {
-			C.nox_xxx_scriptPrepareFoundUnit_511D70(obj.CObj())
+			nox_xxx_scriptPrepareFoundUnit_511D70(obj.CObj())
 			return obj
 		}
 		for sub := obj.FirstItem(); sub != nil; sub = sub.NextItem() {
 			if !sub.Flags().Has(object.FlagDestroyed) && sub.ScriptID() == val {
-				C.nox_xxx_scriptPrepareFoundUnit_511D70(sub.CObj())
+				nox_xxx_scriptPrepareFoundUnit_511D70(sub.CObj())
 				return sub
 			}
 		}
 	}
 	for obj := s.firstServerObjectUninited(); obj != nil; obj = obj.Next() {
 		if !obj.Flags().Has(object.FlagDestroyed) && obj.ScriptID() == val {
-			C.nox_xxx_scriptPrepareFoundUnit_511D70(obj.CObj())
+			nox_xxx_scriptPrepareFoundUnit_511D70(obj.CObj())
 			return obj
 		}
 	}

@@ -18,9 +18,9 @@ require (
 	github.com/youpy/go-wav v0.3.2
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
 	golang.org/x/image v0.0.0-20220321031419-a8550c1d254a
-	golang.org/x/mod v0.5.1
+	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8
+	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -56,6 +56,8 @@ require (
 	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9 // indirect
 	github.com/zaf/g711 v0.0.0-20190814101024-76a4a538f52b // indirect
 	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/tools v0.1.10 // indirect
+	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/irc.v3 v3.1.4 // indirect

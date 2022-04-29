@@ -79,34 +79,6 @@ var (
 	noxMapSectByName = make(map[string]*mapSection)
 )
 
-func nox_server_mapRWMapInfo_42A6E0(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWMapInfo_42A6E0, a1)
-}
-func nox_server_mapRWWallMap_429B20(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWWallMap_429B20, a1)
-}
-func nox_server_mapRWFloorMap_422230(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWFloorMap_422230, a1)
-}
-func nox_server_mapRWSecretWalls_4297C0(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWSecretWalls_4297C0, a1)
-}
-func nox_server_mapRWDestructableWalls_429530(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWDestructableWalls_429530, a1)
-}
-func nox_server_mapRWWaypoints_506260(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWWaypoints_506260, a1)
-}
-func nox_server_mapRWDebugData_5060D0(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWDebugData_5060D0, a1)
-}
-func nox_server_mapRWWindowWalls_4292C0(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWWindowWalls_4292C0, a1)
-}
-func nox_server_mapRWGroupData_505C30(a1 unsafe.Pointer) int {
-	return cgoCallIntVoidPtrFunc(C.nox_server_mapRWGroupData_505C30, a1)
-}
-
 func nox_server_mapRWScriptObject_505A40(a1 unsafe.Pointer) (gout int) {
 	defer func() {
 		log.Printf("nox_server_mapRWScriptObject_505A40: 0x%x (%s)", gout, caller(1))
@@ -167,7 +139,7 @@ func nox_server_mapRWScriptObject_505A40(a1 unsafe.Pointer) (gout int) {
 	if sz <= 0 || noxflags.HasGame(noxflags.GameFlag22|noxflags.GameFlag23) {
 		return 1
 	}
-	return int(C.nox_script_ncobj_parse_505360())
+	return int(nox_script_ncobj_parse_505360())
 }
 
 func nox_server_mapRWAmbientData_429200(a1 unsafe.Pointer) int {
@@ -263,16 +235,16 @@ func (s *Server) nox_xxx_serverParseEntireMap_4CFCE0() error {
 			if obj == nil || obj.callXfer(nil) == 0 {
 				return fmt.Errorf("cannot decode map object: %q", sect)
 			}
-			C.nox_xxx_servMapLoadPlaceObj_4F3F50(obj.CObj(), 0, nil)
+			nox_xxx_servMapLoadPlaceObj_4F3F50(obj.CObj(), 0, nil)
 		}
 	}
-	if C.sub_579CA0() == 0 {
+	if sub_579CA0() == 0 {
 		return errors.New("sub_579CA0 failed")
 	}
-	C.sub_4DAF10()
+	sub_4DAF10()
 	if noxflags.HasGame(noxflags.GameHost) {
-		C.nox_xxx_waypoint_5799C0()
-		C.nox_xxx_unitsNewAddToList_4DAC00()
+		nox_xxx_waypoint_5799C0()
+		nox_xxx_unitsNewAddToList_4DAC00()
 	}
 	return nil
 }
@@ -392,7 +364,7 @@ func nox_xxx_mapCliReadAll_4AC2B0(path string) error {
 		} else if err != nil {
 			return err
 		}
-		if C.nox_xxx_mapNxzDecompress_57BC50(internCStr(v15), internCStr(fpath)) == 0 {
+		if nox_xxx_mapNxzDecompress_57BC50(internCStr(v15), internCStr(fpath)) == 0 {
 			return errors.New("cannot decompress map")
 		}
 	} else if err != nil {
@@ -401,24 +373,24 @@ func nox_xxx_mapCliReadAll_4AC2B0(path string) error {
 	if err := nox_xxx_mapCliReadAllA(fpath); err != nil {
 		return err
 	}
-	C.nox_xxx_prepareLightningEffects_4BAB30()
-	C.sub_4B64C0()
-	C.nox_xxx_bookSetColor_45AC40()
-	C.nox_xxx_colorInit_4C4FD0()
+	nox_xxx_prepareLightningEffects_4BAB30()
+	sub_4B64C0()
+	nox_xxx_bookSetColor_45AC40()
+	nox_xxx_colorInit_4C4FD0()
 	guiCon.ReloadColors()
-	C.sub_445FF0()
-	C.sub_470680()
-	C.sub_461520()
-	C.nox_xxx_tile_486060()
+	sub_445FF0()
+	sub_470680()
+	sub_461520()
+	nox_xxx_tile_486060()
 	v2 := noxServer.getPlayerByID(int(C.nox_player_netCode_85319C))
 	sub_422140(v2)
-	C.nox_xxx_gameSetNoMPFlag_4DB230(0)
+	nox_xxx_gameSetNoMPFlag_4DB230(0)
 	if *memmap.PtrInt32(0x973F18, 3800) < 0 {
-		if C.sub_461450() == 1 {
-			C.sub_461400()
-			C.sub_461440(0)
+		if sub_461450() == 1 {
+			sub_461400()
+			sub_461440(0)
 		}
-		C.nox_xxx_cliShowHideTubes_470AA0(0)
+		nox_xxx_cliShowHideTubes_470AA0(0)
 	}
 	return nil
 }
@@ -430,7 +402,7 @@ func nox_server_mapRWObjectData_504CF0_Read(a2 unsafe.Pointer, v16 unsafe.Pointe
 	}
 	for {
 		_, _ = cryptFileReadAlignedU32()
-		typInd := int(C.nox_xxx_objectTOCgetTT_42C2B0(C.short(v12)))
+		typInd := int(nox_xxx_objectTOCgetTT_42C2B0(C.short(v12)))
 		obj := noxServer.newObjectByTypeInd(typInd)
 		if obj == nil {
 			break
@@ -454,8 +426,8 @@ func nox_server_mapRWObjectData_504CF0_Read(a2 unsafe.Pointer, v16 unsafe.Pointe
 		if a2 != nil {
 			v16a2 = v16
 		}
-		if C.nox_xxx_servMapLoadPlaceObj_4F3F50(obj.CObj(), 0, v16a2) == 1 && v11 {
-			C.nox_xxx_unitSetDecayTime_511660(obj.CObj(), C.int(v7))
+		if nox_xxx_servMapLoadPlaceObj_4F3F50(obj.CObj(), 0, v16a2) == 1 && v11 {
+			nox_xxx_unitSetDecayTime_511660(obj.CObj(), C.int(v7))
 		}
 		v12, _ = cryptFileReadU16()
 		if v12 == 0 {
@@ -470,7 +442,7 @@ func nox_server_mapRWObjectData_504CF0_Write(a2 unsafe.Pointer) int {
 	for it := noxServer.firstServerObject(); it != nil; it = it.Next() {
 		pos := it.Pos()
 		if a2 == nil || sub_4280E0(image.Point{X: int(pos.X), Y: int(pos.Y)}, a2) {
-			if C.sub_4E3B80(C.int(it.objTypeInd())) != 0 && nox_xxx_xfer_saveObj51DF90(it) == 0 {
+			if sub_4E3B80(C.int(it.objTypeInd())) != 0 && nox_xxx_xfer_saveObj51DF90(it) == 0 {
 				return 0
 			}
 		}
@@ -487,11 +459,11 @@ func nox_server_mapRWObjectData_504CF0_Write(a2 unsafe.Pointer) int {
 			v6 := obj.FirstItem()
 			v6.setPos(pos)
 			nox_xxx_xfer_saveObj51DF90(v6)
-		} else if C.sub_4E3B80(C.int(obj.objTypeInd())) != 0 && nox_xxx_xfer_saveObj51DF90(obj) == 0 {
+		} else if sub_4E3B80(C.int(obj.objTypeInd())) != 0 && nox_xxx_xfer_saveObj51DF90(obj) == 0 {
 			return 0
 		}
 	}
-	if noxflags.HasGame(noxflags.GameFlag22) || !noxflags.HasGame(noxflags.GameHost) || noxflags.HasGame(noxflags.GameFlag23) || C.sub_51DED0() != 0 {
+	if noxflags.HasGame(noxflags.GameFlag22) || !noxflags.HasGame(noxflags.GameHost) || noxflags.HasGame(noxflags.GameFlag23) || sub_51DED0() != 0 {
 		cryptFileWriteU16(0)
 		return 1
 	}
@@ -530,7 +502,7 @@ func nox_server_mapRWObjectData_504CF0(a2 unsafe.Pointer) int {
 	v16p, free := alloc.Malloc(16)
 	defer free()
 	if a2 != nil {
-		C.sub_428170(a2, (*C.int4)(v16p))
+		sub_428170(a2, (*C.int4)(v16p))
 	}
 	if nox_xxx_cryptGetXxx() != 0 {
 		return nox_server_mapRWObjectData_504CF0_Read(a2, v16p)

@@ -220,7 +220,7 @@ func nox_xxx_updatePlayer_4F8100(up *nox_object_t) {
 		u.vel_y = 0
 	}
 	if noxflags.HasGame(noxflags.GameModeQuest) && ud.field_137 != 0 && ud.player.playerInd != 31 && (gameFrame()-uint32(ud.field_137) > (30 * gameFPS())) {
-		C.sub_4DCFB0(u.CObj())
+		sub_4DCFB0(u.CObj())
 		return
 	}
 	v2 := 0
@@ -291,17 +291,17 @@ func nox_xxx_updatePlayer_4F8100(up *nox_object_t) {
 		ud.field_54 = 0
 	}
 	nox_xxx_playerInventory_4F8420(u)
-	C.nox_xxx_unitUpdatePlayerImpl_4F8460(u.CObj())
+	nox_xxx_unitUpdatePlayerImpl_4F8460(u.CObj())
 	if u.testBuff(8) && ud.field_22_0 != 1 {
-		C.nox_xxx_playerSetState_4FA020(u.CObj(), 5)
+		nox_xxx_playerSetState_4FA020(u.CObj(), 5)
 	}
-	C.nox_xxx_questCheckSecretArea_421C70(u.CObj())
+	nox_xxx_questCheckSecretArea_421C70(u.CObj())
 	if harp := asObjectC(ud.harpoon); harp != nil {
 		if harp.Flags().Has(object.FlagDestroyed) {
 			nox_xxx_harpoonBreakForPlr_537520(u)
 		} else {
 			force := gamedataFloat("HarpoonForce")
-			C.sub_4E7540(u.CObj(), harp.CObj())
+			sub_4E7540(u.CObj(), harp.CObj())
 			harp.applyForce(u.Pos(), -force)
 		}
 	}
@@ -315,7 +315,7 @@ func nox_xxx_objectApplyForce_52DF80(vec *C.float, obj *C.nox_object_t, force C.
 func nox_xxx_playerInventory_4F8420(u *Unit) {
 	for it := u.FirstItem(); it != nil; it = it.NextItem() {
 		if it.Flags().Has(object.FlagEquipped) {
-			if !C.nox_xxx_playerCheckStrength_4F3180(u.CObj(), it.CObj()) {
+			if !nox_xxx_playerCheckStrength_4F3180(u.CObj(), it.CObj()) {
 				u.forceDrop(it)
 			}
 		}
@@ -334,12 +334,12 @@ func (obj *Object) applyForce(vec types.Pointf, force float64) { // nox_xxx_obje
 	obj.force_x += C.float(float64(dp.X) * float64(f) / float64(r))
 	obj.force_y += C.float(float64(dp.Y) * float64(f) / float64(r))
 	if !obj.Class().Has(object.ClassMissile) {
-		C.nox_xxx_unitHasCollideOrUpdateFn_537610(obj.CObj())
+		nox_xxx_unitHasCollideOrUpdateFn_537610(obj.CObj())
 	}
 }
 
 func nox_xxx_harpoonBreakForPlr_537520(u *Unit) {
-	C.sub_5374D0(u.CObj())
+	sub_5374D0(u.CObj())
 	nox_xxx_aud_501960(998, u, 0, 0)
 }
 
@@ -351,7 +351,7 @@ func playerSuddedDeath4F9E70(u *Unit) {
 	v1 := memmap.Uint32(0x5D4594, 1392)
 	v3 := unsafe.Slice((*uint16)(u.ptrXxx()), 3)
 	if !u.Flags().Has(object.FlagDead) && v3 != nil && v3[0] != 0 && (gameFrame()%(v1*gameFPS()/uint32(v3[2]))) == 0 {
-		C.nox_xxx_unitDamageClear_4EE5E0(u.CObj(), 1)
+		nox_xxx_unitDamageClear_4EE5E0(u.CObj(), 1)
 	}
 }
 
@@ -364,11 +364,11 @@ func sub_4F9ED0(u *Unit) {
 	if v3 != nil && (gameFrame()-uint32(u.field_134)) > gameFPS() {
 		v5 := v3[2]
 		if v3[0] < v5 && v5 != 0 && (gameFrame()%(300*gameFPS()/uint32(v3[2]))) == 0 {
-			C.nox_xxx_unitAdjustHP_4EE460(u.CObj(), 1)
+			nox_xxx_unitAdjustHP_4EE460(u.CObj(), 1)
 		}
 	}
 	if ud.mana_cur < ud.mana_max && (gameFrame()%(300*gameFPS()/uint32(ud.mana_max))) == 0 {
-		C.nox_xxx_playerManaAdd_4EEB80(u.CObj(), 1)
+		nox_xxx_playerManaAdd_4EEB80(u.CObj(), 1)
 	}
 }
 
@@ -439,7 +439,7 @@ func nox_xxx_updatePixie_53CD20(cobj *nox_object_t) {
 		nox_xxx_pixieIdleAnimate_53CF90(u, targ.Pos().Sub(u.Pos()), 32)
 	} else {
 		_ = nox_xxx_maybeAnimatePixie_53D010
-		C.sub_518170(unsafe.Pointer(&u.x), 200.0, C.nox_xxx_maybeAnimatePixie_53D010, u.CObj())
+		sub_518170(unsafe.Pointer(&u.x), 200.0, C.nox_xxx_maybeAnimatePixie_53D010, u.CObj())
 		if owner != nil {
 			if _, trok := nox_xxx_mapTraceRay_535250_00(u.Pos(), owner.Pos(), 9); trok {
 				nox_xxx_pixieIdleAnimate_53CF90(u, owner.Pos().Sub(u.Pos()), 25)
@@ -457,7 +457,7 @@ func nox_xxx_updatePixie_53CD20(cobj *nox_object_t) {
 		Y: memmap.Float32(0x587000, 194140+8*uintptr(u.Dir())) * u.curSpeed(),
 	})
 	if (gameFrame()&8 == 0) && owner != nil {
-		if C.nox_xxx_mapCheck_537110(u.CObj(), owner.CObj()) == 1 {
+		if nox_xxx_mapCheck_537110(u.CObj(), owner.CObj()) == 1 {
 			ud[6] = gameFrame()
 		}
 		if gameFrame()-ud[6] > memmap.Uint32(0x5D4594, 2488696) {

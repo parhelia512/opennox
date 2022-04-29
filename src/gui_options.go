@@ -191,7 +191,7 @@ func sub_4AAA10() C.int {
 	v0 := *v0p // copy before deletion
 	v0p.Free()
 	asWindowP(C.dword_5d4594_1309720).Destroy()
-	C.sub_4A1A40(1)
+	sub_4A1A40(1)
 	v0.Func13()
 	return 1
 }
@@ -212,11 +212,11 @@ func sub_4C3A90(a1, a2 C.int, a3 *C.int, a4 C.int) C.int {
 		nox_common_readcfgfile("nox.cfg", true)
 		sub_4C3B70()
 	case 932:
-		C.sub_4C35B0(0)
+		sub_4C35B0(0)
 	case 933:
 		sub_4C3CB0()
 	case 971, 972, 973:
-		C.sub_430AA0(C.int(win.ID() - 971))
+		sub_430AA0(C.int(win.ID() - 971))
 	}
 	return 0
 }
@@ -237,11 +237,11 @@ func sub_4CBE70(a1, a2 C.int, a3 *C.int, a4 C.int) C.int {
 		nox_common_readcfgfile("nox.cfg", true)
 		sub_4CBBF0()
 	case 932:
-		C.sub_4CBD30()
+		sub_4CBD30()
 	case 933:
 		sub_4CBF40()
 	case 971, 972, 973:
-		C.sub_430AA0(C.int(win.ID() - 971))
+		sub_430AA0(C.int(win.ID() - 971))
 	}
 	return 0
 }

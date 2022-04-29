@@ -125,7 +125,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0(mpos image.Point, a4 *Ct
 	c.nox_xxx_clientControl_42D6B0_A(a4)
 	c.nox_xxx_clientControl_42D6B0_orientation(mpos)
 	if memmap.Uint8(0x85B3FC, 12254) != 0 {
-		C.nox_xxx_guiSpellTargetClickCheckSend_45DBB0()
+		nox_xxx_guiSpellTargetClickCheckSend_45DBB0()
 	}
 	if memmap.Uint8(0x5D4594, 754064)&4 != 0 {
 		c.nox_ctrlevent_action_42E670(player.CCSpellPatternEnd, nil)
@@ -141,7 +141,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_orientation(mpos image.P
 		x := mpos.X
 		y := mpos.Y
 		if v15 := nox_xxx_spriteGetMB_476F80(); v15 != nil {
-			y = int(C.sub_4739D0(C.int(v15.Pos().Y)))
+			y = int(sub_4739D0(C.int(v15.Pos().Y)))
 		}
 		wsz := videoGetWindowSize()
 		cx := x - wsz.X/2
@@ -178,15 +178,15 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_A(a4 *CtrlEventBinding) 
 				switch nox_client_getCursorType() {
 				case gui.CursorShop:
 					v10 := nox_xxx_clientGetSpriteAtCursor_476F90()
-					C.nox_xxx_clientTrade_42E850(v10.C())
+					nox_xxx_clientTrade_42E850(v10.C())
 				case gui.CursorTalk:
 					v11 := nox_xxx_clientGetSpriteAtCursor_476F90()
 					if v11.Flags70()&0x10 != 0 {
-						C.nox_xxx_clientTalk_42E7B0(v11.C())
+						nox_xxx_clientTalk_42E7B0(v11.C())
 					}
 				case gui.CursorUse:
 					v12 := nox_xxx_clientGetSpriteAtCursor_476F90()
-					C.nox_xxx_clientCollideOrUse_42E810(v12.C())
+					nox_xxx_clientCollideOrUse_42E810(v12.C())
 				default:
 					c.nox_ctrlevent_action_42E670(player.CCAction, nil) // regular attack?
 				}
@@ -245,7 +245,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_A(a4 *CtrlEventBinding) 
 				c.nox_ctrlevent_action_42E670(player.CCReadMap, nil)
 			case keybind.EventCastQueued:
 				if !nox_xxx_guiSpellTest_45D9C0() {
-					v13 := C.nox_xxx_packetGetMarshall_476F40()
+					v13 := nox_xxx_packetGetMarshall_476F40()
 					var b [4]byte
 					binary.LittleEndian.PutUint32(b[:], uint32(v13))
 					c.nox_ctrlevent_action_42E780(player.CCCastQueuedSpell, &b)
@@ -288,7 +288,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_A(a4 *CtrlEventBinding) 
 				}
 			case keybind.EventCastRecent:
 				if !nox_xxx_guiSpellTest_45D9C0() {
-					v14 := C.nox_xxx_packetGetMarshall_476F40()
+					v14 := nox_xxx_packetGetMarshall_476F40()
 					var b [4]byte
 					binary.LittleEndian.PutUint32(b[:], uint32(v14))
 					c.nox_ctrlevent_action_42E780(player.CCCastMostRecentSpell, &b)
@@ -304,7 +304,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_A(a4 *CtrlEventBinding) 
 			case keybind.EventInvokeSlot5:
 				c.nox_ctrlevent_action_42E780(player.CCCastSpell5, nil)
 			case keybind.EventSpellSet1, keybind.EventSpellSet2, keybind.EventSpellSet3, keybind.EventSpellSet4, keybind.EventSpellSet5:
-				C.nox_xxx_clientUpdateButtonRow_45E110(C.int(k - keybind.EventSpellSet1))
+				nox_xxx_clientUpdateButtonRow_45E110(C.int(k - keybind.EventSpellSet1))
 			case keybind.EventMapZoomIn:
 				c.nox_ctrlevent_action_42E670(player.CCMapZoomIn, nil)
 			case keybind.EventMapZoomOut:
@@ -333,7 +333,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_A(a4 *CtrlEventBinding) 
 			case keybind.EventTrapBomber1, keybind.EventTrapBomber2, keybind.EventTrapBomber3:
 				if inputKeyCheckTimeout(k, gameFPS()/4) {
 					inputSetKeyTimeout(k)
-					C.nox_client_trapSetSelect_4604B0(C.int(k - keybind.EventTrapBomber1))
+					nox_client_trapSetSelect_4604B0(C.int(k - keybind.EventTrapBomber1))
 					clientPlaySoundSpecial(798, 100)
 				}
 			case keybind.EventQuit:
@@ -382,22 +382,22 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_A(a4 *CtrlEventBinding) 
 			case keybind.EventCreaturesBanish:
 				if inputKeyCheckTimeout(k, gameFPS()/4) {
 					inputSetKeyTimeout(k)
-					C.nox_client_orderCreature(0, 0)
+					nox_client_orderCreature(0, 0)
 				}
 			case keybind.EventCreaturesGuard:
 				if inputKeyCheckTimeout(k, gameFPS()/4) {
 					inputSetKeyTimeout(k)
-					C.nox_client_orderCreature(0, 3)
+					nox_client_orderCreature(0, 3)
 				}
 			case keybind.EventCreaturesEscort:
 				if inputKeyCheckTimeout(k, gameFPS()/4) {
 					inputSetKeyTimeout(k)
-					C.nox_client_orderCreature(0, 4)
+					nox_client_orderCreature(0, 4)
 				}
 			case keybind.EventCreaturesHunt:
 				if inputKeyCheckTimeout(k, gameFPS()/4) {
 					inputSetKeyTimeout(k)
-					C.nox_client_orderCreature(0, 5)
+					nox_client_orderCreature(0, 5)
 				}
 			case keybind.EventAcceptItemsBatch:
 				if inputKeyCheckTimeout(k, gameFPS()/4) {
@@ -418,7 +418,7 @@ func clientAcceptTradeOrDrop() {
 		return
 	}
 	accept := dialog.ChildByID(3606)
-	C.sub_4C01C0(0, 16391, (*C.int)(unsafe.Pointer(accept.C())), 0)
+	sub_4C01C0(0, 16391, (*C.int)(unsafe.Pointer(accept.C())), 0)
 }
 
 func clientSetPhonemeFrame(a1 int) {
@@ -492,13 +492,13 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_B() {
 				clientSetPhonemeFrame(5)
 			}
 		case player.CCChat:
-			C.nox_client_chatStart_46A430(0)
+			nox_client_chatStart_46A430(0)
 			ce.active = false
 		case player.CCTeamChat:
-			C.nox_client_chatStart_46A430(1)
+			nox_client_chatStart_46A430(1)
 			ce.active = false
 		case player.CCReadSpellbook:
-			C.nox_client_toggleSpellbook_45AC70()
+			nox_client_toggleSpellbook_45AC70()
 			ce.active = false
 		case player.CCToggleConsole:
 			guiCon.Toggle()
@@ -516,67 +516,67 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_B() {
 			v38 := nox_video_getGammaSetting_434B00()
 			nox_video_setGammaSetting_434B30(v38 + 1)
 			updateGamma(1)
-			C.sub_434B60()
+			sub_434B60()
 			ce.active = false
 		case player.CCDecreaseGamma:
 			clientPlaySoundSpecial(921, 100)
 			v39 := nox_video_getGammaSetting_434B00()
 			nox_video_setGammaSetting_434B30(v39 - 1)
 			updateGamma(-1)
-			C.sub_434B60()
+			sub_434B60()
 			ce.active = false
 		case player.CCQuit:
-			C.nox_client_quit_4460C0()
+			nox_client_quit_4460C0()
 			ce.active = false
 		case player.CCQuitMenu:
 			if sub_450560() {
 				nox_savegame_sub_46D580()
 			} else {
-				C.sub_42EB90(1)
+				sub_42EB90(1)
 			}
 			ce.active = false
 		case player.CCReadMap:
 			nox_client_toggleMap_473610()
 			ce.active = false
 		case player.CCInventory:
-			C.nox_client_toggleInventory_467C60()
+			nox_client_toggleInventory_467C60()
 			ce.active = false
 		case player.CCCastSpell1, player.CCCastSpell2, player.CCCastSpell3, player.CCCastSpell4, player.CCCastSpell5:
-			C.nox_client_invokeSpellSlot_45DA50(C.int(ce.code - player.CCCastSpell1))
+			nox_client_invokeSpellSlot_45DA50(C.int(ce.code - player.CCCastSpell1))
 			ce.active = false
 		case player.CCMapZoomIn:
-			C.nox_client_mapZoomIn_4724E0()
+			nox_client_mapZoomIn_4724E0()
 			ce.active = false
 		case player.CCMapZoomOut:
-			C.nox_client_mapZoomOut_472500()
+			nox_client_mapZoomOut_472500()
 			ce.active = false
 		case player.CCNextWeapon:
-			C.nox_client_invAlterWeapon_4672C0()
+			nox_client_invAlterWeapon_4672C0()
 			ce.active = false
 		case player.CCQuickHealthPotion:
-			C.nox_client_quickHealthPotion_472220()
+			nox_client_quickHealthPotion_472220()
 			ce.active = false
 		case player.CCQuickManaPotion:
-			C.nox_client_quickManaPotion_472240()
+			nox_client_quickManaPotion_472240()
 			ce.active = false
 		case player.CCQuickCurePoisonPotion:
-			C.nox_client_quickCurePoisonPotion_472260()
+			nox_client_quickCurePoisonPotion_472260()
 			ce.active = false
 		case player.CCNextSpellSet:
-			C.nox_client_spellSetNext_4604F0()
+			nox_client_spellSetNext_4604F0()
 			ce.active = false
 		case player.CCPreviousSpellSet:
-			C.nox_client_spellSetPrev_460540()
+			nox_client_spellSetPrev_460540()
 			ce.active = false
 		case player.CCSelectSpellSet:
-			C.nox_client_spellSetSelect_460590()
+			nox_client_spellSetSelect_460590()
 			ce.active = false
 		case player.CCBuildTrap:
-			C.nox_client_buildTrap_45E040()
+			nox_client_buildTrap_45E040()
 			ce.active = false
 		case player.CCServerOptions:
 			if !(noxflags.HasGame(noxflags.GameFlag4) || !noxflags.HasGame(noxflags.GameOnline)) {
-				C.nox_xxx_guiServerOptsLoad_457500()
+				nox_xxx_guiServerOptsLoad_457500()
 			}
 			ce.active = false
 		case player.CCLaugh:
@@ -586,14 +586,14 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_B() {
 		case player.CCPoint:
 			nox_xxx_netClientSendSocial(31, 4, 0, 1)
 		case player.CCInvertSpellTarget:
-			C.sub_460630()
+			sub_460630()
 			ce.active = false
 		case player.CCToggleRank:
 			clientPlaySoundSpecial(921, 100)
 			sub_4703F0()
 			ce.active = false
 		case player.CCToggleNetstat:
-			C.sub_470A60()
+			sub_470A60()
 			clientPlaySoundSpecial(921, 100)
 			ce.active = false
 		case player.CCToggleGUI:
@@ -605,7 +605,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_B() {
 			ce.active = false
 		case player.CCAutoSave:
 			if noxflags.HasGame(noxflags.GameModeCoop) {
-				if C.nox_xxx_game_4DCCB0() != 0 {
+				if nox_xxx_game_4DCCB0() != 0 {
 					clientPlaySoundSpecial(921, 100)
 					sub_4DB130(common.SaveAuto)
 					sub_4DB170(1, 0, 0)
@@ -616,7 +616,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0_B() {
 			ce.active = false
 		case player.CCAutoLoad:
 			if noxflags.HasGame(noxflags.GameModeCoop) {
-				if C.nox_xxx_game_4DCCB0() != 0 {
+				if nox_xxx_game_4DCCB0() != 0 {
 					clientPlaySoundSpecial(921, 100)
 					sub_413A00(1)
 					v41 := strMan.GetStringInFile("GUIQuit.c:ReallyLoadMessage", "C:\\NoxPost\\src\\Client\\System\\Ctrlevnt.c")
@@ -738,9 +738,9 @@ func nox_ctrlevent_add_ticks_42E630() uint32 {
 	v0 := sub_416640()
 	switch *(*uint32)(unsafe.Add(unsafe.Pointer(&v0[0]), 66)) {
 	case 1:
-		return uint32(C.sub_554290())
+		return uint32(sub_554290())
 	case 2:
-		return uint32(C.sub_554300())
+		return uint32(sub_554300())
 	case 3:
 		return *(*uint32)(unsafe.Add(unsafe.Pointer(&v0[0]), 70))
 	}
@@ -816,11 +816,11 @@ func nox_client_parseConfigHotkeysLine_42CF50(a1 *C.char) C.int {
 			val = strings.ToLower(val)
 			for i, s := range noxMouseSelectOpt {
 				if val == strings.ToLower(s) {
-					C.sub_430AA0(C.int(i))
+					sub_430AA0(C.int(i))
 					return 1
 				}
 			}
-			C.sub_430AA0(0)
+			sub_430AA0(0)
 			return 1
 		}
 		ce := new(CtrlEventBinding)
@@ -843,7 +843,7 @@ func nox_client_parseConfigHotkeysLine_42CF50(a1 *C.char) C.int {
 }
 
 func writeConfigHotkeys(w io.Writer) error {
-	v1 := int(C.nox_client_mousePriKey_430AF0())
+	v1 := int(nox_client_mousePriKey_430AF0())
 	_, err := fmt.Fprintf(w, "MousePickup = %s\r\n", noxMouseSelectOpt[v1])
 	if err != nil {
 		return err
@@ -974,7 +974,7 @@ func (s *Server) nox_xxx_playerSaveInput(pli int, a2 unsafe.Pointer) int {
 		n := copy(dst, buf)
 		C.nox_players_controlBuffer_2388804[pli] = C.int(ind + n)
 	}
-	C.sub_51AA20(C.int(pli))
+	sub_51AA20(C.int(pli))
 	return sz
 }
 

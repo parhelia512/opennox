@@ -257,7 +257,7 @@ func nox_drawable_find(pt image.Point, r int) *Drawable {
 	for y := ys; y <= ye; y++ {
 		for x := xs; x <= xe; x++ {
 			for dr := nox_drawable_2d_index[x][y]; dr != nil; dr = dr.Field100() {
-				if C.nox_xxx_client_4984B0_drawable(dr.C()) == 0 {
+				if nox_xxx_client_4984B0_drawable(dr.C()) == 0 {
 					continue
 				}
 				dp := pt.Sub(dr.Pos())

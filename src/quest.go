@@ -218,25 +218,25 @@ func nox_server_questNextStageThreshold_4D74F0(lvl C.int) C.int {
 
 func (s *Server) nox_server_questMapNextLevel() {
 	// server loading next quest level
-	C.sub_51A920(C.int(noxRndCounter1.IntClamp(0, 2)))
+	sub_51A920(C.int(noxRndCounter1.IntClamp(0, 2)))
 	lvl := s.nox_game_getQuestStage_4E3CC0()
 	lvl += questLevelInc
 	questLog.Printf("switching level to %d", lvl)
 	questLevel.Set(float64(lvl))
 	s.nox_game_setQuestStage_4E3CD0(lvl)
 	lvl = s.nox_xxx_getQuestStage_51A930()
-	C.sub_51A1F0(C.int(lvl))
-	C.sub_4E3D50()
-	C.sub_4E3DD0()
-	C.sub_4F1F20()
+	sub_51A1F0(C.int(lvl))
+	sub_4E3D50()
+	sub_4E3DD0()
+	sub_4F1F20()
 	name := s.nox_server_currentMapGetFilename_409B30()
 	questLog.Printf("loading map: %q", name)
-	C.sub_4D10F0(internCStr(name))
-	C.sub_4D7520(1)
+	sub_4D10F0(internCStr(name))
+	sub_4D7520(1)
 	if !questLevelWarpInfinite {
 		cutoff := uint(gamedataFloat("WarpGateCutoffStage"))
 		if uint(s.nox_game_getQuestStage_4E3CC0()) >= cutoff {
-			C.sub_4D7520(0)
+			sub_4D7520(0)
 		}
 	}
 }
@@ -255,7 +255,7 @@ func (s *Server) switchQuestIfRequested4D6FD0() {
 	if mapName != "" {
 		mapFile = mapName + ".map"
 	} else {
-		mapFile = GoString(C.nox_xxx_getQuestMapFile_4D0F60())
+		mapFile = GoString(nox_xxx_getQuestMapFile_4D0F60())
 	}
 	s.switchMap(mapFile)
 	s.setQuestMapName("")
@@ -267,32 +267,32 @@ func (s *Server) setupQuestGame() {
 	noxflags.UnsetGame(noxflags.GameModeMask)
 	noxflags.SetGame(noxflags.GameModeQuest)
 	if !sub4D6F30() {
-		C.nox_game_setQuestStage_4E3CD0(0)
+		nox_game_setQuestStage_4E3CD0(0)
 	}
-	C.sub_4D0F30()
+	sub_4D0F30()
 	noxflags.UnsetEngine(noxflags.EngineAdmin)
 	noxflags.UnsetGame(noxflags.GameNotQuest)
-	C.sub_4D9CF0(255)
+	sub_4D9CF0(255)
 	for _, u := range s.getPlayerUnits() {
 		u.ControllingPlayer().field_4792 = 0
 	}
 
 	for _, u := range s.getPlayerUnits() {
-		C.sub_4D6000(u.CObj())
+		sub_4D6000(u.CObj())
 		pl := u.ControllingPlayer()
 		if noxflags.HasGame(noxflags.GameHost) && noxflags.HasEngine(noxflags.EngineNoRendering) {
 			if pl.Index() == NOX_PLAYERINFO_MAX-1 {
 				pl.field_4792 = 0
 			} else {
-				pl.field_4792 = C.uint(C.sub_4E4100())
+				pl.field_4792 = C.uint(sub_4E4100())
 			}
 		} else {
-			pl.field_4792 = C.uint(C.sub_4E4100())
+			pl.field_4792 = C.uint(sub_4E4100())
 		}
 		if pl.field_4792 == 1 {
-			C.sub_4D9D20(255, u.CObj())
+			sub_4D9D20(255, u.CObj())
 		}
-		C.nox_xxx_unitInitPlayer_4EFE80(u.CObj())
+		nox_xxx_unitInitPlayer_4EFE80(u.CObj())
 		u.AddGold(-int(pl.gold))
 
 		var next *Object
@@ -303,24 +303,24 @@ func (s *Server) setupQuestGame() {
 					it.Delete()
 				}
 			} else {
-				if it.Class().HasAny(object.ClassArmor) && C.sub_415D10(C.int(it.objTypeInd()))&0x405 == 0 {
+				if it.Class().HasAny(object.ClassArmor) && sub_415D10(C.int(it.objTypeInd()))&0x405 == 0 {
 					it.Delete()
 				}
 			}
 		}
 		switch pl.PlayerClass() {
 		case player.Warrior:
-			C.nox_xxx_playerRespawnItem_4EF750(u.CObj(), internCStr("Sword"), nil, 1, 1)
+			nox_xxx_playerRespawnItem_4EF750(u.CObj(), internCStr("Sword"), nil, 1, 1)
 		case player.Wizard:
-			item := asObjectC(C.nox_xxx_playerRespawnItem_4EF750(u.CObj(), internCStr("SulphorousFlareWand"), nil, 1, 1))
+			item := asObjectC(nox_xxx_playerRespawnItem_4EF750(u.CObj(), internCStr("SulphorousFlareWand"), nil, 1, 1))
 
 			opt, freeOpt := alloc.Make([]unsafe.Pointer{}, 5)
-			mod := C.nox_xxx_modifGetIdByName_413290(internCStr("Replenishment1"))
-			opt[2] = unsafe.Pointer(C.nox_xxx_modifGetDescById_413330(mod))
-			C.nox_xxx_modifSetItemAttrs_4E4990(item.CObj(), (*C.int)(unsafe.Pointer(&opt[0])))
+			mod := nox_xxx_modifGetIdByName_413290(internCStr("Replenishment1"))
+			opt[2] = unsafe.Pointer(nox_xxx_modifGetDescById_413330(mod))
+			nox_xxx_modifSetItemAttrs_4E4990(item.CObj(), (*C.int)(unsafe.Pointer(&opt[0])))
 			freeOpt()
 		case player.Conjurer:
-			C.nox_xxx_playerRespawnItem_4EF750(u.CObj(), internCStr("Bow"), nil, 1, 1)
+			nox_xxx_playerRespawnItem_4EF750(u.CObj(), internCStr("Bow"), nil, 1, 1)
 		}
 		if pl.field_4792 == 0 {
 			pl.GoObserver(false, false)
@@ -333,14 +333,14 @@ func (s *Server) setupQuestGame() {
 	if title := s.teamTitle(9); title != "" {
 		t.setNameAnd68(title, 1)
 	}
-	C.sub_4184D0(t.C())
+	sub_4184D0(t.C())
 	for _, u := range s.getPlayerUnits() {
 		if u.ControllingPlayer().field_4792 == 1 {
-			C.nox_xxx_createAtImpl_4191D0(C.uchar(t.Ind57()), unsafe.Pointer(u.teamPtr()), 1, C.int(u.field_9), 0)
+			nox_xxx_createAtImpl_4191D0(C.uchar(t.Ind57()), unsafe.Pointer(u.teamPtr()), 1, C.int(u.field_9), 0)
 		}
 	}
-	C.sub_4D6BE0()
-	C.sub_4D6A60()
+	sub_4D6BE0()
+	sub_4D6A60()
 }
 
 func (s *Server) setQuestFlag(v int) {
@@ -389,7 +389,7 @@ func sub_4DCF20() {
 	if questPlayerSet && noxServer.getQuestFlag() == 0 {
 		if pl := noxServer.getPlayerByInd(31); pl != nil && pl.field_3680&0x10 != 0 {
 			path := questPlayerFile
-			C.nox_xxx_cliPlrInfoLoadFromFile_41A2E0(internCStr(path), 31)
+			nox_xxx_cliPlrInfoLoadFromFile_41A2E0(internCStr(path), 31)
 			questPlayerSet = false
 			ifs.Remove(path)
 		}

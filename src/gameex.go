@@ -195,8 +195,8 @@ func gameexDropTrap() {
 			return
 		}
 		if noxflags.HasGame(noxflags.GameHost) { // checkGameFlags isServer
-			v9 := C.nox_xxx_objGetTeamByNetCode_418C80(C.int(clientPlayerNetCode()))
-			C.playerDropATrap(C.int(uintptr(unsafe.Pointer(v9)) - 12*4)) // TODO: this doesn't look right
+			v9 := nox_xxx_objGetTeamByNetCode_418C80(C.int(clientPlayerNetCode()))
+			playerDropATrap(C.int(uintptr(unsafe.Pointer(v9)) - 12*4)) // TODO: this doesn't look right
 		} else {
 			// TODO: this currently relies on extension packets, which should not be required for this
 			//       it can be done the "natural way": find the trap in the client-side data structures
@@ -204,7 +204,7 @@ func gameexDropTrap() {
 			buf, freeBuf := alloc.Make([]byte{}, 10)
 			defer freeBuf()
 			gameex_makeExtensionPacket(buf, 9, true)
-			C.gameex_sendPacket((*C.char)(unsafe.Pointer(&buf[0])), 8, 0)
+			gameex_sendPacket((*C.char)(unsafe.Pointer(&buf[0])), 8, 0)
 		}
 	}
 }
@@ -218,7 +218,7 @@ func gameexOnKeyboardPress(kcode keybind.Key) {
 				return
 			}
 			if noxflags.HasGame(noxflags.GameHost) { // isServer
-				if u := HostPlayerUnit(); u != nil && C.mix_MouseKeyboardWeaponRoll(C.int(uintptr(unsafe.Pointer(u.CObj()))), C.char(v8)) != 0 {
+				if u := HostPlayerUnit(); u != nil && mix_MouseKeyboardWeaponRoll(C.int(uintptr(unsafe.Pointer(u.CObj()))), C.char(v8)) != 0 {
 					clientPlaySoundSpecial(895, 100)
 				}
 			} else {
@@ -226,7 +226,7 @@ func gameexOnKeyboardPress(kcode keybind.Key) {
 				defer freeBuf()
 				gameex_makeExtensionPacket(buf, 0, true)
 				buf[8] = v8 | 0x10 // TODO: should it be just v8?
-				C.gameex_sendPacket((*C.char)(unsafe.Pointer(&buf[0])), 9, 0)
+				gameex_sendPacket((*C.char)(unsafe.Pointer(&buf[0])), 9, 0)
 			}
 		}
 	}
@@ -259,7 +259,7 @@ func gameexOnKeyboardPress(kcode keybind.Key) {
 				wstr := GoWStringSlice(wndEntryNames[i][:])
 				id := uint(1520 + i)
 				a2b.Func94(&WindowEvent0x400d{Str: wstr, Val: -1})
-				if uint32(C.getFlagValueFromFlagIndex(C.int(id)-1519))&uint32(C.gameex_flags) != 0 {
+				if uint32(getFlagValueFromFlagIndex(C.int(id)-1519))&uint32(C.gameex_flags) != 0 {
 					v14 := modifyWndPntr.ChildByID(id)
 					v14.DrawData().field_0 |= 0x4
 				} else {
@@ -286,7 +286,7 @@ func modifyWndInputHandler(a1 *Window, ev WindowEvent) WindowEventResp {
 			destroyGameExWindow()
 		case 1938:
 			if !noxflags.HasGame(noxflags.GameModeSolo10) {
-				C.sub_4BDFD0()
+				sub_4BDFD0()
 				asWindowP(unsafe.Pointer(uintptr(C.dword_5d4594_1316972))).SetPos(image.Point{X: 200, Y: 100})
 			}
 		case 1520:

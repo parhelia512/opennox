@@ -135,7 +135,7 @@ func (s *Server) nox_xxx_replayStopReadMB_4D3530() {
 	replay.readHeader = false
 	noxflags.UnsetEngine(noxflags.EngineReplayRead)
 	pl := s.getPlayerByID(255)
-	C.nox_xxx_playerLeaveObserver_0_4E6AA0(pl.C())
+	nox_xxx_playerLeaveObserver_0_4E6AA0(pl.C())
 }
 
 func nox_xxx_replay_4D3860(pi *PlayerOpts) error {

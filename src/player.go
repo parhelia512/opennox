@@ -191,7 +191,7 @@ func BlindPlayers(blind bool) {
 }
 
 func CinemaPlayers(cinema bool) {
-	C.nox_xxx_WideScreenDo_515240(C.bool(cinema))
+	nox_xxx_WideScreenDo_515240(C.bool(cinema))
 }
 
 func PrintToPlayers(text string) {
@@ -346,7 +346,7 @@ func (p *Player) Print(text string) {
 }
 
 func (p *Player) Blind(blind bool) {
-	C.nox_xxx_netMsgFadeBeginPlayer(C.int(p.Index()), C.int(bool2int(!blind)), 0)
+	nox_xxx_netMsgFadeBeginPlayer(C.int(p.Index()), C.int(bool2int(!blind)), 0)
 }
 
 func (p *Player) Cinema(v bool) {
@@ -428,8 +428,8 @@ func (p *Player) Disconnect(v int) {
 	if !p.IsActive() {
 		return
 	}
-	C.nox_xxx_playerDisconnFinish_4DE530(C.int(p.Index()), C.char(v))
-	C.nox_xxx_playerForceDisconnect_4DE7C0(C.int(p.Index()))
+	nox_xxx_playerDisconnFinish_4DE530(C.int(p.Index()), C.char(v))
+	nox_xxx_playerForceDisconnect_4DE7C0(C.int(p.Index()))
 	p.getServer().nox_xxx_netStructReadPackets2_4DEC50(p.Index())
 }
 
@@ -469,7 +469,7 @@ func (p *Player) GoObserver(notify, keepPlayer bool) bool {
 	if p == nil {
 		return true
 	}
-	return C.nox_xxx_playerGoObserver_4E6860(p.C(), C.int(bool2int(notify)), C.int(bool2int(keepPlayer))) != 0
+	return nox_xxx_playerGoObserver_4E6860(p.C(), C.int(bool2int(notify)), C.int(bool2int(keepPlayer))) != 0
 }
 
 func (s *Server) cntPlayers() (n int) {
@@ -665,8 +665,8 @@ func (s *Server) newPlayer(ind int, opts *PlayerOpts) int {
 		}
 	}
 	v5 := sub_416640()
-	C.nox_netlist_resetByInd_40ED10(C.int(ind), 1)
-	C.nox_xxx_playerResetImportantCtr_4E4F40(C.int(ind))
+	nox_netlist_resetByInd_40ED10(C.int(ind), 1)
+	nox_xxx_playerResetImportantCtr_4E4F40(C.int(ind))
 	sub_4E4F30(ind)
 
 	var ptyp string
@@ -707,11 +707,11 @@ func (s *Server) newPlayer(ind int, opts *PlayerOpts) int {
 	pl.SetField2096(opts.Field2096)
 	pl.field_2068 = C.uint(opts.Field2068)
 	if pl.field_2068 != 0 {
-		v12 := unsafe.Pointer(C.sub_425A70(C.int(pl.field_2068)))
+		v12 := unsafe.Pointer(sub_425A70(C.int(pl.field_2068)))
 		if v12 == nil {
-			v12 = unsafe.Pointer(C.sub_425AD0(C.int(pl.field_2068), &pl.field_2072[0]))
+			v12 = unsafe.Pointer(sub_425AD0(C.int(pl.field_2068), &pl.field_2072[0]))
 		}
-		C.sub_425B30(v12, C.int(ind))
+		sub_425B30(v12, C.int(ind))
 	}
 	pl.frame_3596 = C.uint(gameFrame())
 	pl.field_3676 = 2
@@ -721,11 +721,11 @@ func (s *Server) newPlayer(ind int, opts *PlayerOpts) int {
 	info.SetNameSuff("")
 	pl.SetName(pl.OrigName())
 	s.nox_xxx_playerCheckName_4DDA00(pl)
-	C.nox_xxx_playerInitColors_461460(pl.C())
+	nox_xxx_playerInitColors_461460(pl.C())
 	pl.playerUnit = punit.CObj()
 	pl.field_2152 = 0
 	pl.netCode = punit.field_9
-	pl.field_2156 = C.uint(C.nox_xxx_scavengerTreasureMax_4D1600())
+	pl.field_2156 = C.uint(nox_xxx_scavengerTreasureMax_4D1600())
 	udata := punit.updateDataPlayer()
 	xxx := punit.ptrXxx()
 	udata.player = pl.C()
@@ -748,27 +748,27 @@ func (s *Server) newPlayer(ind int, opts *PlayerOpts) int {
 	pl.field_4648 = -1
 	pl.field_4700 = 1
 	if C.dword_5d4594_2650652 != 0 {
-		C.sub_41D670(internCStr(pl.Field2096()))
+		sub_41D670(internCStr(pl.Field2096()))
 	}
-	C.nox_xxx_netNotifyRate_4D7F10(C.int(ind))
+	nox_xxx_netNotifyRate_4D7F10(C.int(ind))
 	if noxflags.HasGame(noxflags.GameModeQuest) {
 		pl.GoObserver(false, true)
 	} else if noxflags.HasGame(noxflags.GameModeSolo10) {
-		C.nox_xxx_netReportPlayerStatus_417630(pl.C())
+		nox_xxx_netReportPlayerStatus_417630(pl.C())
 	} else if pl.Index() == 31 && noxflags.HasEngine(noxflags.EngineNoRendering) {
 		pl.GoObserver(false, true)
 	} else if noxflags.HasGame(noxflags.GameModeChat) {
-		if C.sub_40A740() != 0 {
-			if C.sub_40AA70(pl.C()) == 0 {
+		if sub_40A740() != 0 {
+			if sub_40AA70(pl.C()) == 0 {
 				pl.GoObserver(false, true)
 			}
 		} else if checkGameplayFlags(4) {
-			C.sub_4DF3C0(pl.C())
+			sub_4DF3C0(pl.C())
 		}
 	} else if !noxflags.HasGame(noxflags.GameModeCoop) {
 		pl.GoObserver(true, true)
 	}
-	C.nox_xxx_servSendSettings_4DDB40(punit.CObj())
+	nox_xxx_servSendSettings_4DDB40(punit.CObj())
 	if pl.Index() == 31 {
 		C.nox_xxx_host_player_unit_3843628 = punit.CObj()
 	}
@@ -776,11 +776,11 @@ func (s *Server) newPlayer(ind int, opts *PlayerOpts) int {
 	nox_xxx_netNewPlayerMakePacket_4DDA90(v30[:], pl)
 	s.nox_xxx_netSendPacket_4E5030(ind|0x80, v30[:129], 0, 0, 0)
 	pl.field_3676 = 2
-	if C.nox_xxx_check_flag_aaa_43AF70() == 1 && !noxflags.HasGame(noxflags.GameModeChat) {
-		C.sub_425F10(pl.C())
+	if nox_xxx_check_flag_aaa_43AF70() == 1 && !noxflags.HasGame(noxflags.GameModeChat) {
+		sub_425F10(pl.C())
 	}
 	nox_xxx_createAt_4DAA50(punit, nil, types.Pointf{X: 2944.0, Y: 2944.0})
-	C.nox_xxx_unitsNewAddToList_4DAC00()
+	nox_xxx_unitsNewAddToList_4DAC00()
 	var p28 types.Pointf
 	if noxflags.HasGame(noxflags.GameModeQuest) {
 		if p, ok := s.sub_4E8210(punit); !ok {
@@ -796,22 +796,22 @@ func (s *Server) newPlayer(ind int, opts *PlayerOpts) int {
 	if ind != 31 {
 		if sub_459D70() == 2 {
 			v24 := nox_xxx_cliGamedataGet_416590(1)
-			C.nox_xxx_netGuiGameSettings_4DD9B0(1, unsafe.Pointer(&v24[0]), C.int(pl.Index()))
+			nox_xxx_netGuiGameSettings_4DD9B0(1, unsafe.Pointer(&v24[0]), C.int(pl.Index()))
 		} else {
 			v29, v29free := alloc.Make([]byte{}, 60)
 			defer v29free()
-			C.sub_459AA0(unsafe.Pointer(&v29[0]))
-			C.nox_xxx_netGuiGameSettings_4DD9B0(1, unsafe.Pointer(&v29[0]), C.int(pl.Index()))
+			sub_459AA0(unsafe.Pointer(&v29[0]))
+			nox_xxx_netGuiGameSettings_4DD9B0(1, unsafe.Pointer(&v29[0]), C.int(pl.Index()))
 		}
 	}
 	if noxflags.HasGame(noxflags.GameFlag15 | noxflags.GameFlag16) {
 		if (pl.field_3680 & 1) == 0 {
-			C.sub_509C30(pl.C())
+			sub_509C30(pl.C())
 		}
 	}
 	if !noxflags.HasGame(noxflags.GameModeCoop) {
 		if noxflags.HasGame(noxflags.GameModeQuest) {
-			C.nox_game_sendQuestStage_4D6960(C.int(ind))
+			nox_game_sendQuestStage_4D6960(C.int(ind))
 			return int(punit.field_9)
 		}
 		var buf [3]byte
@@ -874,15 +874,15 @@ func nox_xxx_playerSpell_4FB2A0_magic_plyrspel(up *nox_object_t) {
 		}
 		if pl.spell_lvl[spellInd] != 0 || spellInd == 34 {
 			ok2 = false
-			a1 = int(C.sub_4FD0E0(u.CObj(), C.int(spellInd)))
+			a1 = int(sub_4FD0E0(u.CObj(), C.int(spellInd)))
 			if a1 == 0 {
-				a1 = int(C.nox_xxx_checkPlrCantCastSpell_4FD150(u.CObj(), C.int(spellInd), 0))
+				a1 = int(nox_xxx_checkPlrCantCastSpell_4FD150(u.CObj(), C.int(spellInd), 0))
 			}
 			if a1 != 0 {
 				nox_xxx_netInformTextMsg_4DA0F0(pl.Index(), 0, a1)
 				nox_xxx_aud_501960(231, u, 0, 0)
 			} else {
-				mana := int(C.sub_4FCF90(u.CObj(), C.int(spellInd), 1))
+				mana := int(sub_4FCF90(u.CObj(), C.int(spellInd), 1))
 				if mana < 0 {
 					a1 = 11
 					nox_xxx_netInformTextMsg_4DA0F0(pl.Index(), 0, a1)
@@ -909,7 +909,7 @@ func nox_xxx_playerSpell_4FB2A0_magic_plyrspel(up *nox_object_t) {
 		}
 	}
 	if ud.field_22_0 == 2 {
-		C.nox_xxx_playerSetState_4FA020(u.CObj(), 13)
+		nox_xxx_playerSetState_4FA020(u.CObj(), 13)
 	}
 	if ok2 {
 		v13 := noxServer.Strings().GetStringInFile("SpellUnknown", "C:\\NoxPost\\src\\Server\\Magic\\plyrspel.c")
@@ -927,6 +927,6 @@ func nox_xxx_playerSpell_4FB2A0_magic_plyrspel(up *nox_object_t) {
 
 func sub_4FD030(a1 *Unit, a2 int) {
 	if a1.Class().Has(object.ClassPlayer) {
-		C.nox_xxx_playerManaAdd_4EEB80(a1.CObj(), C.short(a2))
+		nox_xxx_playerManaAdd_4EEB80(a1.CObj(), C.short(a2))
 	}
 }

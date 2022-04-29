@@ -246,14 +246,14 @@ func nox_client_refreshServerList_4378B0() {
 
 	*memmap.PtrUint64(0x5D4594, 815076) = platformTicks()
 	C.dword_5d4594_815060 = 0
-	C.sub_4379C0()
+	sub_4379C0()
 	asWindow(C.dword_5d4594_815004).Func94(asWindowEvent(0x400F, 0, 0))
-	C.sub_49FFA0(1)
+	sub_49FFA0(1)
 	C.nox_wol_server_result_cnt_815088 = 0
 	if C.dword_587000_87404 != 0 {
-		C.sub_41F370(1)
+		sub_41F370(1)
 		v3 := sub_41E2F0()
-		C.sub_41DA70(C.int(v3), 12)
+		sub_41DA70(C.int(v3), 12)
 	} else {
 		ctx := context.Background()
 		asWindow(C.nox_wol_wnd_world_814980).NewDialogID("Wolchat.c:PleaseWait", "C:\\NoxPost\\src\\client\\shell\\noxworld.c")
@@ -304,8 +304,8 @@ func sub_438770_waitList() {
 		})
 	}
 	sub_44A400()
-	C.sub_4379C0()
-	C.sub_4A0360()
+	sub_4379C0()
+	sub_4A0360()
 	C.dword_5d4594_815060 = 1
 }
 
@@ -399,15 +399,15 @@ func clientOnLobbyServer(info *LobbyServerInfo) int {
 	srv.SetFlags(noxflags.GameFlag(info.Flags))
 	srv.SetQuestLevel(info.Level)
 	srv.field_42 = 0
-	if C.dword_587000_87412 == -1 || C.sub_437860(C.int(srv.field_11_0), C.int(srv.field_11_2)) == C.dword_587000_87412 {
-		if C.nox_xxx_checkSomeFlagsOnJoin_4899C0(srv.C()) != 0 {
+	if C.dword_587000_87412 == -1 || sub_437860(C.int(srv.field_11_0), C.int(srv.field_11_2)) == C.dword_587000_87412 {
+		if nox_xxx_checkSomeFlagsOnJoin_4899C0(srv.C()) != 0 {
 			srv.SetAddr(info.Address)
 			srv.field_9 = C.nox_wol_server_result_cnt_815088
 			srv.field_7 = 0
 			srv.SetPort(uint16(info.Port))
 			srv.SetServerName(info.Name)
 			srv.SetFlags(noxflags.GameFlag(info.Flags))
-			C.nox_wol_servers_addResult_4A0030(srv.C())
+			nox_wol_servers_addResult_4A0030(srv.C())
 			C.nox_wol_server_result_cnt_815088++
 		}
 	}
@@ -450,7 +450,7 @@ func sub_554D70(conn net.PacketConn, sock *Socket, csock nox_socket_t, a1 byte) 
 		if len(buf) > 2 && binary.LittleEndian.Uint16(buf) == 0xF13A { // extension packet code
 			var cfrom C.struct_nox_net_sockaddr_in
 			setAddr(&cfrom, from)
-			n = int(C.MixRecvFromReplacer(csock, (*C.char)(unsafe.Pointer(&buf[0])), C.int(cap(buf)), (*C.struct_nox_net_sockaddr)(unsafe.Pointer(&cfrom))))
+			n = int(MixRecvFromReplacer(csock, (*C.char)(unsafe.Pointer(&buf[0])), C.int(cap(buf)), (*C.struct_nox_net_sockaddr)(unsafe.Pointer(&cfrom))))
 			if n < 0 {
 				return 0, sock.err
 			}
@@ -470,11 +470,11 @@ func sub_554D70(conn net.PacketConn, sock *Socket, csock nox_socket_t, a1 byte) 
 						onLobbyServerPacket(saddr, port, string(name), buf)
 					}
 				case 15:
-					if C.sub_43B6D0() != 0 {
+					if sub_43B6D0() != 0 {
 						sub_43AF90(5)
 					}
 				case 16:
-					if C.sub_43B6D0() != 0 {
+					if sub_43B6D0() != 0 {
 						sub_43AF90(4)
 						buf[2] = 18
 						sendToServer(fromIP, fromPort, buf[:8])
@@ -482,7 +482,7 @@ func sub_554D70(conn net.PacketConn, sock *Socket, csock nox_socket_t, a1 byte) 
 				case 19:
 					errcode := ConnectError(buf[3])
 					if errcode != ErrDupSerial {
-						if C.sub_43B6D0() != 0 {
+						if sub_43B6D0() != 0 {
 							nox_client_setConnError_43AFA0(errcode)
 						}
 						break
@@ -492,11 +492,11 @@ func sub_554D70(conn net.PacketConn, sock *Socket, csock nox_socket_t, a1 byte) 
 					gameLog.Printf("connect error: %d (%s, ignored)", errcode, errcode.Name())
 					fallthrough
 				case 20:
-					if C.sub_43B6D0() != 0 && C.sub_43AF80() == 3 {
+					if sub_43B6D0() != 0 && sub_43AF80() == 3 {
 						sub_43AF90(7)
 					}
 				case 21:
-					if C.sub_43B6D0() != 0 {
+					if sub_43B6D0() != 0 {
 						sub_43AF90(8)
 					}
 				}
@@ -529,10 +529,10 @@ func sendToServer(addr net.IP, port int, data []byte) (int, error) {
 
 //export sub_41D4C0
 func sub_41D4C0() C.int {
-	C.sub_41EB40()
-	C.sub_41F4B0()
+	sub_41EB40()
+	sub_41F4B0()
 	gameSetCliDrawFunc(nil)
-	C.sub_40D0F0()
+	sub_40D0F0()
 	return 1
 }
 
@@ -603,13 +603,13 @@ func nox_client_setConnError_43AFA0(err ConnectError) {
 func sub_41E0D0() C.int {
 	for v0 := memmap.Uint32(0x587000, 58264); v0 != 0; v0-- {
 		v1 := sub_41E2F0()
-		switch C.sub_41DCC0(C.int(v1)) {
+		switch sub_41DCC0(C.int(v1)) {
 		case 5:
 			if C.dword_5d4594_2660652 == 0x8004006E {
 				nox_client_setConnError_43AFA0(ErrFull)
 			}
 		case 10:
-			C.sub_43ACC0()
+			sub_43ACC0()
 		case 12:
 			v2 := sub_420100()
 			sub_41F3A0(v2, 1)
@@ -618,7 +618,7 @@ func sub_41E0D0() C.int {
 		}
 		v0--
 	}
-	C.sub_40D250()
+	sub_40D250()
 	return 1
 }
 
@@ -633,7 +633,7 @@ func sub_41F3A0(a1, a2 int) bool {
 	}
 	NewDialogWindow(nil, v2, v4, 288, nil, nil)
 	sub_44A4B0()
-	return C.sub_40D2F0(C.int(a1), C.int(a2)) != 0
+	return sub_40D2F0(C.int(a1), C.int(a2)) != 0
 }
 
 //export sub_4373A0
@@ -653,12 +653,12 @@ func sub_4373A0() {
 			clientPlaySoundSpecial(231, 100)
 		} else {
 			nox_game_checkStateSwitch_43C1E0()
-			C.sub_49FF20()
+			sub_49FF20()
 			if C.dword_587000_87404 == 1 {
 				*memmap.PtrUint32(0x5D4594, 815084) = 1
 				sub_41E300(7)
-				C.sub_4207F0(4)
-				C.sub_40D380()
+				sub_4207F0(4)
+				sub_40D380()
 			}
 			clientPlaySoundSpecial(231, 100)
 		}
@@ -666,12 +666,12 @@ func sub_4373A0() {
 		C.nox_game_createOrJoin_815048 = 0
 		setMouseBounds(image.Rect(0, 0, nox_win_width-1, nox_win_height-1))
 		nox_xxx_wndClearCaptureMain(asWindowP(C.dword_5d4594_814984))
-		C.sub_4375C0(1)
+		sub_4375C0(1)
 		v0 := strMan.GetStringInFile("JoinServer", "C:\\NoxPost\\src\\client\\shell\\noxworld.c")
 		asWindowP(C.dword_5d4594_814996).Func94(&WindowEvent0x4001{Str: v0})
 		clientPlaySoundSpecial(231, 100)
 	} else {
-		C.sub_49FF20()
+		sub_49FF20()
 		if C.dword_587000_87404 != 0 {
 			C.dword_587000_87412 = -1
 			nox_xxx_wndClearCaptureMain(asWindowP(C.dword_5d4594_814984))

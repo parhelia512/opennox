@@ -457,11 +457,11 @@ func (obj *Object) Owner() script.Object {
 
 func (obj *Object) SetOwner(owner script.ObjectWrapper) {
 	if owner == nil {
-		C.nox_xxx_unitClearOwner_4EC300(obj.CObj())
+		nox_xxx_unitClearOwner_4EC300(obj.CObj())
 		return
 	}
 	own := owner.GetObject().(noxObject)
-	C.nox_xxx_unitSetOwner_4EC290(own.CObj(), obj.CObj())
+	nox_xxx_unitSetOwner_4EC290(own.CObj(), obj.CObj())
 }
 
 func (obj *Object) Pos() types.Pointf {
@@ -532,7 +532,7 @@ func (obj *Object) SetPos(p types.Pointf) {
 	defer free()
 	cp.field_0 = C.float(p.X)
 	cp.field_4 = C.float(p.Y)
-	C.nox_xxx_unitMove_4E7010(obj.CObj(), cp)
+	nox_xxx_unitMove_4E7010(obj.CObj(), cp)
 }
 
 func (obj *Object) setPos(p types.Pointf) {
@@ -565,7 +565,7 @@ func (obj *Object) Z() float32 {
 }
 
 func (obj *Object) SetZ(z float32) {
-	C.nox_xxx_unitRaise_4E46F0(obj.CObj(), C.float(z))
+	nox_xxx_unitRaise_4E46F0(obj.CObj(), C.float(z))
 }
 
 func (obj *Object) Push(vec types.Pointf, force float32) {
@@ -588,14 +588,14 @@ func (obj *Object) Enable(enable bool) {
 		return
 	}
 	if enable {
-		C.nox_xxx_objectSetOn_4E75B0(obj.CObj())
+		nox_xxx_objectSetOn_4E75B0(obj.CObj())
 	} else {
-		C.nox_xxx_objectSetOff_4E7600(obj.CObj())
+		nox_xxx_objectSetOff_4E7600(obj.CObj())
 	}
 }
 
 func (obj *Object) Delete() {
-	C.nox_xxx_delayedDeleteObject_4E5CC0(obj.CObj())
+	nox_xxx_delayedDeleteObject_4E5CC0(obj.CObj())
 }
 
 func (obj *Object) Destroy() {
@@ -623,7 +623,7 @@ func (obj *Object) forceDrop(item *Object) { // nox_xxx_invForceDropItem_4ED930
 	cpos := (*C.float2)(ptr)
 	cpos.field_0 = C.float(pos.X)
 	cpos.field_4 = C.float(pos.Y)
-	C.nox_xxx_drop_4ED790(obj.CObj(), item.CObj(), cpos)
+	nox_xxx_drop_4ED790(obj.CObj(), item.CObj(), cpos)
 }
 
 func (obj *Object) isEnemyTo(objp noxObject) bool { // nox_xxx_unitIsEnemyTo_5330C0
@@ -698,7 +698,7 @@ func (obj *Object) isEnemyTo(objp noxObject) bool { // nox_xxx_unitIsEnemyTo_533
 		return false
 	}
 	if !noxflags.HasGame(noxflags.GameModeQuest) && obj.Class().HasAny(object.ClassMonster) && obj2.objTypeInd() == srv.objs.types.wisp {
-		return C.nox_xxx_checkMobAction_50A0D0(obj2.CObj(), 15) != 0
+		return nox_xxx_checkMobAction_50A0D0(obj2.CObj(), 15) != 0
 	}
 	if nox_xxx_servObjectHasTeam_419130(own1.teamPtr()) || nox_xxx_servObjectHasTeam_419130(own2.teamPtr()) {
 		return true
