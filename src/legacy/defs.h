@@ -1285,4 +1285,10 @@ _Static_assert(sizeof(noxSYSTEMTIME) == 16, "wrong size of SYSTEMTIME structure!
 
 void noxGetLocalTime(noxSYSTEMTIME* lpSystemTime);
 
+// See timer.go for definition
+typedef struct timer timer;
+
+// See timer.go for definition
+typedef struct timerGroup timerGroup;
+
 #endif // NOX_DEFS_H
