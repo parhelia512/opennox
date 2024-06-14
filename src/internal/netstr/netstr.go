@@ -349,7 +349,8 @@ func netCrypt(key byte, p []byte) {
 }
 
 func (g *Streams) recvRoot(dst *bytes.Buffer, pc net.PacketConn) (int, netip.AddrPort) {
-	var buf [1024]byte // TODO: get rid of this buffer
+	const bufsize = 16384
+	var buf [bufsize]byte // TODO: get rid of this buffer
 	n, src, err := g.recvRaw(pc, buf[:])
 	if err == nil && g.Xor {
 		if ns := g.connByAddr(src); ns != nil && ns.xorKey != 0 {
