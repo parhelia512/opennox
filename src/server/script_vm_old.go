@@ -74,8 +74,10 @@ type NoxScriptVM struct {
 	}
 	timers  script.Timers
 	virtual struct {
-		last  int
-		funcs map[int]nsCallback
+		last   int
+		funcs  map[int]nsCallback
+		byAddr map[uintptr]int
+		byName map[string]int
 	}
 	panic noxScriptPanic
 
@@ -98,6 +100,8 @@ func (s *NoxScriptVM) Reset() {
 func (s *NoxScriptVM) resetVirtualFuncs() {
 	s.virtual.last = math.MaxInt32
 	s.virtual.funcs = make(map[int]nsCallback)
+	s.virtual.byAddr = make(map[uintptr]int)
+	s.virtual.byName = make(map[string]int)
 }
 
 func (s *NoxScriptVM) FuncsCnt() int {
@@ -182,7 +186,12 @@ func (s *NoxScriptVM) AsFuncIndex(defname string, fnc ns4.Func) int {
 	case string:
 		return s.ScriptIndexByName(fnc)
 	case func():
-		return s.addVirtual(defname, func() (gerr error) {
+		addr := interfaceAddr(fnc)
+		ind, ok := s.virtual.byAddr[addr]
+		if ok {
+			return ind
+		}
+		ind = s.addVirtual(defname, func() (gerr error) {
 			defer func() {
 				if r := recover(); r != nil {
 					if e, ok := r.(error); ok {
@@ -195,6 +204,8 @@ func (s *NoxScriptVM) AsFuncIndex(defname string, fnc ns4.Func) int {
 			fnc()
 			return nil
 		})
+		s.virtual.byAddr[addr] = ind
+		return ind
 	default:
 		panic(fmt.Errorf("unsupported function type: %T", fnc))
 	}
@@ -208,7 +219,8 @@ func (s *NoxScriptVM) addVirtual(name string, fnc func() error) int {
 	}
 	id := s.virtual.last
 	s.virtual.last--
-	s.virtual.funcs[id] = nsCallback{Name: name, Fnc: fnc}
+	cb := nsCallback{Name: name, Fnc: fnc}
+	s.virtual.funcs[id] = cb
 	return id
 }
 
@@ -222,21 +234,28 @@ func (s *NoxScriptVM) addVirtual(name string, fnc func() error) int {
 // function indexes, which are set really large to avoid collisions, for functions
 // from the new runtimes. CallByIndex and ScriptCallback will recognize them later.
 func (s *NoxScriptVM) ScriptIndexByName(name string) int {
+	if ind, ok := s.virtual.byName[name]; ok {
+		return ind
+	}
 	// Prefer map scripts from new script runtimes.
 	for _, vm := range s.s.VMs.VMs {
 		fnc, err := script.GetVMSymbol[func()](vm, name)
 		if err != nil {
 			// Pretend we found it, but return an error on all calls instead.
-			return s.addVirtual(name, func() error {
+			ind := s.addVirtual(name, func() error {
 				return err
 			})
+			s.virtual.byName[name] = ind
+			return ind
 		}
 		if fnc != nil {
 			// Found, returning virtual handle.
-			return s.addVirtual(name, func() error {
+			ind := s.addVirtual(name, func() error {
 				fnc()
 				return nil
 			})
+			s.virtual.byName[name] = ind
+			return ind
 		}
 	}
 	for i, f := range s.vm.funcs {
