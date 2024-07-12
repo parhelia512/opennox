@@ -57,7 +57,7 @@ func (c *Client) Nox_new_drawable_for_thing(typeID int) *client.Drawable {
 	} else if draw == legacy.Get_nox_thing_red_spark_draw() || draw == legacy.Get_nox_thing_blue_spark_draw() ||
 		draw == legacy.Get_nox_thing_yellow_spark_draw() || draw == legacy.Get_nox_thing_green_spark_draw() ||
 		draw == legacy.Get_nox_thing_cyan_spark_draw() {
-		dr.ZVal2 = 35
+		dr.ZVal = 35
 		dr.VelZ = 2
 	} else {
 		dr.SetFrameMB(0)
