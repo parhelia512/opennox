@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
-	"path/filepath"
 	"sort"
 	"strings"
 	"unsafe"
@@ -80,7 +79,7 @@ func sub_43E940(a1 unsafe.Pointer) int {
 	ail.Startup()
 	audioTimer93944 = ail.RegisterTimer(func(u uint32) {
 		sub_486EF0()
-		legacy.Sub_43D2D0()
+		legacy.MusicModule.Sub_43D2D0()
 		(*timer.TimerGroup)(legacy.Get_dword_587000_127004()).ClearUpdated()
 	})
 	if audioTimer93944 == math.MaxUint32 {
@@ -194,80 +193,6 @@ func sub_43ED00(a1p unsafe.Pointer) int {
 	return 0
 }
 
-func sub_43D650() {
-	if s := legacy.Get_dword_5d4594_816364(); s != 0 {
-		s.Close()
-		legacy.Set_dword_5d4594_816364(0)
-	}
-	legacy.Set_dword_5d4594_816092(0)
-}
-
-func sub_43D680() {
-	if s := legacy.Get_dword_5d4594_816364(); s != 0 {
-		s.Pause(true)
-	}
-}
-
-func sub_43D6A0() {
-	if s := legacy.Get_dword_5d4594_816364(); s != 0 {
-		s.Pause(false)
-	}
-}
-
-var audioTable = []string{
-	"",
-	"chap1", "chap2wiz", "chap2con", "chap2war", "chap3", "chap4", "chap5", "chap6", "chap7", "chap8",
-	"chap9", "chapa", "chapb", "title", "town1", "town2", "town3", "sub1", "sub2", "sub3",
-	"wander1", "wander2", "wander3", "credits", "shell", "action1", "action2", "action3", "wander4",
-}
-
-func nox_xxx_musicStartPlay_43D6C0(a1p unsafe.Pointer) int {
-	if legacy.Get_dword_5d4594_816376() == 0 {
-		return 0
-	}
-	a1 := unsafe.Slice((*uint32)(unsafe.Pointer(a1p)), 4)
-
-	ind := int(a1[0])
-	if ind <= 0 || ind >= len(audioTable) {
-		return 0
-	}
-	aname := audioTable[ind]
-	sub_43D650()
-	legacy.Set_dword_587000_93160(0)
-	path := filepath.Join("music", aname)
-	if !strings.Contains(path, ".") {
-		path += ".wav"
-	}
-	s := legacy.Get_dword_5d4594_816376().OpenStream(path)
-	if s == 0 {
-		if legacy.Dialogs.IsFallbackMode() != 0 && legacy.Dialogs.Sub_44D930() {
-			return 0
-		}
-		v5 := legacy.Sub_413890()
-		if v5 == "" {
-			return 0
-		}
-		legacy.Set_dword_587000_93160(1)
-		path2 := filepath.Join(v5, path)
-		s = legacy.Get_dword_5d4594_816376().OpenStream(path2)
-		if s == 0 {
-			return 0
-		}
-	}
-	s.SetPosition(int(a1[2]))
-	(*timer.Timer)(memmap.PtrOff(0x5D4594, 816148)).SetRaw(0)
-	(*timer.Timer)(memmap.PtrOff(0x5D4594, 816148)).SetInterp(0x4000)
-	legacy.Sub_43D3C0(s, int(a1[1]))
-	s.Start()
-	legacy.Set_dword_5d4594_816092(ind)
-	*memmap.PtrUint32(0x5D4594, 816096) = a1[1]
-	*memmap.PtrUint32(0x5D4594, 816100) = a1[2]
-	*memmap.PtrUint32(0x5D4594, 816104) = a1[3]
-	a1[2] = 0
-	legacy.Set_dword_5d4594_816364(s)
-	return 1
-}
-
 func sub_43F060(a1p unsafe.Pointer) int {
 	a1 := unsafe.Slice((*uint32)(unsafe.Pointer(a1p)), 69)
 	s := *(**legacy.AudioSample)(unsafe.Pointer(&a1[68]))
@@ -303,7 +228,7 @@ func nox_audio_initall(a3 int) int {
 	(*timer.TimerGroup)(legacy.Get_dword_587000_122852()).Init()
 	(*timer.TimerGroup)(legacy.Get_dword_587000_127004()).Init()
 	legacy.Dialogs.Nox_xxx_WorkerHurt_44D810()
-	legacy.Sub_43D8E0()
+	legacy.MusicModule.Init()
 	legacy.Sub_451850(legacy.Get_dword_5d4594_805984(), unsafe.Pointer(dword_5d4594_805980))
 	v1 := configGetVolume(VolumeMusic)
 	if v1 == 0 {
