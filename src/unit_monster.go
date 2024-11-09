@@ -20,7 +20,7 @@ func objectMonsterInit(obj *server.Object) {
 		switch int(obj.TypeInd) {
 		case s.Types.CarnivorousPlantID():
 			obj.ClearActionStack()
-			ud.Field328 = float32(float64(ud.MonsterDef.MeleeAttackRange112+obj.Shape.Circle.R) + 10.0)
+			ud.SightRange = float32(float64(ud.MonsterDef.MeleeAttackRange112+obj.Shape.Circle.R) + 10.0)
 			ud.AIAction340 = uint32(ai.ACTION_GUARD)
 		case s.Types.RatID():
 			obj.ClearActionStack()
@@ -125,7 +125,7 @@ func nox_xxx_monsterCreateFn_54C480(u *server.Object) {
 	ud.Aggression2 = 0.5
 	ud.Field330 = 0.5
 	ud.Field332 = 0.5
-	ud.Field328 = 150.0
+	ud.SightRange = 150.0
 	ud.Field329 = 30.0
 	ud.Field333 = math.MaxUint8
 	ud.Field331 = 30

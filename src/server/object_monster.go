@@ -218,7 +218,7 @@ type MonsterUpdateData struct {
 	ScriptLostEnemy       ScriptCallback       // 324, 1296
 	Aggression            float32              // 326, 1304
 	Aggression2           float32              // 327, 1308
-	Field328              float32              // 328, 1312
+	SightRange            float32              // 328, 1312
 	Field329              float32              // 329, 1316
 	Field330              float32              // 330, 1320
 	Field331              uint32               // 331, 1324, TODO: strength stat?

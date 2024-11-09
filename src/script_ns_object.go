@@ -585,6 +585,13 @@ func (obj nsObj) GetElevatorStatus() int {
 	return int(obj.UpdateDataElevator().Field_3)
 }
 
+func (obj nsObj) SetSightRange(val float32) {
+	if obj.Class().Has(object.ClassMonster) {
+		ud := obj.UpdateDataMonster()
+		ud.SightRange = val
+	}
+}
+
 func (obj nsObj) AggressionLevel(level float32) {
 	obj.Object.SetAggression(level)
 }

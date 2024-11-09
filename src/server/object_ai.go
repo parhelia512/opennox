@@ -192,7 +192,7 @@ func (obj *Object) Sub_545E60() int {
 				if !canInteract {
 					return 0
 				}
-				obj.MonsterPushAction(ai.DEPENDENCY_ENEMY_CLOSER_THAN, float32(ud.Field328)*1.05)
+				obj.MonsterPushAction(ai.DEPENDENCY_ENEMY_CLOSER_THAN, float32(ud.SightRange)*1.05)
 			} else {
 				obj.MonsterPushAction(ai.DEPENDENCY_UNDER_ATTACK, s.Frame())
 			}

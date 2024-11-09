@@ -7721,7 +7721,8 @@ int nox_xxx_destroyEveryChatMB_528D60() {
 }
 
 //----- (00528DB0) --------------------------------------------------------
-int nox_xxx_XFerMonster_528DB0(int a1) {
+int nox_xxx_XFerMonster_528DB0(nox_object_t* a1p) {
+	int a1 = a1p;
 	int v1;            // esi
 	int result;        // eax
 	char* v3;          // edi
@@ -8741,7 +8742,8 @@ size_t nox_xxx_readNPCVoiceSet_52AD10(int a1) {
 // 52AD10: using guessed type char var_100[256];
 
 //----- (0052ADE0) --------------------------------------------------------
-int nox_xxx_XFerNPC_52ADE0(int a1) {
+int nox_xxx_XFerNPC_52ADE0(nox_object_t* a1p) {
+	int a1 = a1p;
 	int v1;            // esi
 	char* v2;          // edi
 	int result;        // eax
@@ -8800,7 +8802,7 @@ int nox_xxx_XFerNPC_52ADE0(int a1) {
 	char v56[256];     // [esp+48h] [ebp-200h]
 	char v57[256];     // [esp+148h] [ebp-100h]
 
-	v1 = *(uint32_t*)(a1 + 748);
+	v1 = a1p->data_update;
 	v2 = *(char**)(a1 + 756);
 	v54 = *(uint32_t*)(a1 + 136);
 	v44 = 62;
