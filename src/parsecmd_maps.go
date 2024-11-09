@@ -2,6 +2,7 @@ package opennox
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -53,36 +54,42 @@ func noxCmdLoad(ctx context.Context, c *console.Console, tokens []string) bool {
 	if len(tokens) != 1 {
 		return false
 	}
-	if !noxMapsIgnoreMode && noxflags.HasGame(noxflags.GameModeQuest) {
-		c.Printf(console.ColorRed, "Switching maps is not allowed in Quest")
-		return true
+	if err := noxLoadMap(tokens[0], mapLoadOptions{
+		Force: noxMapsIgnoreMode,
+	}); err != nil {
+		c.Print(console.ColorRed, err.Error())
 	}
-	name := tokens[0]
+	return true
+}
+
+type mapLoadOptions struct {
+	Force bool
+}
+
+func noxLoadMap(name string, opts mapLoadOptions) error {
+	ignoreMode := opts.Force
 	if len(name) != 0 && name[0] != '#' {
 		if err := nox_common_checkMapFile(name); err != nil {
-			c.Printf(console.ColorRed, "Error checking map file %q: %v", name, err)
-			return true
+			return fmt.Errorf("Error checking map file %q: %w", name, err)
 		}
 	}
 	mode := nox_xxx_mapGetTypeMB_4CFFA0(memmap.PtrOff(0x973F18, 2408))
 	if noxflags.HasGame(noxflags.GameOnline) {
-		if !noxMapsIgnoreMode && (mode == 0 || mode.Has(noxflags.GameModeCoopTeam)) {
-			c.Printf(console.ColorRed, "Switching maps to Solo is not allowed")
-			return true
+		if !ignoreMode && (mode == 0 || mode.Has(noxflags.GameModeCoopTeam)) {
+			return errors.New("Switching maps to Solo is not allowed")
 		}
 		if noxflags.HasGame(noxflags.GameModeChat) {
 			if mode.Has(noxflags.GameModeCTF|noxflags.GameModeFlagBall) && noxServer.Teams.Count() != 2 {
 				legacy.Nox_xxx_wndGuiTeamCreate_4185B0()
 			}
-		} else if !noxMapsIgnoreMode && !noxflags.GetGame().Has(mode) {
+		} else if !ignoreMode && !noxflags.GetGame().Has(mode) {
 			v6 := strMan.GetStringInFile("NoMapLoadNewMode", "parsecmd.c")
 			nox_xxx_printCentered_445490(v6)
-			return true
+			return errors.New("Swithing to a different mode is not allowed")
 		}
 	} else {
-		if !noxMapsIgnoreMode && !mode.Has(noxflags.GameModeCoopTeam) {
-			c.Printf(console.ColorRed, "Switching to non-Solo maps is not allowed")
-			return true
+		if !ignoreMode && !mode.Has(noxflags.GameModeCoopTeam) {
+			return errors.New("Switching to non-Solo maps is not allowed")
 		}
 	}
 	fname := name
@@ -95,7 +102,7 @@ func noxCmdLoad(ctx context.Context, c *console.Console, tokens []string) bool {
 		if _, err := ifs.Stat(datapath.Maps(name, fname)); err != nil {
 			str := strMan.GetStringInFile("CannotAccessMap", "parsecmd.c")
 			nox_xxx_printCentered_445490(fmt.Sprintf(str, fname))
-			return true
+			return fmt.Errorf("Cannot access map %q", fname)
 		}
 	}
 	legacy.Nox_xxx_mapLoadOrSaveMB_4DCC70(1)
@@ -104,5 +111,5 @@ func noxCmdLoad(ctx context.Context, c *console.Console, tokens []string) bool {
 	str := strMan.GetStringInFile("maploaded", "parsecmd.c")
 	str = strings.ReplaceAll(str, "%S", "%s")
 	nox_xxx_printCentered_445490(fmt.Sprintf(str, fname))
-	return true
+	return nil
 }

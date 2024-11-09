@@ -11,11 +11,12 @@ require (
 	github.com/noxworld-dev/noxcrypt v0.0.0-20230831140413-02623e75408e
 	github.com/noxworld-dev/noxscript/ns v1.0.2
 	github.com/noxworld-dev/noxscript/ns/v3 v3.4.4
-	github.com/noxworld-dev/noxscript/ns/v4 v4.19.0
+	github.com/noxworld-dev/noxscript/ns/v4 v4.20.0
 	github.com/noxworld-dev/opennox-lib v0.0.0-20240610100101-738fab12825b
 	github.com/noxworld-dev/vqa-decode v0.0.0-20220408200150-8bbbe7a064f7
 	github.com/noxworld-dev/xwis v0.0.0-20220204182326-c5d2fc18e75e
 	github.com/prometheus/client_golang v1.12.1
+	github.com/shoenig/test v1.7.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
@@ -60,7 +61,6 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
-	github.com/shoenig/test v1.7.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
