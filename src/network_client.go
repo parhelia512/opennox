@@ -33,7 +33,7 @@ func nox_xxx_netOnPacketRecvCli_48EA70(ind ntype.PlayerInd, buf *byte, sz int) i
 func nox_xxx_netHandleCliPacket_43C860(_ netlib.StreamID, data []byte) int {
 	op := noxnet.Op(data[0])
 	noxPerfmon.packetSizeCli = len(data)
-	if op == noxnet.MSG_XXX_STOP {
+	if op == noxnet.MSG_SERVER_CLOSE_ACK {
 		sub_446380()
 	} else if op == noxnet.MSG_PING {
 		noxPerfmon.ping = time.Duration(binary.LittleEndian.Uint32(data[1:])) * time.Millisecond
@@ -73,7 +73,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		if err != nil {
 			return -1
 		}
-		frame := p.T
+		frame := uint32(p.T)
 		*localFrame = frame
 		c.tsFullPRev = frame
 		c.tsUpperPrev = (frame & 0xffff) >> 14
@@ -148,7 +148,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		if err != nil {
 			return -1
 		}
-		if mframe := p.T; mframe > uint32(legacy.Get_dword_5d4594_1200804()) {
+		if mframe := uint32(p.T); mframe > uint32(legacy.Get_dword_5d4594_1200804()) {
 			noxSetUseMapFrame(int(mframe))
 			c.nox_xxx_gameClearAll_467DF0(true)
 			c.srv.nox_xxx_gameSetMapPath_409D70(p.MapName.Value)

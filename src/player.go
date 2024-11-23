@@ -242,6 +242,7 @@ type PlayerOpts struct {
 }
 
 func (p *PlayerOpts) UnmarshalBinary(data []byte) error {
+	// TODO: MsgClientAccept
 	*p = PlayerOpts{}
 	if len(data) < 153 {
 		return fmt.Errorf("cannot unmarshal player opts: message too short: %d < %d", len(data), 153)
@@ -260,6 +261,7 @@ func (p *PlayerOpts) UnmarshalBinary(data []byte) error {
 }
 
 func (p *PlayerOpts) MarshalBinary() ([]byte, error) {
+	// TODO: MsgClientAccept
 	data := make([]byte, 153)
 	*(*server.PlayerInfo)(unsafe.Pointer(&data[0])) = p.Info // TODO: set fields individually
 	binary.LittleEndian.PutUint32(data[97:101], uint32(p.Screen.X))

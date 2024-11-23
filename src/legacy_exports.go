@@ -273,7 +273,7 @@ func init() {
 	legacy.Nox_xxx_harpoonBreakForPlr_537520 = nox_xxx_harpoonBreakForPlr_537520
 	legacy.Nox_xxx_collideHarpoon_4EB6A0 = nox_xxx_collideHarpoon_4EB6A0
 	legacy.Nox_xxx_updateHarpoon_54F380 = nox_xxx_updateHarpoon_54F380
-	legacy.SendXXX_5550D0 = sendXXX_5550D0
+	legacy.SendXXX_5550D0 = sendServerPassword
 	legacy.Nox_xxx_netStatsMultiplier_4D9C20 = func(a1p *server.Object) int {
 		return noxServer.NetStatsMultiplier(a1p)
 	}

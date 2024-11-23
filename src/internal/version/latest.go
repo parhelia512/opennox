@@ -26,11 +26,11 @@ func Latest() string {
 		defer cancel()
 		vers, err := latestGithub(ctx)
 		if err == nil {
-			Log.Println("latest on github:", vers)
+			Log.Info("latest on github", "version", vers)
 			latest.vers = vers
 			return
 		}
-		Log.Println(err)
+		Log.Warn("cannot check version", "err", err)
 		// give up
 		latest.vers = Version()
 	})

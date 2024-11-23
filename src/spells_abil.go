@@ -539,6 +539,9 @@ func (a *serverAbilities) getDesc(abil server.Ability) string {
 }
 
 func (a *serverAbilities) getIcon(abil server.Ability, icon int) *noxrender.Image {
+	if abil < 0 || int(abil) >= len(a.defs) {
+		return nil
+	}
 	p := &a.defs[abil]
 	switch icon {
 	case 0:

@@ -3,10 +3,11 @@ package netstr
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net"
 	"net/netip"
 	"syscall"
+
+	"github.com/noxworld-dev/opennox-lib/log"
 )
 
 var DebugSockets = false

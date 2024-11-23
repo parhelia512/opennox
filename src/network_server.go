@@ -40,7 +40,7 @@ func (s *Server) onPacketRaw(pli ntype.PlayerInd, data []byte) bool {
 	switch op {
 	case 0x20:
 		if s.newPlayerFromPacket(pli, data[1:]) == 0 {
-			s.NetStr.ConnByPlayerInd(pli).SendCode11()
+			s.NetStr.ConnByPlayerInd(pli).SendServerClose()
 		}
 		return true
 	case 0x22:

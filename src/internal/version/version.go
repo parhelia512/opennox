@@ -7,7 +7,7 @@ import (
 var Log = log.New("version")
 
 func LogVersion() {
-	Log.Printf("version: %s (%s)", Version(), Commit())
+	Log.Info("engine", "version", Version(), "commit", Commit())
 }
 
 const (

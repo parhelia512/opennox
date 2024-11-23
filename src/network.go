@@ -139,7 +139,7 @@ func sendJoinGame(addr netip.AddrPort, data []byte) (int, error) {
 	return sendToServer(addr, data)
 }
 
-func sendXXX_5550D0(addr netip.AddrPort, data []byte) (int, error) {
+func sendServerPassword(addr netip.AddrPort, data []byte) (int, error) {
 	data[0] = 0
 	data[1] = 0
 	data[2] = 17 // 0x11
@@ -206,9 +206,9 @@ func (s *Server) listen(ctx context.Context, port int) error {
 			s.onPacketRaw(conn.Player(), buf)
 			return 1
 		},
-		SendPoll: s.sendPoll,
-		OnJoin:   nox_xxx_netBigSwitch_553210_op_14_check,
-		Check17:  nox_xxx_netBigSwitch_553210_op_17_check,
+		SendPoll:  s.sendPoll,
+		OnJoin:    noxnetJoinCheck,
+		CheckPass: noxnetCheckPassword,
 	}
 	s.SetUpdateFunc2(s.checkPingLimits)
 	return s.Listen(ctx, narg)
@@ -256,21 +256,20 @@ func sub_416910(a1 unsafe.Pointer) unsafe.Pointer {
 	return nox_common_list_getNextSafe_4258A0(a1)
 }
 
-func nox_xxx_netBigSwitch_553210_op_17_check(out []byte, packet []byte) int {
+func noxnetCheckPassword(p *noxnet.MsgServerPass) noxnet.Message {
 	sst := getServerSettings()
-	if alloc.GoString16B(packet[4:]) != alloc.GoString16((*uint16)(unsafe.Add(unsafe.Pointer(sst), 39))) {
-		out[2] = 19
-		out[3] = 6
-		return 4
+	expPass := alloc.GoString16((*uint16)(unsafe.Add(unsafe.Pointer(sst), 39)))
+
+	if p.Pass != expPass {
+		return &noxnet.MsgServerError{Err: noxnet.ErrWrongPassword}
 	}
 	if *(*int16)(unsafe.Pointer(&sst.RestrictedPingMind105)) == -1 && *(*int16)(unsafe.Pointer(&sst.RestrictedPingMax107)) == -1 {
-		out[2] = 20
-		return 3
+		return &noxnet.MsgJoinOK{}
 	}
-	return 0
+	return nil
 }
 
-func nox_xxx_netBigSwitch_553210_op_14_check(out []byte, packet []byte, a4a bool, add func(pid ntype.Player) bool) int {
+func noxnetJoinCheck(p *noxnet.MsgServerTryJoin, a4a bool, add func(pid ntype.Player) bool) noxnet.Message {
 	s := noxServer
 	v43 := false
 	sst := getServerSettings()
@@ -279,44 +278,33 @@ func nox_xxx_netBigSwitch_553210_op_14_check(out []byte, packet []byte, a4a bool
 	// TODO: This code is disabled because it causes issues with players reconnecting to the server.
 	//       For some reason the player record gets stuck in the server's player list, so this check fails.
 	if false {
-		if true {
-			serial := alloc.GoStringS(packet[56:])
-			for it := s.Players.First(); it != nil; it = s.Players.Next(it) {
-				if byte(it.Field2135) == packet[98] {
-					if it.Serial() == serial {
-						out[2] = 19
-						out[3] = 12
-						return 4
-					}
+		for it := s.Players.First(); it != nil; it = s.Players.Next(it) {
+			if byte(it.Field2135) == p.Unk95 {
+				if it.Serial() == p.Serial {
+					return &noxnet.MsgServerError{Err: noxnet.ErrDupSerial}
 				}
 			}
 		}
 	}
 
-	if vers := NoxVersion(binary.LittleEndian.Uint32(packet[80:])); vers != NOX_CLIENT_VERS_CODE {
-		out[2] = 19
-		out[3] = 13
-		return 4
+	if vers := NoxVersion(p.Version); vers != NOX_CLIENT_VERS_CODE {
+		return &noxnet.MsgServerError{Err: noxnet.ErrWrongVer}
 	}
 	if legacy.Sub_40A740() != 0 {
 		v46 := legacy.Nox_xxx_countObserverPlayers_425BF0()
-		f21 := binary.LittleEndian.Uint32(packet[84:])
-		if f21 == 0 {
+		tid := p.Team
+		if tid == 0 {
 			if byte(v46) >= sst.Field53 {
-				out[2] = 19
-				out[3] = 11
-				return 4
+				return &noxnet.MsgServerError{Err: noxnet.ErrFull}
 			}
-		} else if s.Teams.ByXxx(int(f21)) != nil {
+		} else if s.Teams.ByXxx(int(tid)) != nil {
 			if v46 > 0 {
 				v43 = true
 			}
 		} else {
 			if byte(legacy.Sub_417DE0()) >= sst.Field52 {
 				if byte(v46) >= sst.Field53 {
-					out[2] = 19
-					out[3] = 11
-					return 4
+					return &noxnet.MsgServerError{Err: noxnet.ErrFull}
 				}
 			} else if v46 > 0 {
 				v43 = true
@@ -325,9 +313,7 @@ func nox_xxx_netBigSwitch_553210_op_14_check(out []byte, packet []byte, a4a bool
 	}
 	if a4a {
 		if !v43 || *(*uint32)(unsafe.Pointer(&sst.Field54)) == 0 {
-			out[2] = 19
-			out[3] = 11
-			return 4
+			return &noxnet.MsgServerError{Err: noxnet.ErrFull}
 		}
 		var found *Player
 		s.Players.EachReplaceable(func(it *server.Player) bool {
@@ -340,54 +326,43 @@ func nox_xxx_netBigSwitch_553210_op_14_check(out []byte, packet []byte, a4a bool
 		})
 		if found != nil {
 			s.PlayerDisconnect(s.Players.ByInd(found.PlayerIndex()), 4)
-			out[2] = 21
-			return 3
+			return &noxnet.MsgJoinFailed{}
 		}
 	}
 	if sst.Flags100&0x10 != 0 {
 		var found bool
 		for it := sub_4168E0(); it != nil; it = sub_4168F0(it) {
-			if strings.ToLower(alloc.GoString16((*uint16)(unsafe.Add(it, 12)))) == strings.ToLower(alloc.GoString16B(packet[4:])) {
+			if strings.ToLower(alloc.GoString16((*uint16)(unsafe.Add(it, 12)))) == strings.ToLower(p.PlayerName) {
 				found = true
 				break
 			}
 		}
 		if !found {
-			out[2] = 19
-			out[3] = 4
-			return 4
+			return &noxnet.MsgServerError{Err: noxnet.ErrClosed}
 		}
 	} else {
 		for it := sub_416900(); it != nil; it = sub_416910(it) {
 			if alloc.GoString((*byte)(unsafe.Add(it, 72))) == "0" {
-				if strings.ToLower(alloc.GoString16((*uint16)(unsafe.Add(it, 12)))) == strings.ToLower(alloc.GoString16B(packet[4:])) {
-					out[2] = 19
-					out[3] = 5
-					return 4
+				if strings.ToLower(alloc.GoString16((*uint16)(unsafe.Add(it, 12)))) == strings.ToLower(p.PlayerName) {
+					return &noxnet.MsgServerError{Err: noxnet.ErrBanned}
 				}
 			} else {
-				if strings.ToLower(alloc.GoString((*byte)(unsafe.Add(it, 72)))) == strings.ToLower(alloc.GoStringS(packet[56:])) {
-					out[2] = 19
-					out[3] = 5
-					return 4
+				if strings.ToLower(alloc.GoString((*byte)(unsafe.Add(it, 72)))) == strings.ToLower(p.Serial) {
+					return &noxnet.MsgServerError{Err: noxnet.ErrBanned}
 				}
 			}
 		}
 	}
-	if sst.Flags100 != 0 && sst.Flags100.Has(server.ServerFlags(1<<packet[54])) {
-		out[2] = 19
-		out[3] = 7
-		return 4
+	if sst.Flags100 != 0 && sst.Flags100.Has(server.ServerFlags(1<<p.PlayerClass)) {
+		return &noxnet.MsgServerError{Err: noxnet.ErrIllegalClass}
 	}
 	if sst.Flags100.Has(server.ServerPrivate) {
-		out[2] = 15
-		return 3
+		return &noxnet.MsgPasswordRequired{}
 	}
 	if *(*int16)(unsafe.Pointer(&sst.RestrictedPingMind105)) == -1 && *(*int16)(unsafe.Pointer(&sst.RestrictedPingMax107)) == -1 {
-		out[2] = 20 // OK
-		return 3
+		return &noxnet.MsgJoinOK{}
 	}
-	return 0
+	return nil
 }
 
 func sub_554240(pli ntype.PlayerInd) int {
@@ -398,7 +373,7 @@ func sub_554240(pli ntype.PlayerInd) int {
 }
 
 func sub_43CC80() {
-	noxClient.Conn.SendClose()
+	noxClient.Conn.SendClientClose()
 	legacy.Set_dword_5d4594_2649712(0)
 }
 
@@ -473,7 +448,7 @@ func (s *Server) sendSettings(u *server.Object) {
 	pl := u.ControllingPlayer()
 	{
 		buf, err := noxnet.AppendPacket(nil, &noxnet.MsgFullTimestamp{
-			T: s.Frame(),
+			T: noxnet.Timestamp(s.Frame()),
 		})
 		if err != nil {
 			panic(err)
@@ -537,7 +512,7 @@ func (s *Server) sendSettings(u *server.Object) {
 		buf, err := noxnet.AppendPacket(nil, &noxnet.MsgUseMap{
 			MapName: binenc.String{Value: s.nox_server_currentMapGetFilename_409B30()},
 			CRC:     nox_xxx_mapCrcGetMB_409B00(),
-			T:       s.Frame(),
+			T:       noxnet.Timestamp(s.Frame()),
 		})
 		if err != nil {
 			panic(err)
@@ -551,7 +526,7 @@ func (s *Server) nox_xxx_netUseMap_4DEE00(mname string, crc uint32) {
 	pck, err := noxnet.AppendPacket(nil, &noxnet.MsgUseMap{
 		MapName: binenc.String{Value: mname},
 		CRC:     crc,
-		T:       s.Frame(),
+		T:       noxnet.Timestamp(s.Frame()),
 	})
 	if err != nil {
 		panic(err)

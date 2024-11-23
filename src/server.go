@@ -56,8 +56,8 @@ func sub_40A1A0() int {
 }
 
 func init() {
-	nat.Log = log.New("nat")
-	nat.LogUPNP = log.New("nat-upnp")
+	nat.Log = log.New("nat").Logger
+	nat.LogUPNP = log.New("nat-upnp").Logger
 }
 
 func NewServer(pr console.Printer, sm *strman.StringManager) *Server {
@@ -497,7 +497,7 @@ func (s *Server) nox_xxx_netUpdate_518EE0(u *server.Object) {
 	if legacy.Get_dword_5d4594_2650652() == 0 || (s.Frame()%uint32(nox_xxx_rateGet_40A6C0())) == 0 || noxflags.HasGame(noxflags.GameFlag4) {
 		if pl.Field3680&0x40 != 0 {
 			buf, err := noxnet.AppendPacket(nil, &noxnet.MsgFullTimestamp{
-				T: s.Frame(),
+				T: noxnet.Timestamp(s.Frame()),
 			})
 			if err != nil {
 				panic(err)

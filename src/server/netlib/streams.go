@@ -60,8 +60,8 @@ type SendStream interface {
 	Flush() error
 	FlushAndPoll() error
 	SendCode6() int
-	SendClose()
-	SendCode11()
+	SendClientClose()
+	SendServerClose()
 }
 
 type SendStreamID interface {

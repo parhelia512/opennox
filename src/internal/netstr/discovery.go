@@ -9,12 +9,12 @@ import (
 )
 
 type LobbyWaitOptions struct {
-	OnResult func(addr netip.AddrPort, data []byte)
-	OnCode15 func()
-	OnPing   func(addr netip.AddrPort, data []byte)
-	OnCode19 func(errcode byte) bool
-	OnCode20 func()
-	OnCode21 func()
+	OnResult       func(addr netip.AddrPort, data []byte)
+	OnPassRequired func()
+	OnPing         func(addr netip.AddrPort, data []byte)
+	OnConnectErr   func(errcode noxnet.ConnectError) bool
+	OnJoinOK       func()
+	OnJoinFail     func()
 }
 
 func WaitForLobbyResults(conn net.PacketConn, srvAddr netip.Addr, flag RecvFlags, opts LobbyWaitOptions) (int, error) {
@@ -40,25 +40,25 @@ func WaitForLobbyResults(conn net.PacketConn, srvAddr netip.Addr, flag RecvFlags
 		}
 		buf = buf[:n]
 		op := noxnet.Op(buf[2])
-		if op < code32 {
-			if op == codeInfo13 || srvAddr == from.Addr() {
+		if op < noxnet.MSG_CLIENT_ACCEPT {
+			if op == noxnet.MSG_SERVER_INFO || srvAddr == from.Addr() {
 				switch op {
-				case codeInfo13:
+				case noxnet.MSG_SERVER_INFO:
 					if from.Addr().IsValid() {
 						opts.OnResult(from, buf)
 					}
-				case codeErr15:
-					opts.OnCode15()
-				case codePing16:
+				case noxnet.MSG_PASSWORD_REQUIRED:
+					opts.OnPassRequired()
+				case noxnet.MSG_SERVER_PING:
 					opts.OnPing(from, buf)
-				case codeErrCode19:
-					if !opts.OnCode19(buf[3]) {
+				case noxnet.MSG_SERVER_ERROR:
+					if !opts.OnConnectErr(noxnet.ConnectError(buf[3])) {
 						break
 					}
-				case codeACK20:
-					opts.OnCode20()
-				case codeErr21:
-					opts.OnCode21()
+				case noxnet.MSG_SERVER_JOIN_OK:
+					opts.OnJoinOK()
+				case noxnet.MSG_SERVER_JOIN_FAIL:
+					opts.OnJoinFail()
 				}
 			}
 		}

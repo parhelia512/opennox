@@ -36,7 +36,7 @@ func getGithubToken(ctx context.Context) (string, error) {
 	qu := make(url.Values)
 	qu.Set("scope", "repository:"+githubImageFull+":pull")
 	addr := githubBaseURL + "/token?" + qu.Encode()
-	Log.Println("GET", addr)
+	Log.Debug("GET", "url", addr)
 	req, err := http.NewRequestWithContext(ctx, "GET", addr, nil)
 	if err != nil {
 		return "", err
@@ -64,7 +64,7 @@ func getGithubToken(ctx context.Context) (string, error) {
 // getGithubLatestImage returns the latest version (tag) on GitHub Container Registry, where we host OpenNox server images.
 func getGithubLatestImage(ctx context.Context, token string) (string, error) {
 	addr := githubBaseURL + "/v2/" + githubImageFull + "/tags/list"
-	Log.Println("GET", addr)
+	Log.Debug("GET", "url", addr)
 	req, err := http.NewRequestWithContext(ctx, "GET", addr, nil)
 	if err != nil {
 		return "", err

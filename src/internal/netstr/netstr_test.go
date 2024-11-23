@@ -44,7 +44,7 @@ func TestNetstr(t *testing.T) {
 				out[2] = 20 // OK
 				return 3
 			},
-			Check17: func(out []byte, packet []byte) int {
+			CheckPass: func(out []byte, packet []byte) int {
 				t.Logf("SRV: check17: [%d]: %x", len(packet), packet)
 				out[2] = 20 // OK
 				return 3
@@ -86,7 +86,7 @@ func TestNetstr(t *testing.T) {
 			out[2] = 20 // OK
 			return 3
 		},
-		Check17: func(out []byte, packet []byte) int {
+		CheckPass: func(out []byte, packet []byte) int {
 			t.Logf("CLI: check17: [%d]: %x", len(packet), packet)
 			out[2] = 20 // OK
 			return 3

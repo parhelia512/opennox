@@ -3,7 +3,7 @@ package netxfer
 import (
 	"github.com/noxworld-dev/opennox-lib/binenc"
 	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/noxnet/xfer"
+	"github.com/noxworld-dev/opennox-lib/noxnet/netxfer"
 
 	"github.com/noxworld-dev/opennox/v1/server/netlib"
 )
@@ -20,7 +20,7 @@ type AbortFunc func(act Action)
 type sendState byte
 
 type sendChunk struct {
-	ind      xfer.Chunk
+	ind      netxfer.Chunk
 	data     []byte
 	lastSent Time
 	retries  uint16
@@ -30,7 +30,7 @@ type sendChunk struct {
 
 type sendStream struct {
 	conn      netlib.SendStream
-	recvID    xfer.RecvID
+	recvID    netxfer.RecvID
 	state     sendState
 	size      int
 	nextChunk int
@@ -57,7 +57,7 @@ func (p *sendStream) Free() {
 	}
 }
 
-func (p *sendStream) Ack(chunk xfer.Chunk) {
+func (p *sendStream) Ack(chunk netxfer.Chunk) {
 	if p == nil {
 		return
 	}
@@ -111,7 +111,7 @@ func (x *sender) Init(n int) {
 	x.active = 0
 }
 
-func (x *sender) find(conn netlib.SendStream, rid xfer.RecvID) *sendStream {
+func (x *sender) find(conn netlib.SendStream, rid netxfer.RecvID) *sendStream {
 	for i := 0; i < x.cnt; i++ {
 		it := &x.arr[i]
 		if it.conn == conn && it.recvID == rid {
@@ -121,7 +121,7 @@ func (x *sender) find(conn netlib.SendStream, rid xfer.RecvID) *sendStream {
 	return nil
 }
 
-func (x *sender) HandleAccept(conn netlib.SendStream, m *xfer.MsgAccept) {
+func (x *sender) HandleAccept(conn netlib.SendStream, m *netxfer.MsgAccept) {
 	id := m.SendID
 	if int(id) >= x.cnt {
 		return
@@ -131,11 +131,11 @@ func (x *sender) HandleAccept(conn netlib.SendStream, m *xfer.MsgAccept) {
 	p.state = sendAccepted
 }
 
-func (x *sender) HandleAck(conn netlib.SendStream, m *xfer.MsgAck) {
+func (x *sender) HandleAck(conn netlib.SendStream, m *netxfer.MsgAck) {
 	x.find(conn, m.RecvID).Ack(m.Chunk)
 }
 
-func (x *sender) HandleDone(conn netlib.SendStream, m *xfer.MsgDone) {
+func (x *sender) HandleDone(conn netlib.SendStream, m *netxfer.MsgDone) {
 	p := x.find(conn, m.RecvID)
 	if p == nil {
 		return
@@ -145,7 +145,7 @@ func (x *sender) HandleDone(conn netlib.SendStream, m *xfer.MsgDone) {
 	p.Reset()
 }
 
-func (x *sender) HandleAbort(conn netlib.SendStream, m *xfer.MsgAbort) {
+func (x *sender) HandleAbort(conn netlib.SendStream, m *netxfer.MsgAbort) {
 	p := x.find(conn, m.RecvID)
 	if p == nil {
 		return
@@ -171,7 +171,7 @@ func (x *sender) Send(conn netlib.SendStream, act Action, typ string, data []byt
 	blocks := (len(data)-1)/blockSz + 1
 	for i := 0; i < blocks; i++ {
 		b := &sendChunk{
-			ind: xfer.Chunk(i + 1),
+			ind: netxfer.Chunk(i + 1),
 		}
 		n := blockSz
 		if len(left) <= n {
@@ -213,16 +213,16 @@ func (x *sender) Cancel(ind netlib.SendStream) {
 	for i := 0; i < x.cnt; i++ {
 		it := &x.arr[i]
 		if it.state == sendAccepted && it.conn == ind {
-			x.cancel(it, xfer.ErrClosed)
+			x.cancel(it, netxfer.ErrClosed)
 		}
 	}
 }
 
-func (x *sender) New() (*sendStream, xfer.SendID) {
+func (x *sender) New() (*sendStream, netxfer.SendID) {
 	for i := 0; i < x.cnt; i++ {
 		it := &x.arr[i]
 		if it.state == sendFree && it.size == 0 {
-			return it, xfer.SendID(i)
+			return it, netxfer.SendID(i)
 		}
 	}
 	return nil, 0
@@ -255,7 +255,7 @@ func (x *sender) Update(ts Time) {
 					b.lastSent = ts
 					b.retries++
 				} else if s.state == sendAccepted {
-					x.cancel(s, xfer.ErrSendTimeout)
+					x.cancel(s, netxfer.ErrSendTimeout)
 					break
 				}
 			}
@@ -263,7 +263,7 @@ func (x *sender) Update(ts Time) {
 	}
 }
 
-func (x *sender) cancel(s *sendStream, reason xfer.Error) {
+func (x *sender) cancel(s *sendStream, reason netxfer.Error) {
 	sendCancel(s.conn, s.recvID, reason)
 	s.callAborted()
 	s.Free()
@@ -273,8 +273,8 @@ func (x *sender) cancel(s *sendStream, reason xfer.Error) {
 	}
 }
 
-func sendStart(conn netlib.SendStream, act Action, typ string, sz int, sid xfer.SendID) {
-	conn.SendReliableMsg(&noxnet.MsgXfer{&xfer.MsgStart{
+func sendStart(conn netlib.SendStream, act Action, typ string, sz int, sid netxfer.SendID) {
+	conn.SendReliableMsg(&noxnet.MsgXfer{&netxfer.MsgStart{
 		Act:    act,
 		Size:   uint32(sz),
 		Type:   binenc.String{Value: typ},
@@ -282,8 +282,8 @@ func sendStart(conn netlib.SendStream, act Action, typ string, sz int, sid xfer.
 	}})
 }
 
-func sendData(conn netlib.SendStream, rid xfer.RecvID, chunk xfer.Chunk, data []byte) {
-	conn.SendUnreliableMsg(&noxnet.MsgXfer{&xfer.MsgData{
+func sendData(conn netlib.SendStream, rid netxfer.RecvID, chunk netxfer.Chunk, data []byte) {
+	conn.SendUnreliableMsg(&noxnet.MsgXfer{&netxfer.MsgData{
 		RecvID: rid,
 		Token:  0,
 		Chunk:  chunk,
@@ -292,8 +292,8 @@ func sendData(conn netlib.SendStream, rid xfer.RecvID, chunk xfer.Chunk, data []
 	conn.Flush()
 }
 
-func sendCancel(conn netlib.SendStream, rid xfer.RecvID, reason xfer.Error) {
-	conn.SendReliableMsg(&noxnet.MsgXfer{&xfer.MsgCancel{
+func sendCancel(conn netlib.SendStream, rid netxfer.RecvID, reason netxfer.Error) {
+	conn.SendReliableMsg(&noxnet.MsgXfer{&netxfer.MsgCancel{
 		RecvID: rid,
 		Reason: reason,
 	}})

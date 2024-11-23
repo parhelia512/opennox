@@ -24,33 +24,12 @@ const (
 )
 
 const (
-	codeInit0          = noxnet.Op(0x00)
-	codeNewStream1     = noxnet.Op(0x01)
 	codeErr2           = noxnet.Op(0x02)
 	code3              = noxnet.Op(0x03)
 	codeAlreadyJoined4 = noxnet.Op(0x04)
 	code5              = noxnet.Op(0x05)
-	code6              = noxnet.Op(0x06)
 	code7              = noxnet.Op(0x07)
-	code8              = noxnet.Op(0x08)
 	code9              = noxnet.Op(0x09)
-	code10             = noxnet.Op(0x0A)
-	code11             = noxnet.Op(0x0B)
-	codeDiscover12     = noxnet.Op(0x0C)
-	codeInfo13         = noxnet.Op(0x0D)
-	codeJoin14         = noxnet.Op(0x0E)
-	codeErr15          = noxnet.Op(0x0F)
-	codePing16         = noxnet.Op(0x10)
-	code17             = noxnet.Op(0x11)
-	codePong18         = noxnet.Op(0x12)
-	codeErrCode19      = noxnet.Op(0x13)
-	codeACK20          = noxnet.Op(0x14)
-	codeErr21          = noxnet.Op(0x15)
-	code31             = noxnet.Op(0x1F)
-	code32             = noxnet.Op(0x20)
-	code33             = noxnet.Op(0x21)
-	code34             = noxnet.Op(0x22)
-	code35             = noxnet.Op(0x23)
 	code36             = noxnet.Op(0x24)
 	code37             = noxnet.Op(0x25)
 	code38             = noxnet.Op(0x26)
@@ -181,7 +160,7 @@ func (nx *stream2) nextPingPacket(t time.Duration) []byte {
 	nx.ticks = t
 
 	var buf [8]byte
-	buf[2] = byte(codePing16)
+	buf[2] = byte(noxnet.MSG_SERVER_PING)
 	buf[3] = nx.cur
 	binary.LittleEndian.PutUint32(buf[4:], uint32(nx.ticks/time.Millisecond))
 	return buf[:]
@@ -263,7 +242,7 @@ type Options struct {
 	SendPoll  Handler
 	OnReceive Handler
 	OnJoin    JoinCheck
-	Check17   Check17
+	CheckPass CheckPassFunc
 }
 
 func (g *Streams) newStream(id int, opt *Options) *Conn {
@@ -285,7 +264,7 @@ func (g *Streams) newStreamAt(ind int, id int, opt *Options) *Conn {
 		sendPoll:  opt.SendPoll,
 		onReceive: opt.OnReceive,
 		onJoin:    opt.OnJoin,
-		check17:   opt.Check17,
+		checkPass: opt.CheckPass,
 	}
 	ns.resetReliable()
 	if dsz := opt.BufferSize; dsz > 0 {
@@ -310,7 +289,7 @@ func (g *Streams) maybeSendCode11() {
 			continue
 		}
 		if ns.field38 == 1 && ns.frame40+300 < g.GameFrame() {
-			ns.SendCode11()
+			ns.SendServerClose()
 		}
 	}
 }
@@ -412,7 +391,7 @@ func (g *Streams) sendCode20(ind2 int) (int, error) {
 	var buf [3]byte
 	buf[0] = 0
 	buf[1] = 0
-	buf[2] = byte(codeACK20)
+	buf[2] = byte(noxnet.MSG_SERVER_JOIN_OK)
 
 	nx := &g.streams2[ind2]
 	nx.active = false
@@ -420,12 +399,12 @@ func (g *Streams) sendCode20(ind2 int) (int, error) {
 	return g.lis.writeTo(buf[:3], nx.addr)
 }
 
-func (g *Streams) sendCode19(code byte, ind2 int) (int, error) {
+func (g *Streams) sendCode19(code noxnet.ConnectError, ind2 int) (int, error) {
 	var buf [4]byte
 	buf[0] = 0
 	buf[1] = 0
-	buf[2] = byte(codeErrCode19)
-	buf[3] = code
+	buf[2] = byte(noxnet.MSG_SERVER_ERROR)
+	buf[3] = byte(code)
 
 	nx := &g.streams2[ind2]
 	nx.active = false
@@ -443,7 +422,7 @@ func (g *Streams) ProcessStats(min, max time.Duration) {
 		v2 := nx.cur
 		if int(v2) >= len(nx.samples) {
 			if int(nx.lost) > g.MaxPacketLoss {
-				_, _ = g.sendCode19(1, i)
+				_, _ = g.sendCode19(noxnet.ErrHighPing, i)
 				_, _ = g.sendCode20(i)
 				continue
 			}
@@ -457,10 +436,10 @@ func (g *Streams) ProcessStats(min, max time.Duration) {
 			}
 			avg := sum / time.Duration(cnt)
 			if min != -1 && avg < min {
-				_, _ = g.sendCode19(0, i)
+				_, _ = g.sendCode19(noxnet.ErrLowPing, i)
 			}
 			if max != -1 && avg > max {
-				_, _ = g.sendCode19(1, i)
+				_, _ = g.sendCode19(noxnet.ErrHighPing, i)
 			}
 			_, _ = g.sendCode20(i)
 		} else {
@@ -471,7 +450,7 @@ func (g *Streams) ProcessStats(min, max time.Duration) {
 					nx.cur++
 					_, _ = g.sendTime(i)
 				} else {
-					_, _ = g.sendCode19(1, i)
+					_, _ = g.sendCode19(noxnet.ErrHighPing, i)
 				}
 			}
 		}

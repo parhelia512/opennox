@@ -637,8 +637,7 @@ int nox_xxx_windowMultiplayerSub_439E70(int a1, unsigned int a2, int* a3, int a4
 	uint16_t v28;       // [esp-8h] [ebp-A0h]
 	int v30;            // [esp+Ch] [ebp-8Ch]
 	int v31;            // [esp+10h] [ebp-88h]
-	char buf[4];        // [esp+14h] [ebp-84h]
-	wchar2_t v33[10];    // [esp+18h] [ebp-80h]
+	char buf[24];        // [esp+14h] [ebp-84h]
 	char v34[36];       // [esp+2Ch] [ebp-6Ch]
 	char v35[72];       // [esp+50h] [ebp-48h]
 
@@ -866,8 +865,9 @@ int nox_xxx_windowMultiplayerSub_439E70(int a1, unsigned int a2, int* a3, int a4
 	if (!v8) {
 		if (sub_43AF80() == 6) {
 			v12 = (const wchar2_t*)sub_449E60(4);
-			nox_wcsncpy(v33, v12, 9u);
-			v33[8] = 0;
+			wchar2_t* wbuf = &buf[4];
+			nox_wcsncpy(wbuf, v12, 9u);
+			wbuf[8] = 0;
 			v28 = nox_client_getServerPort_43B320();
 			v13 = nox_client_getServerAddr_43B300();
 			sub_5550D0(v13, v28, buf);

@@ -65,7 +65,7 @@ func sub_43CCA0() {
 			v2 := memmap.Uint64(0x5D4594, 815740) + memmap.Uint64(0x587000, 91880)/uint64(sub_43C790())
 			if platformTicks() >= v2 {
 				buf, err := noxnet.AppendPacket(nil, &noxnet.MsgFullTimestamp{
-					T: s.Frame() + 1,
+					T: noxnet.Timestamp(s.Frame()) + 1,
 				})
 				if err != nil {
 					panic(err)

@@ -86,7 +86,7 @@ func (c *Client) Nox_xxx_cliSendOutgoingClient_43CB50() int {
 
 func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []byte, localFrame *uint32, localFrame16 *uint16, cur CurPlayerInfo) (int, bool, error) {
 	switch op {
-	case noxnet.MSG_XXX_STOP:
+	case noxnet.MSG_SERVER_CLOSE_ACK:
 		return 1, true, nil
 	case noxnet.MSG_STAT_MULTIPLIERS:
 		var p noxnet.MsgStatMult

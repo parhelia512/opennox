@@ -3,6 +3,7 @@ package opennox
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"path/filepath"
 	"reflect"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/noxworld-dev/opennox-lib/console"
 	"github.com/noxworld-dev/opennox-lib/datapath"
+	noxlog "github.com/noxworld-dev/opennox-lib/log"
 	"github.com/noxworld-dev/opennox-lib/maps"
 	"github.com/noxworld-dev/opennox-lib/script"
 	"github.com/noxworld-dev/opennox-lib/strman"
@@ -67,7 +69,7 @@ func (s *Server) registerScriptAPIs(pref string) {
 						return
 					}
 					if _, err := vm.Exec(code); err != nil {
-						rt.Log.Printf("error: %v", err)
+						apiLog.Printf("error: %v", err)
 					}
 				})
 			})
@@ -77,7 +79,7 @@ func (s *Server) registerScriptAPIs(pref string) {
 
 func (s *Server) vmsMaybeInitMap() {
 	mp := s.nox_server_currentMapGetFilename_409B30()
-	ScriptLog.Printf("check map init: %q vs %q", mp, s.VMs.Curmap)
+	ScriptLog.Debug("check map init", "cur", s.VMs.Curmap, "new", mp)
 	if mp == s.VMs.Curmap {
 		return
 	}
@@ -92,13 +94,15 @@ func (s *Server) vmsInitMap() {
 	mp = strings.TrimSuffix(mp, maps.Ext)
 	mapsDir := datapath.Maps()
 	s.VMs.VMByName = make(map[string]script.VM)
+	log := slog.Default()
 	for _, rt := range script.VMRuntimes() {
 		if rt.NewMap == nil {
 			continue
 		}
-		vm, err := rt.NewMap(noxScriptImpl{s}, mapsDir, mp)
+		log := noxlog.WithSystem(log, rt.Name)
+		vm, err := rt.NewMap(log, noxScriptImpl{s}, mapsDir, mp)
 		if err != nil {
-			rt.Log.Println("error opening script %q: %v", filepath.Join(maps.Dir, mp), err)
+			log.Error("error opening script", "path", filepath.Join(maps.Dir, mp), "err", err)
 			noxConsole.Print(console.ColorRed, fmt.Sprintf("ERROR: %q: %v", filepath.Join(maps.Dir, mp), err))
 			continue
 		}

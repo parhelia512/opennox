@@ -11,6 +11,7 @@ import (
 	"unsafe"
 
 	"github.com/noxworld-dev/lobby"
+	"github.com/noxworld-dev/opennox-lib/noxnet"
 
 	"github.com/noxworld-dev/opennox/v1/client"
 	"github.com/noxworld-dev/opennox/v1/client/gui"
@@ -258,7 +259,7 @@ func waitForLobbyResults(conn net.PacketConn, flag netstr.RecvFlags) (int, error
 			name = name[:alloc.StrLenS(name)]
 			onLobbyServerPacket(saddr, port, string(name), data)
 		},
-		OnCode15: func() {
+		OnPassRequired: func() {
 			if legacy.Sub_43B6D0() != 0 {
 				legacy.Sub_43AF90(5)
 			}
@@ -266,13 +267,12 @@ func waitForLobbyResults(conn net.PacketConn, flag netstr.RecvFlags) (int, error
 		OnPing: func(addr netip.AddrPort, buf []byte) {
 			if legacy.Sub_43B6D0() != 0 {
 				legacy.Sub_43AF90(4)
-				buf[2] = 18
+				buf[2] = byte(noxnet.MSG_SERVER_PONG)
 				sendToServer(addr, buf[:8])
 			}
 		},
-		OnCode19: func(code byte) bool {
-			errcode := ConnectError(code)
-			if errcode != ErrDupSerial {
+		OnConnectErr: func(errcode noxnet.ConnectError) bool {
+			if errcode != noxnet.ErrDupSerial {
 				if legacy.Sub_43B6D0() != 0 {
 					nox_client_setConnError_43AFA0(errcode)
 				}
@@ -287,12 +287,12 @@ func waitForLobbyResults(conn net.PacketConn, flag netstr.RecvFlags) (int, error
 			}
 			return true
 		},
-		OnCode20: func() {
+		OnJoinOK: func() {
 			if legacy.Sub_43B6D0() != 0 && legacy.Sub_43AF80() == 3 {
 				legacy.Sub_43AF90(7)
 			}
 		},
-		OnCode21: func() {
+		OnJoinFail: func() {
 			if legacy.Sub_43B6D0() != 0 {
 				legacy.Sub_43AF90(8)
 			}
@@ -315,60 +315,7 @@ func sendToServer(addr netip.AddrPort, data []byte) (int, error) {
 
 func sub_420100() int { return int(memmap.Uint32(0x587000, 60072) >> 8) }
 
-type ConnectError int
-
-func (e ConnectError) Name() string {
-	switch e {
-	case ErrLowPing:
-		return "ErrLowPing"
-	case ErrHighPing:
-		return "ErrHighPing"
-	case ErrLowLevel:
-		return "ErrLowLevel"
-	case ErrHighLevel:
-		return "ErrHighLevel"
-	case ErrClosed:
-		return "ErrClosed"
-	case ErrBanned:
-		return "ErrBanned"
-	case ErrWrongPassword:
-		return "ErrWrongPassword"
-	case ErrIllegalClass:
-		return "ErrIllegalClass"
-	case ErrTimeOut:
-		return "ErrTimeOut"
-	case ErrFindFailed:
-		return "ErrFindFailed"
-	case ErrNeedRefresh:
-		return "ErrNeedRefresh"
-	case ErrFull:
-		return "ErrFull"
-	case ErrDupSerial:
-		return "ErrDupSerial"
-	case ErrWrongVer:
-		return "ErrWrongVer"
-	}
-	return fmt.Sprintf("ConnectError(%d)", int(e))
-}
-
-const (
-	ErrLowPing = ConnectError(iota)
-	ErrHighPing
-	ErrLowLevel
-	ErrHighLevel
-	ErrClosed
-	ErrBanned
-	ErrWrongPassword
-	ErrIllegalClass
-	ErrTimeOut
-	ErrFindFailed
-	ErrNeedRefresh
-	ErrFull
-	ErrDupSerial
-	ErrWrongVer
-)
-
-func nox_client_setConnError_43AFA0(err ConnectError) {
+func nox_client_setConnError_43AFA0(err noxnet.ConnectError) {
 	gameLog.Printf("connect error: %d (%s)", err, err.Name())
 	legacy.Set_nox_client_connError_814552(int(err))
 	legacy.Sub_43AF90(2)

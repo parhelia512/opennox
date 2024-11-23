@@ -2,7 +2,7 @@ package netxfer
 
 import (
 	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/noxnet/xfer"
+	"github.com/noxworld-dev/opennox-lib/noxnet/netxfer"
 
 	"github.com/noxworld-dev/opennox/v1/server/netlib"
 )
@@ -12,7 +12,7 @@ const (
 	maxStreams = 256
 )
 
-type Action = xfer.Action
+type Action = netxfer.Action
 
 type Time = uint32
 
@@ -46,19 +46,19 @@ func (x *NetXfer) CancelSend(conn netlib.SendStream) {
 
 func (x *NetXfer) Handle(conn netlib.SendStreamID, ts Time, m *noxnet.MsgXfer) {
 	switch m := m.Msg.(type) {
-	case *xfer.MsgStart:
+	case *netxfer.MsgStart:
 		x.recv.HandleStart(conn, ts, m)
-	case *xfer.MsgAccept:
+	case *netxfer.MsgAccept:
 		x.send.HandleAccept(conn, m)
-	case *xfer.MsgCancel:
+	case *netxfer.MsgCancel:
 		x.recv.HandleCancel(m)
-	case *xfer.MsgAbort:
+	case *netxfer.MsgAbort:
 		x.send.HandleAbort(conn, m)
-	case *xfer.MsgData:
+	case *netxfer.MsgData:
 		x.recv.HandleData(conn.Player(), conn, ts, m)
-	case *xfer.MsgAck:
+	case *netxfer.MsgAck:
 		x.send.HandleAck(conn, m)
-	case *xfer.MsgDone:
+	case *netxfer.MsgDone:
 		x.send.HandleDone(conn, m)
 	}
 }

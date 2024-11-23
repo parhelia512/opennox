@@ -1524,10 +1524,10 @@ int nox_xxx_netCliProcUpdateStream_494A60(unsigned char* a1, int a2, uint32_t* a
 		v24 = nox_xxx_cliGenerateAlias_57B9A0((int)getMemAt(0x5D4594, 1198020), v3, v6, gameFrame());
 		if (v24 != -1) {
 			sub_57BA10((int)getMemAt(0x5D4594, 1198020 + 8 * v24), v3, v6, -1);
-			v23[0] = -91;
+			v23[0] = 0xA5; // MSG_NEW_ALIAS
+			v23[1] = v24;
 			*(uint16_t*)&v23[2] = v3;
 			*(uint16_t*)&v23[4] = v4;
-			v23[1] = v24;
 			*(uint32_t*)&v23[6] = -1;
 			nox_netlist_addToMsgListCli_40EBC0(a2, 0, v23, 10);
 		}
@@ -1570,7 +1570,7 @@ int nox_xxx_netCliProcUpdateStream_494A60(unsigned char* a1, int a2, uint32_t* a
 			nox_xxx_spriteSetFrameMB_45AB80((int)v16, v25);
 		}
 	}
-	*a3 = v20;
+	a3[0] = v20;
 	a3[1] = v21;
 	nox_xxx_cliUpdateCameraPos_435600(v20, v21);
 	return v15 - (uint32_t)v22;
@@ -1605,9 +1605,9 @@ unsigned char* nox_xxx_netCliUpdateStream2_494C30(unsigned char* a1, int a2, int
 	unsigned char v28; // [esp+34h] [ebp+Ch]
 
 	v3 = a1;
-	v4 = *a1;
+	v4 = a1[0];
 	v25 = 0;
-	if (!*a1) {
+	if (!v4) {
 		v4 = a1[1];
 		v3 = a1 + 1;
 		if (!v4 && !a1[2]) {
@@ -1624,8 +1624,8 @@ unsigned char* nox_xxx_netCliUpdateStream2_494C30(unsigned char* a1, int a2, int
 		v24 = nox_xxx_cliGenerateAlias_57B9A0((int)getMemAt(0x5D4594, 1198020), v6, v9, gameFrame());
 		if (v24 != -1) {
 			sub_57BA10((int)getMemAt(0x5D4594, 1198020 + 8 * v24), v6, v9, gameFrame() + 60);
+			v26[0] = 0xA5; // MSG_NEW_ALIAS
 			v26[1] = v24;
-			v26[0] = -91;
 			*(uint16_t*)&v26[2] = v6;
 			*(uint16_t*)&v26[4] = v8;
 			*(uint32_t*)&v26[6] = gameFrame() + 60;
@@ -1650,8 +1650,8 @@ unsigned char* nox_xxx_netCliUpdateStream2_494C30(unsigned char* a1, int a2, int
 		*a3 += v15;
 		a3[1] += *(char*)(v14 - 1);
 	}
-	v16 = *v13;
-	if ((int)*v13 < 0) {
+	v16 = v13[0];
+	if (v16 < 0) {
 		return &a1[-v14];
 	}
 	if (v16 > 6000) {
@@ -1664,7 +1664,7 @@ unsigned char* nox_xxx_netCliUpdateStream2_494C30(unsigned char* a1, int a2, int
 	if (v17 > 6000) {
 		return &a1[-v14];
 	}
-	v18 = nox_xxx_spriteCreate_48E970(v8, v6, v16, v13[1]);
+	v18 = nox_xxx_spriteCreate_48E970(v8, v6, v16, v17);
 	v19 = (int)v18;
 	if (!v18) {
 		return &a1[-v14];
