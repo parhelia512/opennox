@@ -1,9 +1,9 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/script"
+	"github.com/opennox/libs/script"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func (s *Server) getWaypointGroupByID(id string) *script.WaypointGroup {

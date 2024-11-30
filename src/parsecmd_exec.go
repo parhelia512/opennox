@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/noxworld-dev/opennox-lib/console"
+	"github.com/opennox/libs/console"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 var (

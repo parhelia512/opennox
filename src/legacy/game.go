@@ -62,17 +62,17 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/ccall"
+	"github.com/opennox/opennox/v1/client"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/legacy/common/ccall"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

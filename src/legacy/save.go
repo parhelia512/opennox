@@ -18,8 +18,8 @@ import (
 	"errors"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/internal/cryptfile"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/internal/cryptfile"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

@@ -3,8 +3,8 @@ package opennox
 import (
 	"os"
 
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/maps"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/maps"
 )
 
 var mapsend struct {

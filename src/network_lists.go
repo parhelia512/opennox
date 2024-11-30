@@ -3,15 +3,15 @@ package opennox
 import (
 	"encoding/binary"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/internal/netlist"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
-	"github.com/noxworld-dev/opennox/v1/server/netlib"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/internal/netlist"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server/netlib"
 )
 
 func nox_xxx_rateGet_40A6C0() int {

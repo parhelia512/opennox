@@ -7,16 +7,16 @@ import (
 	"sort"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/spell"
-	"github.com/noxworld-dev/opennox-lib/things"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/things"
+	"github.com/opennox/libs/types"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 const (

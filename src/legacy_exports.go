@@ -1,15 +1,15 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/internal/cryptfile"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/internal/cryptfile"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func init() {

@@ -1,6 +1,6 @@
 package opennox
 
-import "github.com/noxworld-dev/opennox/v1/legacy"
+import "github.com/opennox/opennox/v1/legacy"
 
 var noxCursors struct {
 	Select     *legacy.ImageRef

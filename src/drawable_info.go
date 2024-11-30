@@ -3,11 +3,11 @@ package opennox
 import (
 	"unsafe"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
+	noxcolor "github.com/opennox/libs/color"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/server"
 )
 
 type clientDrawInfo struct {

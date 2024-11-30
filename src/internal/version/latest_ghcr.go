@@ -11,7 +11,7 @@ import (
 
 const (
 	githubBaseURL   = "https://ghcr.io"
-	githubOrg       = "noxworld-dev"
+	githubOrg       = "opennox"
 	githubRepo      = "opennox-docker"
 	githubRepoFull  = githubOrg + "/" + githubRepo
 	githubImage     = "opennox"

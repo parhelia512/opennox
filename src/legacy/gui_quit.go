@@ -15,7 +15,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/client/gui"
 )
 
 var (

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"unsafe"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 type ServerMapGroups struct {

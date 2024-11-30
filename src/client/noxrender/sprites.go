@@ -15,14 +15,14 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/bag"
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/noximage/pcx"
-	"github.com/noxworld-dev/opennox-lib/things"
+	"github.com/opennox/libs/bag"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/noximage/pcx"
+	"github.com/opennox/libs/things"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
 )
 
 var (

@@ -10,18 +10,18 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/noxworld-dev/lobby"
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/lobby"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/common/discover"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/internal/netstr"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/client"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/common/discover"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/internal/netstr"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 var (

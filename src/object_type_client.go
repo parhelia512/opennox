@@ -3,13 +3,13 @@ package opennox
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/strman"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/client"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 func init() {

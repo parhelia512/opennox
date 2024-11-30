@@ -153,7 +153,7 @@
 - High-resolution support (up to 4K)! You'll need to run `opennox-hd.exe` for it.
 - A lot faster OpenGL-based rendering (partially offloaded to GPU).
 - Add `cheat charm.all` to charm any creature (including humanoids).
-- Automated end-to-end testing mode, see [opennox-e2e](https://github.com/noxworld-dev/opennox-e2e) for details.
+- Automated end-to-end testing mode, see [opennox-e2e](https://github.com/opennox/opennox-e2e) for details.
 - Simple HTTP-based [Server API](./docs/server-api.md) for controlling game servers.
 - Allow disabling image smoothing in the video options.
 - Allow enabling image stretching in the video options.

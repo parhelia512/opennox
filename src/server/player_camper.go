@@ -1,10 +1,10 @@
 package server
 
 import (
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/object"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/sound"
 )
 
 type playerCamper struct {

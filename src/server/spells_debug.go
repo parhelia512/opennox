@@ -3,8 +3,8 @@ package server
 import (
 	"encoding/json"
 
-	"github.com/noxworld-dev/opennox-lib/spell"
-	"github.com/noxworld-dev/opennox-lib/things"
+	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/things"
 )
 
 type DebugSpellDef struct {

@@ -7,11 +7,11 @@ import (
 	"image"
 	"os"
 
-	"github.com/noxworld-dev/opennox-lib/client/seat/sdl"
+	"github.com/opennox/libs/client/seat/sdl"
 
-	"github.com/noxworld-dev/opennox/v1/client/noxmovie"
-	"github.com/noxworld-dev/opennox/v1/legacy/client/audio/ail"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/client/noxmovie"
+	"github.com/opennox/opennox/v1/legacy/client/audio/ail"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
 )
 
 var (

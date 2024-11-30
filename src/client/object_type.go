@@ -8,16 +8,16 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/strman"
-	"github.com/noxworld-dev/opennox-lib/things"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/strman"
+	"github.com/opennox/libs/things"
 
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

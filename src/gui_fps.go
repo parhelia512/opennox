@@ -8,8 +8,8 @@ import (
 
 	"golang.org/x/image/font"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/client/noxrender"
 )
 
 type guiFPS struct {

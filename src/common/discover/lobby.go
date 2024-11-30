@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/netip"
 
-	"github.com/noxworld-dev/lobby"
+	"github.com/opennox/lobby"
 
-	"github.com/noxworld-dev/opennox/v1/internal/version"
+	"github.com/opennox/opennox/v1/internal/version"
 )
 
 var (

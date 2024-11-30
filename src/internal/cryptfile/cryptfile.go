@@ -7,7 +7,7 @@ import (
 	"io"
 	"math"
 
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/internal/binfile"
 )
 
 type section struct {

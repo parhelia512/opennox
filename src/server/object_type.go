@@ -9,14 +9,14 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/things"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/player"
+	"github.com/opennox/libs/things"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 var (

@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/platform"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/platform"
+	"github.com/opennox/libs/strman"
 	"github.com/shoenig/test/must"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/client/audio/ail"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
-	"github.com/noxworld-dev/opennox/v1/legacy/timer"
+	"github.com/opennox/opennox/v1/legacy/client/audio/ail"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/legacy/timer"
 )
 
 func platformTicks() uint64 {

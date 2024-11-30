@@ -3,7 +3,7 @@
 package ail
 
 import (
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
 )
 
 func (dig Driver) AllocateSample() Sample {

@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/noxworld-dev/opennox-lib/balance"
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/balance"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/log"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 var (

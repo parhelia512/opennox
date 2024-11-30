@@ -16,12 +16,12 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/types"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/unit/ai"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/ccall"
-	"github.com/noxworld-dev/opennox/v1/server"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/unit/ai"
+	"github.com/opennox/opennox/v1/legacy/common/ccall"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

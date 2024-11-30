@@ -6,17 +6,17 @@ import (
 	"math"
 	"unsafe"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/types"
-	"github.com/noxworld-dev/opennox-lib/wall"
+	noxcolor "github.com/opennox/libs/color"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/types"
+	"github.com/opennox/libs/wall"
 
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/server"
 )
 
 // TODO: remove references to memmap

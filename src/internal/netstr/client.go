@@ -8,7 +8,7 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
 )
 
 type Client struct {

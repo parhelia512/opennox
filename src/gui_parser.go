@@ -11,13 +11,13 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/ifs"
-	"github.com/noxworld-dev/opennox-lib/noxfont"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/ifs"
+	"github.com/opennox/libs/noxfont"
+	"github.com/opennox/libs/strman"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 func nox_new_window_from_file(name string, fnc gui.WindowFunc) *gui.Window {

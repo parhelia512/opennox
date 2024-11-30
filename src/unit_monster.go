@@ -4,11 +4,11 @@ import (
 	"math"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/object"
 
-	"github.com/noxworld-dev/opennox/v1/common/unit/ai"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/common/unit/ai"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var _ = [1]struct{}{}[248-unsafe.Sizeof(server.MonsterDef{})]

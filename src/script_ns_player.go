@@ -1,15 +1,15 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/strman"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/player"
+	"github.com/opennox/libs/strman"
+	"github.com/opennox/libs/types"
+	"github.com/opennox/noxscript/ns/v4"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func (s noxScriptNS) toPlayer(pl *server.Player) ns.Player {

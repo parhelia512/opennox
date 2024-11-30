@@ -14,10 +14,10 @@ import (
 
 	"github.com/timshannon/go-openal/openal"
 
-	"github.com/noxworld-dev/opennox-lib/env"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/env"
+	"github.com/opennox/libs/log"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
 )
 
 var (

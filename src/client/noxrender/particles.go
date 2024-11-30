@@ -6,9 +6,9 @@ import (
 	"image/color"
 	"math"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
+	noxcolor "github.com/opennox/libs/color"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 type renderParticles struct {

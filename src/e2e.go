@@ -15,17 +15,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/ifs"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/ifs"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/exp/maps"
 	"gopkg.in/yaml.v2"
 
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
-	"github.com/noxworld-dev/opennox-lib/client/seat"
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/platform"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/client/keybind"
+	"github.com/opennox/libs/client/seat"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/platform"
+	"github.com/opennox/libs/types"
 )
 
 var (

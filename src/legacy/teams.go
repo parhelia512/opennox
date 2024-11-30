@@ -11,9 +11,9 @@ import "C"
 import (
 	"unsafe"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
+	noxcolor "github.com/opennox/libs/color"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 type nox_team_t = C.nox_team_t

@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/common/memmap"
 )
 
 var (

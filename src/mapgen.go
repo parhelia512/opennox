@@ -4,8 +4,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 func nox_xxx_mapGenMakeInfo_4D5DB0(p unsafe.Pointer) {

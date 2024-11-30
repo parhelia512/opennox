@@ -18,9 +18,9 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/internal/noxfactor/c2gotok"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/internal/noxfactor/c2gotok"
 )
 
 var (
@@ -235,9 +235,9 @@ func (r *Refactorer) preProcessFile(path string) error {
 
 var knownLibs = map[string][2]string{
 	"image":    {"", "image"},
-	"alloc":    {"", "github.com/noxworld-dev/opennox/v1/legacy/common/alloc"},
-	"memmap":   {"", "github.com/noxworld-dev/opennox/v1/common/memmap"},
-	"noxflags": {"noxflags", "github.com/noxworld-dev/opennox/v1/common/flags"},
+	"alloc":    {"", "github.com/opennox/opennox/v1/legacy/common/alloc"},
+	"memmap":   {"", "github.com/opennox/opennox/v1/common/memmap"},
+	"noxflags": {"noxflags", "github.com/opennox/opennox/v1/common/flags"},
 }
 
 func (r *Refactorer) processFile(path string) error {

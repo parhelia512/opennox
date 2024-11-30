@@ -5,8 +5,8 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/client/audio/ail"
-	"github.com/noxworld-dev/opennox/v1/legacy/timer"
+	"github.com/opennox/opennox/v1/legacy/client/audio/ail"
+	"github.com/opennox/opennox/v1/legacy/timer"
 )
 
 type MusicState struct {

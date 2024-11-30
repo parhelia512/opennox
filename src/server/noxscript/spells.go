@@ -1,12 +1,12 @@
 package noxscript
 
 import (
-	"github.com/noxworld-dev/noxscript/ns/asm"
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/noxscript/ns/v4/effect"
-	"github.com/noxworld-dev/noxscript/ns/v4/enchant"
-	nsp "github.com/noxworld-dev/noxscript/ns/v4/spell"
-	"github.com/noxworld-dev/opennox-lib/script"
+	"github.com/opennox/libs/script"
+	"github.com/opennox/noxscript/ns/asm"
+	ns4 "github.com/opennox/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4/effect"
+	"github.com/opennox/noxscript/ns/v4/enchant"
+	nsp "github.com/opennox/noxscript/ns/v4/spell"
 )
 
 func init() {

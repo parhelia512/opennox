@@ -1,7 +1,7 @@
 package legacy
 
 import "C"
-import "github.com/noxworld-dev/opennox/v1/client/gui"
+import "github.com/opennox/opennox/v1/client/gui"
 
 //export nox_client_setCursorType_477610
 func nox_client_setCursorType_477610(v int) int {

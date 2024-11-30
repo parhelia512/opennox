@@ -7,8 +7,8 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/noxworld-dev/lobby"
-	"github.com/noxworld-dev/xwis"
+	"github.com/opennox/lobby"
+	"github.com/opennox/xwis"
 )
 
 func init() {

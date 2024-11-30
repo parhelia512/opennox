@@ -6,10 +6,10 @@ import (
 	"image/color"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/platform"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/server"
 )
 
 const perfmonSz = 30

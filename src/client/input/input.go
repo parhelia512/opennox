@@ -3,9 +3,9 @@ package input
 import (
 	"image"
 
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
-	"github.com/noxworld-dev/opennox-lib/client/seat"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/client/keybind"
+	"github.com/opennox/libs/client/seat"
+	"github.com/opennox/libs/log"
 )
 
 var (

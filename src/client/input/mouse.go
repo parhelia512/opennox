@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"image"
 
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
-	"github.com/noxworld-dev/opennox-lib/client/seat"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/client/keybind"
+	"github.com/opennox/libs/client/seat"
+	"github.com/opennox/libs/types"
 )
 
 const (

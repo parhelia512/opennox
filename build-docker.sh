@@ -89,7 +89,7 @@ __build_app_wasm() {
 		return 2
 	fi
 
-	git clone git@github.com:noxworld-dev/nox-ws-server.git /tmp/nox-ws-server
+	git clone git@github.com:opennox/nox-ws-server.git /tmp/nox-ws-server
 	cp /tmp/nox-ws-server/static/* ${DIR}/build/web/
 	rm -rf /tmp/nox-ws-server
 	return $?

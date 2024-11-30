@@ -4,9 +4,9 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/types"
 )
 
 const MapSize = WallGridSize * common.GridStep

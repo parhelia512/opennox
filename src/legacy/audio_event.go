@@ -8,11 +8,11 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/server"
 )
 
 //export nox_xxx_getSevenDwords3_501940

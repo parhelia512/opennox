@@ -9,7 +9,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/client/gui"
 )
 
 func Sub_46AF00(a1 *gui.Window) string {

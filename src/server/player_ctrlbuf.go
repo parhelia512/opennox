@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/player"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/player"
 )
 
 const ctrlBufCap = 128

@@ -3,14 +3,14 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
 
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/internal/netlist"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/internal/netlist"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func sub_4349C0(cl [3]uint32) {

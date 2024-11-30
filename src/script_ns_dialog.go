@@ -1,11 +1,11 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/noxscript/ns/v4/audio"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/strman"
+	"github.com/opennox/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4/audio"
 
-	"github.com/noxworld-dev/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/common/sound"
 )
 
 func (s noxScriptNS) SetShopkeeperText(obj ns.Obj, text ns.StringID) {

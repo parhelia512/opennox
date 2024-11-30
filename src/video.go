@@ -5,9 +5,9 @@ import (
 	"image"
 	"strconv"
 
-	"github.com/noxworld-dev/opennox-lib/client/seat"
-	"github.com/noxworld-dev/opennox-lib/console"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/client/seat"
+	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/log"
 	"github.com/spf13/viper"
 )
 

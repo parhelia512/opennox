@@ -1,7 +1,7 @@
 package version
 
 import (
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/log"
 )
 
 var Log = log.New("version")

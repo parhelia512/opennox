@@ -9,8 +9,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/env"
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/env"
+	"github.com/opennox/libs/platform"
 )
 
 //export nox_itoa

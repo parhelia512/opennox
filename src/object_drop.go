@@ -1,10 +1,10 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func nox_objectDropAudEvent_4EE2F0(obj1 *server.Object, obj2 *server.Object, a3 *types.Pointf) int {

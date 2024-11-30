@@ -3,7 +3,7 @@ package input
 import (
 	"image"
 
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/types"
 )
 
 type window struct {

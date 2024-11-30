@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/noxtest"
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/noxtest"
+	"github.com/opennox/libs/platform"
 	"github.com/stretchr/testify/require"
 )
 

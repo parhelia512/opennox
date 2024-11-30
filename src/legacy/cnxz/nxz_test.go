@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/noxworld-dev/opennox-lib/ifs"
-	"github.com/noxworld-dev/opennox-lib/noxtest"
+	"github.com/opennox/libs/ifs"
+	"github.com/opennox/libs/noxtest"
 	"github.com/stretchr/testify/require"
 )
 

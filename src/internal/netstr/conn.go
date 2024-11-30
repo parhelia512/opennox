@@ -8,10 +8,10 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
 
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/server/netlib"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/server/netlib"
 )
 
 func decodeMessage(packet []byte, dst noxnet.Message) bool {

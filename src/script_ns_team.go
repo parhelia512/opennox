@@ -3,9 +3,9 @@ package opennox
 import (
 	"image/color"
 
-	"github.com/noxworld-dev/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func (s noxScriptNS) Teams() []ns.Team {

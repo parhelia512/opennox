@@ -4,13 +4,13 @@ import (
 	"image"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/console"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/script"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/script"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 // TODO: This is only for old LUA compatibility.

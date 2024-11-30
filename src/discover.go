@@ -5,10 +5,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/noxworld-dev/lobby"
+	"github.com/opennox/lobby"
 
-	"github.com/noxworld-dev/opennox/v1/common/discover"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/discover"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 func init() {

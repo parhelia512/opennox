@@ -1,8 +1,8 @@
 package noxscript
 
 import (
-	"github.com/noxworld-dev/noxscript/ns/asm"
-	"github.com/noxworld-dev/noxscript/ns/v4/audio"
+	"github.com/opennox/noxscript/ns/asm"
+	"github.com/opennox/noxscript/ns/v4/audio"
 )
 
 func init() {

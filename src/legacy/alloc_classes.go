@@ -7,7 +7,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 const DeadWord = 0xacacacac

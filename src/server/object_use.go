@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/noxworld-dev/opennox-lib/spell"
+	"github.com/opennox/libs/spell"
 )
 
 func init() {

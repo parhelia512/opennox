@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/log"
 )
 
 var (

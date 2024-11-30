@@ -3,17 +3,17 @@ package opennox
 import (
 	"fmt"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/strman"
-	"github.com/noxworld-dev/opennox-lib/things"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/player"
+	"github.com/opennox/libs/strman"
+	"github.com/opennox/libs/things"
 
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func sub_4FC670(a1 int) {

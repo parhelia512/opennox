@@ -1,6 +1,6 @@
 package server
 
-import "github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+import "github.com/opennox/opennox/v1/legacy/common/alloc"
 
 type SpellProjectileUpdateData struct {
 	Field0  *Object // 0, 0

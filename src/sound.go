@@ -1,11 +1,11 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/object"
 
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func clientPlaySoundSpecial(snd sound.ID, a2 int) {

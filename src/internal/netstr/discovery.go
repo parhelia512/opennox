@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/netip"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
 )
 
 type LobbyWaitOptions struct {

@@ -1,11 +1,11 @@
 package netxfer
 
 import (
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/noxnet/netxfer"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netxfer"
 
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/server/netlib"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/server/netlib"
 )
 
 type ReceiveFunc func(conn ntype.PlayerInd, act Action, typ string, data []byte)

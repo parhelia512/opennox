@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/noxworld-dev/opennox/v1/internal/vers/git"
+	"github.com/opennox/opennox/v1/internal/vers/git"
 )
 
 const (
@@ -22,7 +22,7 @@ const (
 )
 
 const (
-	versPackage = "github.com/noxworld-dev/opennox/v1/internal/version"
+	versPackage = "github.com/opennox/opennox/v1/internal/version"
 )
 
 var (

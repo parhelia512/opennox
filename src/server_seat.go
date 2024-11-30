@@ -5,10 +5,10 @@ package opennox
 import (
 	"image"
 
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/log"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/client"
+	"github.com/opennox/opennox/v1/common/ntype"
 )
 
 func (c *Client) initSeat(sz image.Point) error {

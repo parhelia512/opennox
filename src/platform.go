@@ -3,10 +3,10 @@ package opennox
 import (
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/env"
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/env"
+	"github.com/opennox/libs/platform"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 func platformTicks() uint64 {

@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
-	"github.com/noxworld-dev/opennox-lib/noximage"
+	noxcolor "github.com/opennox/libs/color"
+	"github.com/opennox/libs/noximage"
 	"github.com/stretchr/testify/require"
 )
 

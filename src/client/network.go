@@ -3,14 +3,14 @@ package client
 import (
 	"errors"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/player"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/player"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/internal/netlist"
-	"github.com/noxworld-dev/opennox/v1/internal/netstr"
-	"github.com/noxworld-dev/opennox/v1/server"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/internal/netlist"
+	"github.com/opennox/opennox/v1/internal/netstr"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

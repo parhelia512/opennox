@@ -7,7 +7,7 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/common"
+	"github.com/opennox/libs/common"
 )
 
 const (

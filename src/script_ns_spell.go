@@ -1,15 +1,15 @@
 package opennox
 
 import (
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/noxscript/ns/v4/enchant"
-	nsp "github.com/noxworld-dev/noxscript/ns/v4/spell"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/spell"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/spell"
+	ns4 "github.com/opennox/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4/enchant"
+	nsp "github.com/opennox/noxscript/ns/v4/spell"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func (s noxScriptNS) CastSpellLvl(name nsp.Spell, lvl int, source, target ns4.Positioner) {

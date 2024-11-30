@@ -1,9 +1,9 @@
 package netlist
 
 import (
-	"github.com/noxworld-dev/opennox-lib/common"
+	"github.com/opennox/libs/common"
 
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/common/ntype"
 )
 
 const (

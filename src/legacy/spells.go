@@ -27,11 +27,11 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/spell"
-	"github.com/noxworld-dev/opennox-lib/things"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/things"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

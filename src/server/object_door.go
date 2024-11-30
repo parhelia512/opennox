@@ -3,9 +3,9 @@ package server
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/object"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 type serverDoors struct {

@@ -9,12 +9,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/noxworld-dev/lobby"
+	"github.com/opennox/lobby"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/log"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 const (

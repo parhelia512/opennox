@@ -5,7 +5,7 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/memguard"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/memguard"
 )
 
 var (

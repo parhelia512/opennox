@@ -5,7 +5,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
 )
 
 const (

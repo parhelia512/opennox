@@ -3,7 +3,7 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox/v1/client"
+	"github.com/opennox/opennox/v1/client"
 )
 
 func (c *Client) Nox_xxx_client_4984B0_drawable(dr *client.Drawable) bool {

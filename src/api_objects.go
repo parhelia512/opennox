@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/object"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var _ json.Marshaler = &Object{}

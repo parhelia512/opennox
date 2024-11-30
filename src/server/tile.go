@@ -3,7 +3,7 @@ package server
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 type TileDef struct {

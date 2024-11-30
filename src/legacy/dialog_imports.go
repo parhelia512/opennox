@@ -17,13 +17,13 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/strman"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/legacy/client/audio/ail"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/legacy/dialog"
-	"github.com/noxworld-dev/opennox/v1/legacy/timer"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/legacy/client/audio/ail"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/legacy/dialog"
+	"github.com/opennox/opennox/v1/legacy/timer"
 )
 
 func Set_dword_5d4594_831080(v uint32) {

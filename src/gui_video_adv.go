@@ -3,14 +3,14 @@ package opennox
 import (
 	"image/color"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
-	"github.com/noxworld-dev/opennox-lib/noxfont"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	noxcolor "github.com/opennox/libs/color"
+	"github.com/opennox/libs/noxfont"
+	"github.com/opennox/libs/strman"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/client/gui"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/legacy"
 )
 
 type videoOpt struct {

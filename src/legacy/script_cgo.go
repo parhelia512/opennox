@@ -6,7 +6,7 @@ package legacy
 */
 import "C"
 import (
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/log"
 )
 
 var scriptLog = log.New("script")

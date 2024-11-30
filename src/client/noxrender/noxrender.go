@@ -6,12 +6,12 @@ import (
 	"image/draw"
 	"unsafe"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/noximage"
+	noxcolor "github.com/opennox/libs/color"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/noximage"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 var Log = log.New("render")

@@ -4,7 +4,7 @@ package legacy
 #include "defs.h"
 */
 import "C"
-import noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+import noxflags "github.com/opennox/opennox/v1/common/flags"
 
 //export nox_common_setEngineFlag
 func nox_common_setEngineFlag(flags C.nox_engine_flag) {

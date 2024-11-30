@@ -1,10 +1,10 @@
 package server
 
 import (
-	"github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/noxscript/ns/v4/audio"
+	"github.com/opennox/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4/audio"
 
-	"github.com/noxworld-dev/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/common/sound"
 )
 
 func (s NoxScriptNS) AudioEvent(audio audio.Name, p ns.Positioner) {

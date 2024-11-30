@@ -3,8 +3,8 @@ package opennox
 import (
 	"context"
 
-	"github.com/noxworld-dev/opennox-lib/console"
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/object"
 )
 
 func init() {

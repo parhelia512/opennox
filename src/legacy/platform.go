@@ -4,7 +4,7 @@ package legacy
 #include <stdbool.h>
 */
 import "C"
-import "github.com/noxworld-dev/opennox-lib/platform"
+import "github.com/opennox/libs/platform"
 
 var (
 	PlatformTicks          func() uint64

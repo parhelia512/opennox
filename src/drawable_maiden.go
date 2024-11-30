@@ -1,9 +1,9 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox/v1/client"
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/client"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/legacy"
 )
 
 func init() {

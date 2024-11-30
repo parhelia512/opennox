@@ -1,6 +1,6 @@
 package server
 
-import "github.com/noxworld-dev/noxscript/ns/asm"
+import "github.com/opennox/noxscript/ns/asm"
 
 func (s *NoxScriptVM) callBuiltin(sc *ScriptFunc, fi asm.Builtin) error {
 	if fi < 0 || fi > asm.BuiltinGetScore {

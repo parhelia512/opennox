@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/noxworld-dev/opennox-lib/ifs"
+	"github.com/opennox/libs/ifs"
 )
 
 func openWav(path string) (*wavReader, error) {

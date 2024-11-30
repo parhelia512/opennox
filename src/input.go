@@ -1,9 +1,9 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
+	"github.com/opennox/libs/client/keybind"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/common/memmap"
 )
 
 var (

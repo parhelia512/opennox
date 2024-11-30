@@ -1,9 +1,9 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/spell"
+	"github.com/opennox/libs/spell"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func castVampirism(spellID spell.ID, _, _, _ *server.Object, args *server.SpellAcceptArg, lvl int) int {

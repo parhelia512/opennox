@@ -7,20 +7,20 @@ import (
 	"time"
 	"unsafe"
 
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/platform"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/platform"
+	"github.com/opennox/libs/strman"
+	ns4 "github.com/opennox/noxscript/ns/v4"
 
-	"github.com/noxworld-dev/opennox-lib/console"
+	"github.com/opennox/libs/console"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/gsync"
-	"github.com/noxworld-dev/opennox/v1/common/ntype"
-	"github.com/noxworld-dev/opennox/v1/internal/netlist"
-	"github.com/noxworld-dev/opennox/v1/internal/netstr"
-	"github.com/noxworld-dev/opennox/v1/server/netxfer"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/gsync"
+	"github.com/opennox/opennox/v1/common/ntype"
+	"github.com/opennox/opennox/v1/internal/netlist"
+	"github.com/opennox/opennox/v1/internal/netstr"
+	"github.com/opennox/opennox/v1/server/netxfer"
 )
 
 var Log = log.New("server")

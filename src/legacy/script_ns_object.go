@@ -15,7 +15,7 @@ void nox_xxx_unitAdjustHP_4EE460(nox_object_t* unit, int dv);
 */
 import "C"
 import (
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func Nox_xxx_getObjectByScrName_4DA4F0(name string) *server.Object {

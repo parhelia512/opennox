@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/noxworld-dev/lobby"
+	"github.com/opennox/lobby"
 
-	"github.com/noxworld-dev/opennox-lib/common"
+	"github.com/opennox/libs/common"
 )
 
 const (

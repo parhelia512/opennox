@@ -3,17 +3,17 @@ package opennox
 import (
 	"fmt"
 
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/noxscript/ns/v4/class"
-	"github.com/noxworld-dev/noxscript/ns/v4/damage"
-	"github.com/noxworld-dev/noxscript/ns/v4/enchant"
-	"github.com/noxworld-dev/noxscript/ns/v4/subclass"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/player"
+	"github.com/opennox/libs/types"
+	ns4 "github.com/opennox/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4/class"
+	"github.com/opennox/noxscript/ns/v4/damage"
+	"github.com/opennox/noxscript/ns/v4/enchant"
+	"github.com/opennox/noxscript/ns/v4/subclass"
 
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func (s noxScriptNS) toObj(obj *server.Object) ns4.Obj {

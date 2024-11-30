@@ -5,11 +5,11 @@ import (
 	"image/color"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/console"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/strman"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 type TeamDef struct {

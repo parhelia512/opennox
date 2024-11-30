@@ -1,6 +1,6 @@
 package server
 
-import ns4 "github.com/noxworld-dev/noxscript/ns/v4"
+import ns4 "github.com/opennox/noxscript/ns/v4"
 
 func nsToObj(v ns4.Obj) *Object {
 	if v == nil {

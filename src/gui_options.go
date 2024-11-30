@@ -9,12 +9,12 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/noxworld-dev/opennox-lib/noxfont"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/noxfont"
+	"github.com/opennox/libs/strman"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/legacy"
 )
 
 const (

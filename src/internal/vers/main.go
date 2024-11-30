@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/noxworld-dev/opennox/v1/internal/vers/git"
+	"github.com/opennox/opennox/v1/internal/vers/git"
 )
 
 var (

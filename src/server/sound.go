@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/noxworld-dev/opennox-lib/object"
+	"github.com/opennox/libs/object"
 
-	"github.com/noxworld-dev/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/common/sound"
 )
 
 func (s *Server) Sub_532EC0(who *Object, mat uint16) {

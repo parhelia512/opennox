@@ -1,11 +1,11 @@
 package opennox
 
 import (
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/spell"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/spell"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/server"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/server"
 )
 
 type spellBuffConf struct {

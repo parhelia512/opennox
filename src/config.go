@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/noxworld-dev/opennox-lib/env"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/env"
+	"github.com/opennox/libs/log"
 )
 
 func init() {

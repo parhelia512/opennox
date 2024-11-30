@@ -1,6 +1,6 @@
 package noxrender
 
-import noxcolor "github.com/noxworld-dev/opennox-lib/color"
+import noxcolor "github.com/opennox/libs/color"
 
 var colorTable struct {
 	R, G, B [256]noxcolor.RGBA5551

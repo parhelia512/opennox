@@ -10,13 +10,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/client/seat"
-	"github.com/noxworld-dev/opennox-lib/noximage"
+	"github.com/opennox/libs/client/seat"
+	"github.com/opennox/libs/noximage"
 
-	"github.com/noxworld-dev/opennox/v1/client/render"
-	"github.com/noxworld-dev/opennox/v1/legacy/client/audio/ail"
+	"github.com/opennox/opennox/v1/client/render"
+	"github.com/opennox/opennox/v1/legacy/client/audio/ail"
 
-	"github.com/noxworld-dev/vqa-decode/movies"
+	"github.com/opennox/vqa-decode/movies"
 	"github.com/timshannon/go-openal/openal"
 	"github.com/youpy/go-wav"
 )

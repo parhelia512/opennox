@@ -4,16 +4,16 @@ import (
 	"math"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/player"
-	"github.com/noxworld-dev/opennox-lib/spell"
-	"github.com/noxworld-dev/opennox-lib/things"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/player"
+	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/things"
+	"github.com/opennox/libs/types"
 
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/server"
 )
 
 func castGlyph(sp spell.ID, a2, caster, targ *server.Object, sa *server.SpellAcceptArg, lvl int) int {

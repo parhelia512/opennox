@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 
-	"github.com/noxworld-dev/nat"
-	"github.com/noxworld-dev/opennox-lib/env"
+	"github.com/opennox/libs/env"
+	"github.com/opennox/nat"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 type natService struct {

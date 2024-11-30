@@ -3,15 +3,15 @@ package opennox
 import (
 	"time"
 
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/platform"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/internal/netlist"
-	"github.com/noxworld-dev/opennox/v1/server"
-	"github.com/noxworld-dev/opennox/v1/server/netlib"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/internal/netlist"
+	"github.com/opennox/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server/netlib"
 )
 
 var (

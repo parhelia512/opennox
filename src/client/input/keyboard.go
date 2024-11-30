@@ -1,8 +1,8 @@
 package input
 
 import (
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
-	"github.com/noxworld-dev/opennox-lib/client/seat"
+	"github.com/opennox/libs/client/keybind"
+	"github.com/opennox/libs/client/seat"
 )
 
 const keyboardEventBuf = 256

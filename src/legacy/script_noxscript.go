@@ -12,9 +12,9 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/server"
-	"github.com/noxworld-dev/opennox/v1/server/noxscript"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server/noxscript"
 )
 
 var (

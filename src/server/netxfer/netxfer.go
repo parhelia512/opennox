@@ -1,10 +1,10 @@
 package netxfer
 
 import (
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/noxnet/netxfer"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netxfer"
 
-	"github.com/noxworld-dev/opennox/v1/server/netlib"
+	"github.com/opennox/opennox/v1/server/netlib"
 )
 
 const (

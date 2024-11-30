@@ -3,10 +3,10 @@ package opennox
 import (
 	"image"
 
-	"github.com/noxworld-dev/opennox-lib/env"
+	"github.com/opennox/libs/env"
 
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/client/gui"
+	"github.com/opennox/opennox/v1/common/sound"
 )
 
 func init() {

@@ -3,10 +3,10 @@ package server
 import (
 	"strings"
 
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/noxscript/ns/v4/effect"
-	"github.com/noxworld-dev/opennox-lib/noxnet"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/types"
+	ns4 "github.com/opennox/noxscript/ns/v4"
+	"github.com/opennox/noxscript/ns/v4/effect"
 )
 
 var nsFxNames = make(map[string]noxnet.Op)

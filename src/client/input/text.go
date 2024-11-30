@@ -3,7 +3,7 @@ package input
 import (
 	"unicode"
 
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
+	"github.com/opennox/libs/client/keybind"
 )
 
 type inputCharMap struct {

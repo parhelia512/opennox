@@ -4,9 +4,9 @@ import (
 	"image"
 	"unsafe"
 
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
+	noxcolor "github.com/opennox/libs/color"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/ccall"
+	"github.com/opennox/opennox/v1/legacy/common/ccall"
 )
 
 const deadWord = 0xacacacac

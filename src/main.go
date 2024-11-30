@@ -14,28 +14,28 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/platform"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
 
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/env"
-	"github.com/noxworld-dev/opennox-lib/log"
+	"github.com/opennox/libs/client/keybind"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/env"
+	"github.com/opennox/libs/log"
 
-	"github.com/noxworld-dev/opennox/v1/client"
-	"github.com/noxworld-dev/opennox/v1/client/gui"
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/common/serial"
-	"github.com/noxworld-dev/opennox/v1/common/sound"
-	"github.com/noxworld-dev/opennox/v1/internal/version"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/legacy/client/audio/ail"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/client"
+	"github.com/opennox/opennox/v1/client/gui"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/common/serial"
+	"github.com/opennox/opennox/v1/common/sound"
+	"github.com/opennox/opennox/v1/internal/version"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/legacy/client/audio/ail"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
 )
 
 func init() {
@@ -205,9 +205,9 @@ func RunArgs(args []string) (gerr error) {
 			err := errors.New("cannot find Nox data dir")
 			datapath.Log.Println(err)
 			if runtime.GOOS == "windows" {
-				errorMessage("Nox game data directory not found. Please install Nox from Origin or GoG.\nIf the problem persists, please check https://noxworld-dev.github.io/opennox-docs/opennox/install/windows/index.html")
+				errorMessage("Nox game data directory not found. Please install Nox from Origin or GoG.\nIf the problem persists, please check https://opennox.github.io/opennox-docs/opennox/install/windows/index.html")
 			} else {
-				errorMessage("Nox game data directory not found. Please install Nox from GoG (via Lutris or Heroic).\nIf the problem persists, please check https://noxworld-dev.github.io/opennox-docs/opennox/install/linux/index.html")
+				errorMessage("Nox game data directory not found. Please install Nox from GoG (via Lutris or Heroic).\nIf the problem persists, please check https://opennox.github.io/opennox-docs/opennox/install/linux/index.html")
 			}
 			return err
 		}

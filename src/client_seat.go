@@ -9,13 +9,13 @@ import (
 	"github.com/spf13/viper"
 	"github.com/tawesoft/golib/v2/dialog"
 
-	"github.com/noxworld-dev/opennox-lib/client/seat/sdl"
-	"github.com/noxworld-dev/opennox-lib/env"
+	"github.com/opennox/libs/client/seat/sdl"
+	"github.com/opennox/libs/env"
 
-	"github.com/noxworld-dev/opennox/v1/client/input"
-	"github.com/noxworld-dev/opennox/v1/client/render"
-	"github.com/noxworld-dev/opennox/v1/internal/version"
-	"github.com/noxworld-dev/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/client/input"
+	"github.com/opennox/opennox/v1/client/render"
+	"github.com/opennox/opennox/v1/internal/version"
+	"github.com/opennox/opennox/v1/legacy"
 )
 
 func init() {

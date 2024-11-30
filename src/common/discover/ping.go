@@ -10,10 +10,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/noxworld-dev/lobby"
-	"github.com/noxworld-dev/opennox-lib/noxnet"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/lobby"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
 
 const (

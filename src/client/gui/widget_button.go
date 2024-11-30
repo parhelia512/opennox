@@ -4,11 +4,11 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/client/keybind"
-	noxcolor "github.com/noxworld-dev/opennox-lib/color"
+	"github.com/opennox/libs/client/keybind"
+	noxcolor "github.com/opennox/libs/color"
 
-	"github.com/noxworld-dev/opennox/v1/client/input"
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/client/input"
+	"github.com/opennox/opennox/v1/client/noxrender"
 )
 
 func NewButtonRaw(g *GUI, parent *Window, status StatusFlags, px, py, w, h int, draw *WindowData) *Window {

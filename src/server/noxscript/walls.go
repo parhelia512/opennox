@@ -3,9 +3,9 @@ package noxscript
 import (
 	"image"
 
-	"github.com/noxworld-dev/noxscript/ns/asm"
-	"github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/opennox-lib/common"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/noxscript/ns/asm"
+	"github.com/opennox/noxscript/ns/v4"
 )
 
 func init() {

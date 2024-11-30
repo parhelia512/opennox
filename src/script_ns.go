@@ -5,12 +5,12 @@ import (
 	"path"
 	"strings"
 
-	ns3vm "github.com/noxworld-dev/noxscript/ns/v3/vm"
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/opennox-lib/common"
+	"github.com/opennox/libs/common"
+	ns3vm "github.com/opennox/noxscript/ns/v3/vm"
+	ns4 "github.com/opennox/noxscript/ns/v4"
 
-	noxflags "github.com/noxworld-dev/opennox/v1/common/flags"
-	"github.com/noxworld-dev/opennox/v1/server"
+	noxflags "github.com/opennox/opennox/v1/common/flags"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var (

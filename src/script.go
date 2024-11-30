@@ -9,17 +9,17 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/noxworld-dev/opennox-lib/console"
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	noxlog "github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/maps"
-	"github.com/noxworld-dev/opennox-lib/script"
-	"github.com/noxworld-dev/opennox-lib/strman"
+	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/datapath"
+	noxlog "github.com/opennox/libs/log"
+	"github.com/opennox/libs/maps"
+	"github.com/opennox/libs/script"
+	"github.com/opennox/libs/strman"
 	// register script runtimes
-	_ "github.com/noxworld-dev/opennox-lib/script/eval"
-	_ "github.com/noxworld-dev/opennox-lib/script/lua"
+	_ "github.com/opennox/libs/script/eval"
+	_ "github.com/opennox/libs/script/lua"
 
-	"github.com/noxworld-dev/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server"
 )
 
 var ScriptLog = server.ScriptLog

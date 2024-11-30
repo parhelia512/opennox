@@ -3,13 +3,13 @@ package opennox
 import (
 	"os"
 
-	"github.com/noxworld-dev/opennox-lib/datapath"
-	"github.com/noxworld-dev/opennox-lib/ifs"
-	"github.com/noxworld-dev/opennox-lib/maps"
+	"github.com/opennox/libs/datapath"
+	"github.com/opennox/libs/ifs"
+	"github.com/opennox/libs/maps"
 
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 )
 
 var soloAllowMP = os.Getenv("NOX_SOLO_MP") == "true"

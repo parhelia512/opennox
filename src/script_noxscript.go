@@ -5,20 +5,20 @@ import (
 	"os"
 	"unsafe"
 
-	ns4 "github.com/noxworld-dev/noxscript/ns/v4"
-	"github.com/noxworld-dev/opennox-lib/common"
-	"github.com/noxworld-dev/opennox-lib/ifs"
-	"github.com/noxworld-dev/opennox-lib/object"
-	"github.com/noxworld-dev/opennox-lib/spell"
-	"github.com/noxworld-dev/opennox-lib/types"
+	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/ifs"
+	"github.com/opennox/libs/object"
+	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/types"
+	ns4 "github.com/opennox/noxscript/ns/v4"
 
-	"github.com/noxworld-dev/opennox/v1/client/noxrender"
-	"github.com/noxworld-dev/opennox/v1/common/memmap"
-	"github.com/noxworld-dev/opennox/v1/internal/binfile"
-	"github.com/noxworld-dev/opennox/v1/legacy"
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc"
-	"github.com/noxworld-dev/opennox/v1/server"
-	"github.com/noxworld-dev/opennox/v1/server/noxscript"
+	"github.com/opennox/opennox/v1/client/noxrender"
+	"github.com/opennox/opennox/v1/common/memmap"
+	"github.com/opennox/opennox/v1/internal/binfile"
+	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/server"
+	"github.com/opennox/opennox/v1/server/noxscript"
 )
 
 func (s *Server) scriptsReset() {

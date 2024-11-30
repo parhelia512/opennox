@@ -16,7 +16,7 @@ on:
       - dev
 
 env:
-  DOCKER_IMAGE_NAME: ghcr.io/noxworld-dev/opennox
+  DOCKER_IMAGE_NAME: ghcr.io/opennox/opennox
 
 jobs:
   hybrid_docker_mingw:
@@ -37,7 +37,7 @@ jobs:
           restore-keys: |
             mingw-gocache-v3-
 
-      - uses: docker://ghcr.io/noxworld-dev/docker-build:latest-win
+      - uses: docker://ghcr.io/opennox/docker-build:latest-win
         name: Docker build
 
       - uses: actions/upload-artifact@v3
@@ -73,7 +73,7 @@ jobs:
           restore-keys: |
             mingw-win7-gocache-v3-
 
-      - uses: docker://ghcr.io/noxworld-dev/docker-build:win-go1.21.4
+      - uses: docker://ghcr.io/opennox/docker-build:win-go1.21.4
         name: Docker build
         env:
           GOTOOLCHAIN: local
@@ -111,7 +111,7 @@ jobs:
           restore-keys: |
             linux-gocache-v3-
 
-      - uses: docker://ghcr.io/noxworld-dev/docker-build:latest-linux
+      - uses: docker://ghcr.io/opennox/docker-build:latest-linux
         name: Docker build
 
       - uses: actions/upload-artifact@v3
@@ -266,7 +266,7 @@ jobs:
           name: opennox-linux
           path: build
 
-      - uses: docker://ghcr.io/noxworld-dev/docker-build:latest-linux-packaging-appimage
+      - uses: docker://ghcr.io/opennox/docker-build:latest-linux-packaging-appimage
         name: Using docker build - latest-linux-packaging-appimage
 
       - uses: actions/upload-artifact@v3

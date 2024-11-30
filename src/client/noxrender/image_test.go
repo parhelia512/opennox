@@ -17,9 +17,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/noxworld-dev/opennox-lib/bag"
-	"github.com/noxworld-dev/opennox-lib/noximage"
-	"github.com/noxworld-dev/opennox-lib/noxtest"
+	"github.com/opennox/libs/bag"
+	"github.com/opennox/libs/noximage"
+	"github.com/opennox/libs/noxtest"
 )
 
 var drawBlends = []struct {

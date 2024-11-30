@@ -6,10 +6,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/noxworld-dev/opennox-lib/log"
-	"github.com/noxworld-dev/opennox-lib/platform"
+	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/platform"
 
-	"github.com/noxworld-dev/opennox/v1/legacy/common/alloc/handles"
+	"github.com/opennox/opennox/v1/legacy/common/alloc/handles"
 )
 
 var (
