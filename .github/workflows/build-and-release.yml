@@ -59,6 +59,7 @@ jobs:
     # Cross compile Windows binaries with downgraded Go toolkit
     name: Cross compile for Windows (Win7 compatible)
     runs-on: ubuntu-latest
+    if: false # TODO
     steps:
       - uses: actions/checkout@v3
         with:
