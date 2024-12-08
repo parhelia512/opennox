@@ -19,6 +19,7 @@ import (
 	"github.com/opennox/libs/env"
 	"github.com/opennox/libs/ifs"
 	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/script"
 	"github.com/opennox/libs/types"
@@ -621,7 +622,16 @@ func sub_41CC00(a1 string) {
 	sz := 4 + nox_xxx_computeServerPlayerDataBufferSize_41CC50(a1)
 	data, _ := alloc.Make([]byte{}, sz)
 	legacy.Sub_41CAC0(a1, data)
-	noxServer.NetXferSendHost(server.NetXferSaveServer, server.NetXferSaveServerType, data, netXferSendDone, netXferSendAborted)
+	const act = server.NetXferSaveServer
+	noxServer.NetXferSendHost(netxfer.Data{
+		Action: act,
+		Type:   server.NetXferSaveServerType,
+		Data:   data,
+	}, func() {
+		netXferSendDone(act)
+	}, func() {
+		netXferSendAborted(act)
+	})
 }
 
 func sub_4464D0(a1 int32) []byte {
@@ -631,9 +641,19 @@ func sub_4464D0(a1 int32) []byte {
 
 func nox_xxx_playerSendMOTD_4DD140(ind ntype.PlayerInd) {
 	buf := sub_4464D0(1)
-	if len(buf) != 0 {
-		noxServer.NetXferSend(ind, server.NetXferMOTD, server.NetXferMOTDType, buf, netXferSendDone, netXferSendAborted)
+	if len(buf) == 0 {
+		return
 	}
+	const act = server.NetXferMOTD
+	noxServer.NetXferSend(ind, netxfer.Data{
+		Action: act,
+		Type:   server.NetXferMOTDType,
+		Data:   buf,
+	}, func() {
+		netXferSendDone(act)
+	}, func() {
+		netXferSendAborted(act)
+	})
 }
 
 func execConsoleCmd(ctx context.Context, cmd string) bool { // nox_server_parseCmdText_443C80

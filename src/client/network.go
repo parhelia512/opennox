@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/player"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -127,7 +128,7 @@ func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []b
 		if err != nil {
 			return 0, false, err
 		}
-		c.Server.NetXfer.Handle(c.Conn, c.Server.Frame(), &p)
+		c.Server.NetXfer.Handle(server.XferConn{c.Conn}, netxfer.Timestamp(c.Server.Frame()), p.Msg)
 		return 1 + n, true, nil
 	}
 	return 0, false, nil

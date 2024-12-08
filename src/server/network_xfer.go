@@ -5,11 +5,13 @@ import (
 	"reflect"
 
 	"github.com/fxamacker/cbor/v2"
+	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netxfer"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/ntype"
 	"github.com/opennox/opennox/v1/internal/netstr"
-	"github.com/opennox/opennox/v1/server/netxfer"
+	"github.com/opennox/opennox/v1/server/netlib"
 )
 
 func init() {
@@ -35,6 +37,20 @@ var (
 	netXferCBORTypes = make(map[string]reflect.Type)
 )
 
+type XferConn struct {
+	Conn netlib.SendStream
+}
+
+func (c XferConn) SendReliableMsg(m netxfer.Msg) error {
+	_, err := c.Conn.SendReliableMsg(&noxnet.MsgXfer{Msg: m})
+	return err
+}
+
+func (c XferConn) SendUnreliableMsg(m netxfer.Msg) error {
+	_, err := c.Conn.SendUnreliableMsg(&noxnet.MsgXfer{Msg: m}, true)
+	return err
+}
+
 func RegisterNetXferExt(obj NetXferExt) {
 	typ := obj.CBORType()
 	if _, ok := netXferCBORTypes[typ]; ok {
@@ -48,14 +64,14 @@ func RegisterNetXferExt(obj NetXferExt) {
 	netXferCBORTypes[typ] = rt
 }
 
-func (s *Server) NetXferSendHost(act netxfer.Action, typ string, data []byte, onDone netxfer.DoneFunc, onAbort netxfer.AbortFunc) bool {
-	return s.netXferSend(HostPlayerIndex, act, typ, data, false, onDone, onAbort)
+func (s *Server) NetXferSendHost(data netxfer.Data, onDone netxfer.DoneFunc, onAbort netxfer.AbortFunc) bool {
+	return s.netXferSend(HostPlayerIndex, data, false, onDone, onAbort)
 }
-func (s *Server) NetXferSend(pli ntype.PlayerInd, act netxfer.Action, typ string, data []byte, onDone netxfer.DoneFunc, onAbort netxfer.AbortFunc) bool {
-	return s.netXferSend(pli, act, typ, data, true, onDone, onAbort)
+func (s *Server) NetXferSend(pli ntype.PlayerInd, data netxfer.Data, onDone netxfer.DoneFunc, onAbort netxfer.AbortFunc) bool {
+	return s.netXferSend(pli, data, true, onDone, onAbort)
 }
-func (s *Server) netXferSend(pli ntype.PlayerInd, act netxfer.Action, typ string, data []byte, remote bool, onDone netxfer.DoneFunc, onAbort netxfer.AbortFunc) bool {
-	if len(data) == 0 {
+func (s *Server) netXferSend(pli ntype.PlayerInd, data netxfer.Data, remote bool, onDone netxfer.DoneFunc, onAbort netxfer.AbortFunc) bool {
+	if len(data.Data) == 0 {
 		return false
 	}
 	var conn *netstr.Conn
@@ -66,12 +82,12 @@ func (s *Server) netXferSend(pli ntype.PlayerInd, act netxfer.Action, typ string
 			return false
 		}
 		if !remote || pli == HostPlayerIndex {
-			s.NetXferLocal(act, typ, data)
+			s.NetXferLocal(data)
 			return true
 		}
 		conn = s.NetStr.ConnByPlayerInd(pli)
 	}
-	return s.NetXfer.Send(conn, act, typ, data, onDone, onAbort)
+	return s.NetXfer.Send(XferConn{conn}, data, onDone, onAbort)
 }
 
 type NetXferExt interface {
@@ -100,15 +116,19 @@ func (s *Server) NetXferSendExt(pli ntype.PlayerInd, arr ...NetXferExt) bool {
 	if err != nil {
 		panic(err)
 	}
-	return s.NetXferSend(pli, NetXferExtOpenNox, NetXferExtCBORType, data, nil, nil)
+	return s.NetXferSend(pli, netxfer.Data{
+		Action: NetXferExtOpenNox,
+		Type:   NetXferExtCBORType,
+		Data:   data,
+	}, nil, nil)
 }
 
-func (s *Server) NetXferHandle(ind ntype.PlayerInd, act netxfer.Action, typ string, data []byte) bool {
-	switch act {
+func (s *Server) NetXferHandle(ind ntype.PlayerInd, data netxfer.Data) bool {
+	switch data.Action {
 	case NetXferExtOpenNox:
-		switch typ {
+		switch data.Type {
 		case NetXferExtCBORType:
-			s.netXferHandleCBOR(ind, data)
+			s.netXferHandleCBOR(ind, data.Data)
 			return true // do not process further
 		}
 	}

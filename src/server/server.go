@@ -9,6 +9,7 @@ import (
 
 	"github.com/opennox/libs/common"
 	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/platform"
 	"github.com/opennox/libs/strman"
 	ns4 "github.com/opennox/noxscript/ns/v4"
@@ -20,7 +21,6 @@ import (
 	"github.com/opennox/opennox/v1/common/ntype"
 	"github.com/opennox/opennox/v1/internal/netlist"
 	"github.com/opennox/opennox/v1/internal/netstr"
-	"github.com/opennox/opennox/v1/server/netxfer"
 )
 
 var Log = log.New("server")
@@ -115,7 +115,7 @@ type Server struct {
 
 	NetStr    *netstr.Streams
 	NetList   *netlist.List
-	NetXfer   netxfer.NetXfer
+	NetXfer   netxfer.State[XferConn]
 	onXferExt []func(ind ntype.PlayerInd, obj NetXferExt)
 	lis       netstr.Server
 	OwnIPStr  string
@@ -134,7 +134,7 @@ type Server struct {
 	NetSendPacketXxx func(a1 int, buf []byte, a4, a5, a6 int) int // Nox_xxx_netSendPacket_4E5030
 	ClientConn       func() *netstr.Client
 	ObjectByNetCode  func(code int) *Object
-	NetXferLocal     func(act netxfer.Action, typ string, data []byte)
+	NetXferLocal     func(data netxfer.Data)
 }
 
 func (s *Server) Close() {

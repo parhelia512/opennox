@@ -430,7 +430,7 @@ func RunArgs(args []string) (gerr error) {
 	platform.RandSeedTime()
 	legacy.Nox_xxx_mapSelectFirst_4D0E00()
 	noxServer.NetList.Init()
-	noxServer.NetXfer.Init(32, xferDataCallback40AF90)
+	noxServer.NetXfer.Init(32, xferDataCallback)
 	legacy.Sub_4134D0()
 	if v := noxClient.Strings().Lang(); v == 6 || v == 8 {
 		noxClient.r.SetBold(false)

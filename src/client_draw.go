@@ -9,6 +9,7 @@ import (
 	"sort"
 
 	"github.com/opennox/libs/common"
+	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/wall"
 
 	"github.com/opennox/opennox/v1/client"
@@ -113,7 +114,7 @@ func (c *Client) nox_xxx_client_435F80_draw() bool {
 		return true
 	}
 	if !noxflags.HasGame(noxflags.GameHost) {
-		c.Server.NetXfer.Update(c.Server.Frame())
+		c.Server.NetXfer.Update(netxfer.Timestamp(c.Server.Frame()))
 	}
 	if noxflags.HasGame(noxflags.GameHost) {
 		legacy.Nox_xxx_spriteDeleteSomeList_49C4B0()
