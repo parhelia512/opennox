@@ -687,7 +687,7 @@ func sub41CFA0(a1 string, a2 ntype.PlayerInd) bool {
 		Data:   buf,
 	}, func() {
 		netXferSendDone(act)
-	}, func() {
+	}, func(_ netxfer.Error) {
 		netXferSendAborted(act)
 	})
 	return true

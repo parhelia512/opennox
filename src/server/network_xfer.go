@@ -5,7 +5,7 @@ import (
 	"reflect"
 
 	"github.com/fxamacker/cbor/v2"
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/noxnet/netxfer"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -41,13 +41,13 @@ type XferConn struct {
 	Conn netlib.SendStream
 }
 
-func (c XferConn) SendReliableMsg(m netxfer.Msg) error {
-	_, err := c.Conn.SendReliableMsg(&noxnet.MsgXfer{Msg: m})
+func (c XferConn) SendReliableMsg(m netmsg.Message) error {
+	_, err := c.Conn.SendReliableMsg(m)
 	return err
 }
 
-func (c XferConn) SendUnreliableMsg(m netxfer.Msg) error {
-	_, err := c.Conn.SendUnreliableMsg(&noxnet.MsgXfer{Msg: m}, true)
+func (c XferConn) SendUnreliableMsg(m netmsg.Message) error {
+	_, err := c.Conn.SendUnreliableMsg(m, true)
 	return err
 }
 
@@ -87,7 +87,8 @@ func (s *Server) netXferSend(pli ntype.PlayerInd, data netxfer.Data, remote bool
 		}
 		conn = s.NetStr.ConnByPlayerInd(pli)
 	}
-	return s.NetXfer.Send(XferConn{conn}, data, onDone, onAbort)
+	_, ok := s.NetXfer.StartSend(XferConn{conn}, data, onDone, onAbort)
+	return ok
 }
 
 type NetXferExt interface {

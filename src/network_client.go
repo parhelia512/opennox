@@ -12,6 +12,7 @@ import (
 
 	"github.com/opennox/libs/console"
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/strman"
 
 	"github.com/opennox/opennox/v1/client"
@@ -31,13 +32,13 @@ func nox_xxx_netOnPacketRecvCli_48EA70(ind ntype.PlayerInd, buf *byte, sz int) i
 }
 
 func nox_xxx_netHandleCliPacket_43C860(_ netlib.StreamID, data []byte) int {
-	op := noxnet.Op(data[0])
+	op := netmsg.Op(data[0])
 	noxPerfmon.packetSizeCli = len(data)
-	if op == noxnet.MSG_SERVER_CLOSE_ACK {
+	if op == netmsg.MSG_SERVER_CLOSE_ACK {
 		sub_446380()
-	} else if op == noxnet.MSG_PING {
+	} else if op == netmsg.MSG_PING {
 		noxPerfmon.ping = time.Duration(binary.LittleEndian.Uint32(data[1:])) * time.Millisecond
-	} else if op >= noxnet.MSG_TIMESTAMP {
+	} else if op >= netmsg.MSG_TIMESTAMP {
 		noxClient.nox_xxx_netOnPacketRecvCli48EA70(server.HostPlayerIndex, data)
 		if nox_client_isConnected() {
 			legacy.Sub_48D660()
@@ -54,7 +55,7 @@ func nox_xxx_netHandleCliPacket_43C860(_ netlib.StreamID, data []byte) int {
 	return 1
 }
 
-func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op noxnet.Op, data []byte, localFrame *uint32, localFrame16 *uint16) int {
+func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op netmsg.Op, data []byte, localFrame *uint32, localFrame16 *uint16) int {
 	if len(data) == 0 {
 		return 0
 	}
@@ -67,7 +68,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		return n
 	}
 	switch op {
-	case noxnet.MSG_FULL_TIMESTAMP:
+	case netmsg.MSG_FULL_TIMESTAMP:
 		var p noxnet.MsgFullTimestamp
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -83,13 +84,13 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		}
 		legacy.Sub_43C650()
 		return 1 + n
-	case noxnet.MSG_SIMULATED_TIMESTAMP:
+	case netmsg.MSG_SIMULATED_TIMESTAMP:
 		frame := uint32(*localFrame16)
 		if frame < (c.tsFullPRev + sub_43C790()) {
 			c.srv.SetFrame(frame)
 		}
 		return 5
-	case noxnet.MSG_TIMESTAMP:
+	case netmsg.MSG_TIMESTAMP:
 		var p noxnet.MsgTimestamp
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -131,18 +132,18 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			legacy.Sub_43C650()
 		}
 		return 1 + n
-	case noxnet.MSG_RATE_CHANGE:
+	case netmsg.MSG_RATE_CHANGE:
 		if nox_client_isConnected() {
 			sub_43C7A0(uint32(data[1]))
 		}
 		return 1 + 1
-	case noxnet.MSG_SERVER_QUIT:
+	case netmsg.MSG_SERVER_QUIT:
 		var buf [1]byte
-		buf[0] = byte(noxnet.MSG_SERVER_QUIT_ACK)
+		buf[0] = byte(netmsg.MSG_SERVER_QUIT_ACK)
 		c.Conn.SendUnreliable(buf[:1], true)
 		sub_446380()
 		return 1
-	case noxnet.MSG_USE_MAP:
+	case netmsg.MSG_USE_MAP:
 		var p noxnet.MsgUseMap
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -167,7 +168,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			sub_44A400()
 		}
 		return 1 + n
-	case noxnet.MSG_JOIN_DATA:
+	case netmsg.MSG_JOIN_DATA:
 		var p noxnet.MsgJoinData
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -190,7 +191,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		legacy.Set_dword_5d4594_1200832(0)
 		legacy.Nox_xxx_cliSetSettingsAcquired_4169D0(0)
 		return 1 + n
-	case noxnet.MSG_DESTROY_OBJECT:
+	case netmsg.MSG_DESTROY_OBJECT:
 		if len(data) < 3 {
 			return -1
 		}
@@ -200,7 +201,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		code := binary.LittleEndian.Uint16(data[1:])
 		c.DestroyDrawable(code)
 		return 3
-	case noxnet.MSG_NEW_PLAYER:
+	case netmsg.MSG_NEW_PLAYER:
 		if len(data) < 129 {
 			return -1
 		}
@@ -238,7 +239,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			legacy.Set_dword_5d4594_1200832(1)
 		}
 		return 129
-	case noxnet.MSG_PLAYER_QUIT:
+	case netmsg.MSG_PLAYER_QUIT:
 		if len(data) < 3 {
 			return -1
 		}
@@ -267,16 +268,16 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			nox_xxx_printCentered_445490(msg)
 		}
 		return 3
-	case noxnet.MSG_REPORT_SPELL_START:
+	case netmsg.MSG_REPORT_SPELL_START:
 		if len(data) < 2 {
 			return -1
 		}
 		legacy.Sub_49BB80(data[1])
 		return 2
-	case noxnet.MSG_REPORT_INVENTORY_LOADED:
+	case netmsg.MSG_REPORT_INVENTORY_LOADED:
 		legacy.Sub_467CA0()
 		return 1
-	case noxnet.MSG_FX_DEATH_RAY:
+	case netmsg.MSG_FX_DEATH_RAY:
 		if len(data) < 9 {
 			return -1
 		}
@@ -286,7 +287,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		p2y := binary.LittleEndian.Uint16(data[7:])
 		c.clientFXDeathRay(image.Pt(int(p1x), int(p1y)), image.Pt(int(p2x), int(p2y)))
 		return 9
-	case noxnet.MSG_FX_PARTICLEFX:
+	case netmsg.MSG_FX_PARTICLEFX:
 		if len(data) < 14 {
 			return -1
 		}
@@ -295,7 +296,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			c.r.partfx.onParticleFx(data[1], dr, int(binary.LittleEndian.Uint16(data[2:])), binary.LittleEndian.Uint16(data[4:]) != 0, int(binary.LittleEndian.Uint16(data[6:])))
 		}
 		return 14
-	case noxnet.MSG_IMPORTANT:
+	case netmsg.MSG_IMPORTANT:
 		n := 1
 		if noxflags.HasGame(noxflags.GameHost) {
 			n = 5
@@ -305,7 +306,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		}
 		if nox_client_isConnected() {
 			var buf [5]byte
-			buf[0] = byte(noxnet.MSG_IMPORTANT_ACK)
+			buf[0] = byte(netmsg.MSG_IMPORTANT_ACK)
 			if noxflags.HasGame(noxflags.GameHost) {
 				v := binary.LittleEndian.Uint32(data[1:])
 				binary.LittleEndian.PutUint32(buf[1:], v)
@@ -315,7 +316,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			c.srv.NetList.AddToMsgListCli(ind, 0, buf[:5])
 		}
 		return n
-	case noxnet.MSG_MAP_SEND_START:
+	case netmsg.MSG_MAP_SEND_START:
 		if len(data) < 88 {
 			return -1
 		}
@@ -323,7 +324,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		name := alloc.GoStringS(data[8:88])
 		c.mapsend.onMapDownloadStart(name, uint(sz))
 		return 88
-	case noxnet.MSG_MAP_SEND_PACKET:
+	case netmsg.MSG_MAP_SEND_PACKET:
 		if len(data) < 6 {
 			return -1
 		}
@@ -331,13 +332,13 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		sz := binary.LittleEndian.Uint16(data[4:])
 		c.mapsend.onMapDownloadPart(uint(bind), data[6:6+sz])
 		return 6 + int(sz)
-	case noxnet.MSG_MAP_SEND_ABORT:
+	case netmsg.MSG_MAP_SEND_ABORT:
 		if len(data) < 2 {
 			return -1
 		}
 		c.mapsend.onMapDownloadAbort()
 		return 2
-	case noxnet.MSG_FADE_BEGIN:
+	case netmsg.MSG_FADE_BEGIN:
 		var p noxnet.MsgFadeBegin
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -351,7 +352,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			c.clientPacketFade(p.Menu == 1, p.Out == 1)
 		}
 		return 1 + n
-	case noxnet.MSG_DIALOG:
+	case netmsg.MSG_DIALOG:
 		if len(data) < 2 {
 			return -1
 		}
@@ -383,7 +384,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 			return 2
 		}
 		return -1
-	case noxnet.MSG_TEXT_MESSAGE:
+	case netmsg.MSG_TEXT_MESSAGE:
 		var p noxnet.MsgText
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -440,9 +441,9 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 	return legacy.Nox_xxx_netOnPacketRecvCli_48EA70_switch(ind, op, data)
 }
 
-func (c *Client) HandleMessage(ind ntype.PlayerInd, msg noxnet.Message) int {
+func (c *Client) HandleMessage(ind ntype.PlayerInd, msg netmsg.Message) int {
 	// TODO: avoid re-encoding
-	buf, err := noxnet.AppendPacket(nil, msg)
+	buf, err := netmsg.Append(nil, msg)
 	if err != nil {
 		panic(err)
 	}
@@ -458,7 +459,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70(ind ntype.PlayerInd, data []by
 		localFrame16 uint16
 	)
 	for len(data) > 0 {
-		op := noxnet.Op(data[0])
+		op := netmsg.Op(data[0])
 		n := c.nox_xxx_netOnPacketRecvCli48EA70_switch(ind, op, data, &localFrame, &localFrame16)
 		if n == 0 {
 			break // stop earlier

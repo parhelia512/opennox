@@ -10,6 +10,7 @@ import (
 
 	"github.com/opennox/libs/log"
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/platform"
 
 	"github.com/opennox/opennox/v1/common/ntype"
@@ -24,15 +25,15 @@ const (
 )
 
 const (
-	codeErr2           = noxnet.Op(0x02)
-	code3              = noxnet.Op(0x03)
-	codeAlreadyJoined4 = noxnet.Op(0x04)
-	code5              = noxnet.Op(0x05)
-	code7              = noxnet.Op(0x07)
-	code9              = noxnet.Op(0x09)
-	code36             = noxnet.Op(0x24)
-	code37             = noxnet.Op(0x25)
-	code38             = noxnet.Op(0x26)
+	codeErr2           = netmsg.Op(0x02)
+	code3              = netmsg.Op(0x03)
+	codeAlreadyJoined4 = netmsg.Op(0x04)
+	code5              = netmsg.Op(0x05)
+	code7              = netmsg.Op(0x07)
+	code9              = netmsg.Op(0x09)
+	code36             = netmsg.Op(0x24)
+	code37             = netmsg.Op(0x25)
+	code38             = netmsg.Op(0x26)
 )
 
 var (
@@ -160,7 +161,7 @@ func (nx *stream2) nextPingPacket(t time.Duration) []byte {
 	nx.ticks = t
 
 	var buf [8]byte
-	buf[2] = byte(noxnet.MSG_SERVER_PING)
+	buf[2] = byte(netmsg.MSG_SERVER_PING)
 	buf[3] = nx.cur
 	binary.LittleEndian.PutUint32(buf[4:], uint32(nx.ticks/time.Millisecond))
 	return buf[:]
@@ -391,7 +392,7 @@ func (g *Streams) sendCode20(ind2 int) (int, error) {
 	var buf [3]byte
 	buf[0] = 0
 	buf[1] = 0
-	buf[2] = byte(noxnet.MSG_SERVER_JOIN_OK)
+	buf[2] = byte(netmsg.MSG_SERVER_JOIN_OK)
 
 	nx := &g.streams2[ind2]
 	nx.active = false
@@ -403,7 +404,7 @@ func (g *Streams) sendCode19(code noxnet.ConnectError, ind2 int) (int, error) {
 	var buf [4]byte
 	buf[0] = 0
 	buf[1] = 0
-	buf[2] = byte(noxnet.MSG_SERVER_ERROR)
+	buf[2] = byte(netmsg.MSG_SERVER_ERROR)
 	buf[3] = byte(code)
 
 	nx := &g.streams2[ind2]

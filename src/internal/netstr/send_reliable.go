@@ -5,7 +5,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 )
 
 const (
@@ -40,15 +40,15 @@ func (ns *Conn) SendReliable(buf []byte) (seq int, err error) {
 	return seq, nil
 }
 
-func (ns *Conn) SendReliableMsg(msg noxnet.Message) (int, error) {
-	buf, err := noxnet.AppendPacket(nil, msg)
+func (ns *Conn) SendReliableMsg(msg netmsg.Message) (int, error) {
+	buf, err := netmsg.Append(nil, msg)
 	if err != nil {
 		return 0, err
 	}
 	return ns.SendReliable(buf)
 }
 
-func (ns *Conn) ReliableInQueue(ops ...noxnet.Op) int {
+func (ns *Conn) ReliableInQueue(ops ...netmsg.Op) int {
 	return ns.reliable.InQueue(ops...)
 }
 
@@ -77,10 +77,10 @@ type reliableSender struct {
 	Now   func() time.Duration
 }
 
-func (ns *reliableSender) InQueue(ops ...noxnet.Op) int {
+func (ns *reliableSender) InQueue(ops ...netmsg.Op) int {
 	cnt := 0
 	for it := ns.queue; it != nil; it = it.next {
-		op := noxnet.Op(it.data[2])
+		op := netmsg.Op(it.data[2])
 		if len(ops) == 0 || slices.Contains(ops, op) {
 			cnt++
 		}

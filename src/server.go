@@ -14,6 +14,7 @@ import (
 	"github.com/opennox/libs/ifs"
 	"github.com/opennox/libs/log"
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/script"
 	"github.com/opennox/libs/spell"
@@ -443,7 +444,7 @@ func (s *Server) updateRemotePlayers() error {
 			// TODO: passing Go pointer
 			legacy.Nox_xxx_netInformTextMsg2_4DA180(3, unsafe.Pointer(&m))
 			var buf [1]byte
-			buf[0] = byte(noxnet.MSG_TIMEOUT_NOTIFICATION)
+			buf[0] = byte(netmsg.MSG_TIMEOUT_NOTIFICATION)
 			s.NetStr.ByPlayer(pl).SendReliable(buf[:])
 			s.PlayerDisconnect(pl, 3)
 		}
@@ -451,7 +452,7 @@ func (s *Server) updateRemotePlayers() error {
 			s.PlayerDisconnect(pl, 4)
 		}
 		if (pl.Field3676 != 3) || (pl.Field3680&0x10 == 0) {
-			buf, err := noxnet.AppendPacket(nil, &noxnet.MsgTimestamp{
+			buf, err := netmsg.Append(nil, &noxnet.MsgTimestamp{
 				T: uint16(s.Frame()),
 			})
 			if err != nil {
@@ -496,7 +497,7 @@ func (s *Server) nox_xxx_netUpdate_518EE0(u *server.Object) {
 	}
 	if legacy.Get_dword_5d4594_2650652() == 0 || (s.Frame()%uint32(nox_xxx_rateGet_40A6C0())) == 0 || noxflags.HasGame(noxflags.GameFlag4) {
 		if pl.Field3680&0x40 != 0 {
-			buf, err := noxnet.AppendPacket(nil, &noxnet.MsgFullTimestamp{
+			buf, err := netmsg.Append(nil, &noxnet.MsgFullTimestamp{
 				T: noxnet.Timestamp(s.Frame()),
 			})
 			if err != nil {
@@ -505,7 +506,7 @@ func (s *Server) nox_xxx_netUpdate_518EE0(u *server.Object) {
 			nox_netlist_addToMsgListSrv(pind, buf)
 			legacy.Nox_xxx_playerUnsetStatus_417530(pl, 64)
 		} else {
-			buf, err := noxnet.AppendPacket(nil, &noxnet.MsgTimestamp{
+			buf, err := netmsg.Append(nil, &noxnet.MsgTimestamp{
 				T: uint16(s.Frame()),
 			})
 			if err != nil {

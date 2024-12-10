@@ -12,7 +12,7 @@ import (
 	"github.com/opennox/libs/console"
 	"github.com/opennox/libs/datapath"
 	"github.com/opennox/libs/ifs"
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/platform"
 
 	"github.com/opennox/opennox/v1/common/ntype"
@@ -68,7 +68,7 @@ func (s *serverMapSend) CountQueued(pli ntype.PlayerInd) int {
 	if nind == 0 || pli >= 32 {
 		return 0
 	}
-	return s.s.NetStr.ConnByPlayerInd(nind).ReliableInQueue(noxnet.MSG_MAP_SEND_START, noxnet.MSG_MAP_SEND_PACKET)
+	return s.s.NetStr.ConnByPlayerInd(nind).ReliableInQueue(netmsg.MSG_MAP_SEND_START, netmsg.MSG_MAP_SEND_PACKET)
 }
 
 func (s *serverMapSend) Reset() {
@@ -91,7 +91,7 @@ func (s *serverMapSend) abort(p *playerMapSend, errCode byte) {
 		return
 	}
 	var buf [2]byte
-	buf[0] = byte(noxnet.MSG_MAP_SEND_ABORT)
+	buf[0] = byte(netmsg.MSG_MAP_SEND_ABORT)
 	buf[1] = byte(errCode)
 	s.s.NetStr.ConnByPlayerInd(p.PlayerInd).SendReliable(buf[:2])
 	if s.activeCnt != 0 {
@@ -112,7 +112,7 @@ func (s *serverMapSend) SendMore(p *playerMapSend) {
 			s.s.Print(console.ColorRed, fmt.Sprintf(format, s.mapName, pl.Name()))
 		}
 		var buf [88]byte
-		buf[0] = byte(noxnet.MSG_MAP_SEND_START)
+		buf[0] = byte(netmsg.MSG_MAP_SEND_START)
 		binary.LittleEndian.PutUint32(buf[4:], uint32(p.DataSize))
 		copy(buf[8:], s.mapName)
 		s.s.NetStr.ConnByPlayerInd(p.PlayerInd).SendReliable(buf[:88])
@@ -122,7 +122,7 @@ func (s *serverMapSend) SendMore(p *playerMapSend) {
 	if dsz := p.DataSize - p.SentSize; psz >= dsz {
 		psz = dsz
 	}
-	packet[0] = byte(noxnet.MSG_MAP_SEND_PACKET)
+	packet[0] = byte(netmsg.MSG_MAP_SEND_PACKET)
 	binary.LittleEndian.PutUint16(packet[2:], uint16(p.Sequence))
 	binary.LittleEndian.PutUint16(packet[4:], uint16(psz))
 	var src []byte

@@ -10,7 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/discover"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/lobby"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -179,7 +180,7 @@ func encodeGameDiscovery(token uint32) []byte {
 	data := make([]byte, 2, 12)
 	data[0] = 0
 	data[1] = 0
-	data, err := noxnet.AppendPacket(data, &noxnet.MsgDiscover{
+	data, err := netmsg.Append(data, &discover.MsgDiscover{
 		Token: token,
 		// TODO: set the rest of the fields?
 	})
@@ -204,20 +205,20 @@ func getAddr(addr net.Addr) netip.AddrPort {
 	return netip.AddrPort{}
 }
 
-func decodeGameInfo(buf []byte) *noxnet.MsgServerInfo {
+func decodeGameInfo(buf []byte) *discover.MsgServerInfo {
 	if len(buf) < 2 {
 		return nil
 	}
 	buf = buf[2:] // skip header
-	var p noxnet.MsgServerInfo
-	_, err := noxnet.DecodePacket(buf, &p)
+	var p discover.MsgServerInfo
+	_, err := netmsg.Decode(buf, &p)
 	if err != nil {
 		return nil
 	}
 	return &p
 }
 
-func convGameInfo(addr netip.AddrPort, m *noxnet.MsgServerInfo, buf []byte) *lobby.Game {
+func convGameInfo(addr netip.AddrPort, m *discover.MsgServerInfo, buf []byte) *lobby.Game {
 	name := m.ServerName
 	mname := m.MapName
 	status := buf[20] | buf[21]

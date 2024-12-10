@@ -13,6 +13,7 @@ import (
 	"github.com/opennox/libs/binenc"
 	"github.com/opennox/libs/console"
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 
 	"github.com/opennox/opennox/v1/client"
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -77,7 +78,7 @@ func noxSetUseMapFrame(frame int) {
 	noxUseMapFrame = frame
 }
 
-func noxOnCliPacketDebug(op noxnet.Op, buf []byte) {
+func noxOnCliPacketDebug(op netmsg.Op, buf []byte) {
 	if noxServer.NetStr.Debug && len(buf) != 0 {
 		netstr.Log.Printf("CLIENT: op=%d (%s) [%d:%d]\n%02x %x", int(op), op.String(), int(len(buf))-1, op.Len(), buf[0], buf[1:])
 	}
@@ -148,7 +149,7 @@ func sendServerPassword(addr netip.AddrPort, data []byte) (int, error) {
 
 func nox_xxx_netClientSendSocial(a1 int, emote byte, a4, a5 int) {
 	var buf [2]byte
-	buf[0] = byte(noxnet.MSG_SOCIAL)
+	buf[0] = byte(netmsg.MSG_SOCIAL)
 	buf[1] = emote
 	nox_xxx_netClientSend2_4E53C0(a1, buf[:], a4, a5)
 }
@@ -165,7 +166,7 @@ func (c *Client) clientSendInput(pli ntype.PlayerInd) bool {
 		return true
 	}
 	var buf [2]byte
-	buf[0] = byte(noxnet.MSG_PLAYER_INPUT)
+	buf[0] = byte(netmsg.MSG_PLAYER_INPUT)
 	buf[1] = byte(len(nbuf))
 	if !c.srv.NetList.AddToMsgListCli(pli, netlist.Kind0, buf[:2]) {
 		return false
@@ -186,7 +187,7 @@ func (c *Client) clientSendInputMouse(pli ntype.PlayerInd, mp image.Point) bool 
 	}
 	c.netPrevMouse = mp
 
-	buf, err := noxnet.AppendPacket(nil, &noxnet.MsgMouse{
+	buf, err := netmsg.Append(nil, &noxnet.MsgMouse{
 		X: uint16(mp.X),
 		Y: uint16(mp.Y),
 	})
@@ -225,7 +226,7 @@ func nox_xxx_servNetInitialPackets_552A80_discover(src, dst []byte) int {
 
 func netSendGauntlet() {
 	var buf [2]byte
-	buf[0] = byte(noxnet.MSG_GAUNTLET)
+	buf[0] = byte(netmsg.MSG_GAUNTLET)
 	buf[1] = 27
 	nox_xxx_netClientSend2_4E53C0(server.HostPlayerIndex, buf[:2], 0, 0)
 }
@@ -256,7 +257,7 @@ func sub_416910(a1 unsafe.Pointer) unsafe.Pointer {
 	return nox_common_list_getNextSafe_4258A0(a1)
 }
 
-func noxnetCheckPassword(p *noxnet.MsgServerPass) noxnet.Message {
+func noxnetCheckPassword(p *noxnet.MsgServerPass) netmsg.Message {
 	sst := getServerSettings()
 	expPass := alloc.GoString16((*uint16)(unsafe.Add(unsafe.Pointer(sst), 39)))
 
@@ -269,7 +270,7 @@ func noxnetCheckPassword(p *noxnet.MsgServerPass) noxnet.Message {
 	return nil
 }
 
-func noxnetJoinCheck(p *noxnet.MsgServerTryJoin, a4a bool, add func(pid ntype.Player) bool) noxnet.Message {
+func noxnetJoinCheck(p *noxnet.MsgServerTryJoin, a4a bool, add func(pid ntype.Player) bool) netmsg.Message {
 	s := noxServer
 	v43 := false
 	sst := getServerSettings()
@@ -438,7 +439,7 @@ func sub_43CF70() {
 		if pl := getCurPlayer(); pl != nil {
 			legacy.Nox_xxx_netNeedTimestampStatus_4174F0(pl, 64)
 			var buf [1]byte
-			buf[0] = byte(noxnet.MSG_NEED_TIMESTAMP)
+			buf[0] = byte(netmsg.MSG_NEED_TIMESTAMP)
 			nox_xxx_netClientSend2_4E53C0(server.HostPlayerIndex, buf[:1], 0, 1)
 		}
 	}
@@ -447,7 +448,7 @@ func sub_43CF70() {
 func (s *Server) sendSettings(u *server.Object) {
 	pl := u.ControllingPlayer()
 	{
-		buf, err := noxnet.AppendPacket(nil, &noxnet.MsgFullTimestamp{
+		buf, err := netmsg.Append(nil, &noxnet.MsgFullTimestamp{
 			T: noxnet.Timestamp(s.Frame()),
 		})
 		if err != nil {
@@ -456,7 +457,7 @@ func (s *Server) sendSettings(u *server.Object) {
 		s.NetList.AddToMsgListCli(pl.PlayerIndex(), netlist.Kind1, buf)
 	}
 	{
-		buf, err := noxnet.AppendPacket(nil, &noxnet.MsgJoinData{
+		buf, err := netmsg.Append(nil, &noxnet.MsgJoinData{
 			NetCode: uint16(s.GetUnitNetCode(u)),
 			Unk2:    uint32(pl.Field2068),
 		})
@@ -470,7 +471,7 @@ func (s *Server) sendSettings(u *server.Object) {
 	v3 := getSettings2ByInd(0)
 	{
 		var buf [20]byte
-		buf[0] = byte(noxnet.MSG_GAME_SETTINGS)
+		buf[0] = byte(netmsg.MSG_GAME_SETTINGS)
 		binary.LittleEndian.PutUint32(buf[1:], s.Frame())
 		binary.LittleEndian.PutUint32(buf[5:], uint32(NOX_CLIENT_VERS_CODE))
 		binary.LittleEndian.PutUint32(buf[9:], uint32(noxflags.GetGame()&0x7FFF0))
@@ -482,7 +483,7 @@ func (s *Server) sendSettings(u *server.Object) {
 	}
 	{
 		var buf [49]byte
-		buf[0] = byte(noxnet.MSG_GAME_SETTINGS_2)
+		buf[0] = byte(netmsg.MSG_GAME_SETTINGS_2)
 		copy(buf[1:17], s.getServerName())
 		buf[16] = 0
 		binary.LittleEndian.PutUint32(buf[17:], v3.Field24.Vals[0])
@@ -509,7 +510,7 @@ func (s *Server) sendSettings(u *server.Object) {
 		s.Nox_xxx_netSendBySock_4DDDC0(pl.PlayerIndex())
 	}
 	{
-		buf, err := noxnet.AppendPacket(nil, &noxnet.MsgUseMap{
+		buf, err := netmsg.Append(nil, &noxnet.MsgUseMap{
 			MapName: binenc.String{Value: s.nox_server_currentMapGetFilename_409B30()},
 			CRC:     nox_xxx_mapCrcGetMB_409B00(),
 			T:       noxnet.Timestamp(s.Frame()),
@@ -523,7 +524,7 @@ func (s *Server) sendSettings(u *server.Object) {
 }
 
 func (s *Server) nox_xxx_netUseMap_4DEE00(mname string, crc uint32) {
-	pck, err := noxnet.AppendPacket(nil, &noxnet.MsgUseMap{
+	pck, err := netmsg.Append(nil, &noxnet.MsgUseMap{
 		MapName: binenc.String{Value: mname},
 		CRC:     crc,
 		T:       noxnet.Timestamp(s.Frame()),
@@ -550,7 +551,7 @@ func (s *Server) nox_xxx_netUseMap_4DEE00(mname string, crc uint32) {
 func Nox_xxx_netTimerStatus_4D8F50(a1 ntype.PlayerInd, a2 int) {
 	s := noxServer
 	var buf [13]byte
-	buf[0] = byte(noxnet.MSG_TIMER_STATUS)
+	buf[0] = byte(netmsg.MSG_TIMER_STATUS)
 	binary.LittleEndian.PutUint32(buf[1:], uint32(a2))
 	binary.LittleEndian.PutUint32(buf[5:], uint32(legacy.Sub_40A230()))
 	binary.LittleEndian.PutUint32(buf[9:], s.Frame())
@@ -564,9 +565,9 @@ func (s *Server) netSendAudioEvent(u *server.Object, ev *server.AudioEvent, perc
 	mv := uint8(int8(50 * int(dx) / (videoGetWindowSize().X / 2)))
 	var buf [4]byte
 	if u == ev.Obj {
-		buf[0] = byte(noxnet.MSG_AUDIO_PLAYER_EVENT)
+		buf[0] = byte(netmsg.MSG_AUDIO_PLAYER_EVENT)
 	} else {
-		buf[0] = byte(noxnet.MSG_AUDIO_EVENT)
+		buf[0] = byte(netmsg.MSG_AUDIO_EVENT)
 	}
 	buf[1] = mv
 	binary.LittleEndian.PutUint16(buf[2:], packed)
@@ -577,7 +578,7 @@ func (s *Server) nox_xxx_netPlayerObjSendCamera_519330(u *server.Object) bool {
 	ud := u.UpdateDataPlayer()
 	pl := ud.Player
 	var buf [12]byte
-	buf[0] = byte(noxnet.MSG_PLAYER_OBJ)
+	buf[0] = byte(netmsg.MSG_PLAYER_OBJ)
 	binary.LittleEndian.PutUint16(buf[1:], 0)
 	binary.LittleEndian.PutUint16(buf[3:], 0)
 	pos := pl.Pos3632()

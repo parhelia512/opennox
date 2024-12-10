@@ -4,7 +4,7 @@ import (
 	"math"
 	"unsafe"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/spell"
@@ -223,7 +223,7 @@ func triggerTrap(trap, a2 *server.Object) {
 		}
 	}
 	pos := trap.Pos()
-	s.Nox_xxx_netSendPointFx_522FF0(noxnet.MSG_FX_BLUE_SPARKS, pos)
+	s.Nox_xxx_netSendPointFx_522FF0(netmsg.MSG_FX_BLUE_SPARKS, pos)
 	s.Audio.EventPos(sound.SoundGlyphDetonate, pos, 0, 0)
 	const dist = 100
 	rect := types.RectFromPointsf(pos.Sub(types.Ptf(dist, dist)), pos.Add(types.Ptf(dist, dist)))
@@ -323,7 +323,7 @@ func sub_4E71F0(obj *server.Object) {
 func nox_bomberDead_54A150(u *server.Object) int {
 	s := noxServer
 	ud := u.UpdateDataMonster()
-	s.Nox_xxx_netSendPointFx_522FF0(noxnet.MSG_FX_EXPLOSION, u.Pos())
+	s.Nox_xxx_netSendPointFx_522FF0(netmsg.MSG_FX_EXPLOSION, u.Pos())
 	s.Audio.EventObj(sound.SoundBomberDie, u, 0, 0)
 
 	if it := u.FirstItem(); it != nil {

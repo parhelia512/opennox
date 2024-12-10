@@ -1,7 +1,7 @@
 package opennox
 
 import (
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/spell"
 	"github.com/opennox/libs/things"
@@ -19,7 +19,7 @@ func nox_xxx_cspellRemoveSpell_52BC90(obj *server.Object) {
 	if obj.Flags().Has(object.FlagDestroyed) {
 		return
 	}
-	s.Nox_xxx_netSendPointFx_522FF0(noxnet.MSG_FX_COUNTERSPELL_EXPLOSION, obj.PosVec)
+	s.Nox_xxx_netSendPointFx_522FF0(netmsg.MSG_FX_COUNTERSPELL_EXPLOSION, obj.PosVec)
 	switch int(obj.TypeInd) {
 	case s.Types.MagicID():
 		sobj.Delete()
@@ -67,7 +67,7 @@ func nox_xxx_castCounterSpell_52BBB0(cspl spell.ID, a2, a3, a4 *server.Object, s
 					continue
 				}
 				if !found {
-					s.Nox_xxx_netSendPointFx_522FF0(noxnet.MSG_FX_COUNTERSPELL_EXPLOSION, it.PosVec)
+					s.Nox_xxx_netSendPointFx_522FF0(netmsg.MSG_FX_COUNTERSPELL_EXPLOSION, it.PosVec)
 					found = true
 				}
 				asObjectS(it).DisableEnchant(enc)

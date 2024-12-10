@@ -9,6 +9,7 @@ import (
 	"unsafe"
 
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/spell"
@@ -197,7 +198,7 @@ func (obj *Object) observeClear() {
 }
 
 func nox_xxx_netNewPlayerMakePacket_4DDA90(buf []byte, pl *server.Player) {
-	buf[0] = byte(noxnet.MSG_NEW_PLAYER)
+	buf[0] = byte(netmsg.MSG_NEW_PLAYER)
 	binary.LittleEndian.PutUint16(buf[1:], uint16(pl.NetCode()))
 	binary.LittleEndian.PutUint16(buf[100:], uint16(pl.Lessons))
 	binary.LittleEndian.PutUint16(buf[102:], uint16(pl.Field2140))
@@ -621,11 +622,11 @@ func nox_xxx_playerDisconnFinish_4DE530(pli ntype.PlayerInd, a2 int8) {
 			}
 		}
 	}
-	s.NetXfer.Cancel(server.XferConn{s.NetStr.ConnByPlayerInd(pli)})
+	s.NetXfer.CancelAll(server.XferConn{s.NetStr.ConnByPlayerInd(pli)})
 	legacy.Sub_4DE410(pli)
 	if pl != nil {
 		var buf [3]byte
-		buf[0] = byte(noxnet.MSG_OUTGOING_CLIENT)
+		buf[0] = byte(netmsg.MSG_OUTGOING_CLIENT)
 		// TODO: this can be nil for some reason; should we sent this at all?
 		if pl.PlayerUnit != nil {
 			binary.LittleEndian.PutUint16(buf[1:], uint16(pl.PlayerUnit.NetCode))
@@ -634,7 +635,7 @@ func nox_xxx_playerDisconnFinish_4DE530(pli ntype.PlayerInd, a2 int8) {
 	}
 	if int32(a2) == 4 {
 		var buf [1]byte
-		buf[0] = byte(noxnet.MSG_KICK_NOTIFICATION)
+		buf[0] = byte(netmsg.MSG_KICK_NOTIFICATION)
 		s.NetStr.ConnByPlayerInd(pli).SendReliable(buf[:1])
 	}
 	legacy.Sub_4E55F0(pli)

@@ -7,7 +7,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/script"
@@ -712,7 +712,7 @@ func (obj *Object) SetPos(pos types.Pointf) {
 		ud.Field68 = s.Frame()
 		s.Sub4DE4D0(int(pl.PlayerInd))
 		var buf [5]byte
-		buf[0] = byte(noxnet.MSG_FORGET_DRAWABLES)
+		buf[0] = byte(netmsg.MSG_FORGET_DRAWABLES)
 		binary.LittleEndian.PutUint32(buf[1:], s.Frame())
 		s.NetSendPacketXxx1(pl.Index(), buf[:5], 0, 0)
 	}
@@ -1321,7 +1321,7 @@ func nox_xxx_startShopDialog_548DE0(player, npc *server.Object, snd sound.ID, st
 
 	buf, free := alloc.Make([]byte{}, 135)
 	defer free()
-	buf[0] = byte(noxnet.MSG_DIALOG)
+	buf[0] = byte(netmsg.MSG_DIALOG)
 	buf[1] = 3
 	copy(buf[2:34], str)
 	v7 := legacy.Sub_4E39F0_obj_db(npc)

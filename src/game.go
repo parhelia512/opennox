@@ -629,7 +629,7 @@ func sub_41CC00(a1 string) {
 		Data:   data,
 	}, func() {
 		netXferSendDone(act)
-	}, func() {
+	}, func(_ netxfer.Error) {
 		netXferSendAborted(act)
 	})
 }
@@ -651,7 +651,7 @@ func nox_xxx_playerSendMOTD_4DD140(ind ntype.PlayerInd) {
 		Data:   buf,
 	}, func() {
 		netXferSendDone(act)
-	}, func() {
+	}, func(_ netxfer.Error) {
 		netXferSendAborted(act)
 	})
 }

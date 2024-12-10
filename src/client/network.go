@@ -4,6 +4,8 @@ import (
 	"errors"
 
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
+	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/player"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -24,35 +26,35 @@ type CurPlayerInfo struct {
 
 func (c *Client) Nox_xxx_netSendClientReady_43C9F0() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_CLIENT_READY)
+	data[0] = byte(netmsg.MSG_CLIENT_READY)
 	c.Conn.SendReliable(data[:])
 	return 1
 }
 
 func (c *Client) Nox_xxx_netKeepAliveSocket_43CA20() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_KEEP_ALIVE)
+	data[0] = byte(netmsg.MSG_KEEP_ALIVE)
 	c.Conn.SendUnreliable(data[:], true)
 	return 1
 }
 
 func (c *Client) Nox_xxx_netRequestMap_43CA50() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_REQUEST_MAP)
+	data[0] = byte(netmsg.MSG_REQUEST_MAP)
 	c.Conn.SendReliable(data[:])
 	return 1
 }
 
 func (c *Client) Nox_xxx_netMapReceived_43CA80() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_RECEIVED_MAP)
+	data[0] = byte(netmsg.MSG_RECEIVED_MAP)
 	c.Conn.SendReliable(data[:])
 	return 1
 }
 
 func (c *Client) Nox_xxx_cliSendCancelMap_43CAB0() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_CANCEL_MAP)
+	data[0] = byte(netmsg.MSG_CANCEL_MAP)
 	seq, _ := c.Conn.SendReliable(data[:])
 	if c.Conn.WaitServerResponse(seq, 20, netstr.RecvNoHooks|netstr.RecvJustOne) != 0 {
 		return 0
@@ -63,7 +65,7 @@ func (c *Client) Nox_xxx_cliSendCancelMap_43CAB0() int {
 
 func (c *Client) Nox_xxx_netSendIncomingClient_43CB00() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_INCOMING_CLIENT)
+	data[0] = byte(netmsg.MSG_INCOMING_CLIENT)
 	seq, _ := c.Conn.SendReliable(data[:])
 	if c.Conn.WaitServerResponse(seq, 20, netstr.RecvNoHooks|netstr.RecvJustOne) != 0 {
 		return 0
@@ -74,7 +76,7 @@ func (c *Client) Nox_xxx_netSendIncomingClient_43CB00() int {
 
 func (c *Client) Nox_xxx_cliSendOutgoingClient_43CB50() int {
 	var data [1]byte
-	data[0] = byte(noxnet.MSG_OUTGOING_CLIENT)
+	data[0] = byte(netmsg.MSG_OUTGOING_CLIENT)
 	seq, _ := c.Conn.SendReliable(data[:])
 	if c.Conn.WaitServerResponse(seq, 20, netstr.RecvNoHooks|netstr.RecvJustOne) != 0 {
 		return 0
@@ -84,11 +86,11 @@ func (c *Client) Nox_xxx_cliSendOutgoingClient_43CB50() int {
 	return 1
 }
 
-func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []byte, localFrame *uint32, localFrame16 *uint16, cur CurPlayerInfo) (int, bool, error) {
+func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op netmsg.Op, data []byte, localFrame *uint32, localFrame16 *uint16, cur CurPlayerInfo) (int, bool, error) {
 	switch op {
-	case noxnet.MSG_SERVER_CLOSE_ACK:
+	case netmsg.MSG_SERVER_CLOSE_ACK:
 		return 1, true, nil
-	case noxnet.MSG_STAT_MULTIPLIERS:
+	case netmsg.MSG_STAT_MULTIPLIERS:
 		var p noxnet.MsgStatMult
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -101,7 +103,7 @@ func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []b
 			Speed:    p.Speed,
 		})
 		return 1 + n, true, nil
-	case noxnet.MSG_DESTROY_WALL:
+	case netmsg.MSG_DESTROY_WALL:
 		var p noxnet.MsgWallDestroy
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -111,7 +113,7 @@ func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []b
 			c.Server.Walls.BreakByID(p.ID)
 		}
 		return 1 + n, true, nil
-	case noxnet.MSG_FX_JIGGLE:
+	case netmsg.MSG_FX_JIGGLE:
 		var p noxnet.MsgFxJiggle
 		n, err := p.Decode(data[1:])
 		if err != nil {
@@ -121,8 +123,8 @@ func (c *Client) OnClientPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []b
 			c.Viewport().Jiggle12 = int(p.Val) / 3
 		}
 		return 1 + n, true, nil
-	case noxnet.MSG_XFER_MSG:
-		var p noxnet.MsgXfer
+	case netmsg.MSG_XFER_MSG:
+		var p netxfer.MsgXfer
 		n, err := p.Decode(data[1:])
 		if err != nil {
 			return 0, false, err

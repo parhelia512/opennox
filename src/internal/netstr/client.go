@@ -8,7 +8,7 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 )
 
 type Client struct {
@@ -98,9 +98,9 @@ func (ns *Client) Dial(host string, port int, cport int, opts encoding.BinaryMar
 			return err
 		}
 		buf := make([]byte, 3+len(data))
-		buf[0] = byte(noxnet.MSG_ACCEPTED)
+		buf[0] = byte(netmsg.MSG_ACCEPTED)
 		buf[1] = ns.data2hdr()[1]
-		buf[2] = byte(noxnet.MSG_CLIENT_ACCEPT)
+		buf[2] = byte(netmsg.MSG_CLIENT_ACCEPT)
 		if len(data) > 0 {
 			copy(buf[3:], data)
 		}

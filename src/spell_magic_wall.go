@@ -5,7 +5,7 @@ import (
 	"unsafe"
 
 	"github.com/opennox/libs/common"
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/spell"
 	"github.com/opennox/libs/wall"
@@ -109,7 +109,7 @@ func (sp *spellWall) netChangeOrRemoveWall(mw *server.MagicWall) {
 			if mw.Field0 != 0 {
 				wl := mw.Wall8
 				var buf [6]byte
-				buf[0] = byte(noxnet.MSG_CHANGE_OR_ADD_WALL_MAGIC)
+				buf[0] = byte(netmsg.MSG_CHANGE_OR_ADD_WALL_MAGIC)
 				buf[1] = mw.PrevTile12
 				buf[2] = mw.PrevDir13
 				buf[3] = mw.PrevField14
@@ -119,7 +119,7 @@ func (sp *spellWall) netChangeOrRemoveWall(mw *server.MagicWall) {
 			} else {
 				wl := mw.Wall8
 				var buf [3]byte
-				buf[0] = byte(noxnet.MSG_REMOVE_WALL_MAGIC)
+				buf[0] = byte(netmsg.MSG_REMOVE_WALL_MAGIC)
 				buf[1] = wl.X5
 				buf[2] = wl.Y6
 				sp.s.NetSendPacketXxx0(i, buf[:3], 0, 1)
@@ -177,7 +177,7 @@ func (sp *spellWall) changeOrAddRemoteWalls(pl *server.Player) {
 			if mw.PlayerBits16&bit == 0 {
 				wl := mw.Wall8
 				var buf [6]byte
-				buf[0] = byte(noxnet.MSG_CHANGE_OR_ADD_WALL_MAGIC)
+				buf[0] = byte(netmsg.MSG_CHANGE_OR_ADD_WALL_MAGIC)
 				buf[1] = wl.Tile1
 				buf[2] = wl.Dir0
 				buf[3] = wl.Field2

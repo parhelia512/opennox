@@ -4,11 +4,11 @@ import (
 	"errors"
 	"io"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 )
 
-func (ns *Conn) SendUnreliableMsg(msg noxnet.Message, flush bool) (int, error) {
-	buf, err := noxnet.AppendPacket(nil, msg)
+func (ns *Conn) SendUnreliableMsg(msg netmsg.Message, flush bool) (int, error) {
+	buf, err := netmsg.Append(nil, msg)
 	if err != nil {
 		return 0, err
 	}

@@ -11,6 +11,7 @@ import (
 	"unsafe"
 
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/lobby"
 
 	"github.com/opennox/opennox/v1/client"
@@ -267,7 +268,7 @@ func waitForLobbyResults(conn net.PacketConn, flag netstr.RecvFlags) (int, error
 		OnPing: func(addr netip.AddrPort, buf []byte) {
 			if legacy.Sub_43B6D0() != 0 {
 				legacy.Sub_43AF90(4)
-				buf[2] = byte(noxnet.MSG_SERVER_PONG)
+				buf[2] = byte(netmsg.MSG_SERVER_PONG)
 				sendToServer(addr, buf[:8])
 			}
 		},

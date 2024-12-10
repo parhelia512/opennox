@@ -73,9 +73,9 @@ func TestNetstr(t *testing.T) {
 			return len(buf)
 		},
 		OnReceive: func(id netlib.StreamID, buf []byte) int {
-			op := noxnet.Op(buf[0])
+			op := netmsg.Op(buf[0])
 			switch op {
-			case noxnet.MSG_XXX_STOP:
+			case netmsg.MSG_XXX_STOP:
 				t.Error("failed")
 			}
 			t.Logf("CLI: func2: %v, [%d]", id.Player(), len(buf))

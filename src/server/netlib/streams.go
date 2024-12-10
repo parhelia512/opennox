@@ -4,7 +4,7 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 
 	"github.com/opennox/opennox/v1/common/ntype"
 )
@@ -51,11 +51,11 @@ type SendStream interface {
 	StreamID
 
 	SendUnreliable(buf []byte, flush bool) (int, error)
-	SendUnreliableMsg(msg noxnet.Message, flush bool) (int, error)
+	SendUnreliableMsg(msg netmsg.Message, flush bool) (int, error)
 
 	SendReliable(buf []byte) (int, error)
-	SendReliableMsg(msg noxnet.Message) (int, error)
-	ReliableInQueue(ops ...noxnet.Op) int
+	SendReliableMsg(msg netmsg.Message) (int, error)
+	ReliableInQueue(ops ...netmsg.Op) int
 
 	Flush() error
 	FlushAndPoll() error

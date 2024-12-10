@@ -9,23 +9,24 @@ import (
 	"time"
 
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 
 	"github.com/opennox/opennox/v1/common/ntype"
 	"github.com/opennox/opennox/v1/server/netlib"
 )
 
-func decodeMessage(packet []byte, dst noxnet.Message) bool {
+func decodeMessage(packet []byte, dst netmsg.Message) bool {
 	if _, err := dst.Decode(packet[3:]); err != nil {
 		return false
 	}
 	return true
 }
 
-func encodeMessage(out []byte, m noxnet.Message) int {
+func encodeMessage(out []byte, m netmsg.Message) int {
 	if m == nil {
 		return 0
 	}
-	n, err := noxnet.EncodePacket(out[2:], m)
+	n, err := netmsg.Encode(out[2:], m)
 	if err != nil {
 		panic(err)
 	}
@@ -174,7 +175,7 @@ func (ns *Conn) SendServerClose() {
 	}
 	ns.Flush()
 	var buf [1]byte
-	buf[0] = byte(noxnet.MSG_SERVER_CLOSE)
+	buf[0] = byte(netmsg.MSG_SERVER_CLOSE)
 	_, _ = ns.SendUnreliable(buf[:], false)
 	ns.Flush()
 	ns.accepted--
@@ -189,7 +190,7 @@ func (ns *Conn) SendClientClose() {
 	}
 	ns.FlushAndPoll()
 	var buf [1]byte
-	buf[0] = byte(noxnet.MSG_CLIENT_CLOSE)
+	buf[0] = byte(netmsg.MSG_CLIENT_CLOSE)
 	_, _ = ns.SendUnreliable(buf[:1], false)
 	ns.FlushAndPoll()
 	ns.Close()
@@ -247,9 +248,9 @@ func (ns *Conn) processStreamOp0(out []byte, pid handle, p1 byte, from netip.Add
 
 	ns2.setAddr(from)
 
-	out[0] = byte(noxnet.MSG_ACCEPTED)
+	out[0] = byte(netmsg.MSG_ACCEPTED)
 	out[1] = p1
-	out[2] = byte(noxnet.MSG_SERVER_ACCEPT)
+	out[2] = byte(netmsg.MSG_SERVER_ACCEPT)
 	binary.LittleEndian.PutUint32(out[3:], uint32(ind))
 	out[7] = key
 	seq, _ := ns2.SendReliable(out[:8])
@@ -283,7 +284,7 @@ func (ns *Conn) processStreamOp6(ns2 *Conn, out []byte, packetCur []byte) int {
 		hdr = ns.data2hdr()
 	}
 	out[1] = hdr[0]
-	out[2] = byte(noxnet.MSG_CLIENT_PONG)
+	out[2] = byte(netmsg.MSG_CLIENT_PONG)
 	binary.LittleEndian.PutUint32(out[3:], v)
 	return 7
 }
@@ -297,7 +298,7 @@ func (ns *Conn) processStreamOp7(ns2 *Conn, out []byte) int {
 	if ms >= 1 {
 		speed = int32(256000 / ms)
 	}
-	out[0] = byte(noxnet.MSG_SPEED)
+	out[0] = byte(netmsg.MSG_SPEED)
 	binary.LittleEndian.PutUint32(out[1:], uint32(speed))
 	// TODO: these two were sending hook payload from either ns1 or ns4
 	if ns.id == -1 {
@@ -332,7 +333,7 @@ func (ns *Conn) processStreamOp8(ns2 *Conn, out []byte, packetCur []byte) int {
 	return 7
 }
 
-type JoinCheck func(p *noxnet.MsgServerTryJoin, a4a bool, add func(pid ntype.Player) bool) noxnet.Message
+type JoinCheck func(p *noxnet.MsgServerTryJoin, a4a bool, add func(pid ntype.Player) bool) netmsg.Message
 
 func (ns *Conn) processTryJoin(out []byte, packet []byte, p1 byte, from netip.AddrPort) int {
 	var p noxnet.MsgServerTryJoin
@@ -360,7 +361,7 @@ func (ns *Conn) processTryJoin(out []byte, packet []byte, p1 byte, from netip.Ad
 
 	ind2 := ns.g.getFreeNetStruct2Ind()
 	if ind2 < 0 {
-		out[2] = byte(noxnet.MSG_SERVER_JOIN_OK)
+		out[2] = byte(netmsg.MSG_SERVER_JOIN_OK)
 		return 3
 	}
 	nx := &ns.g.streams2[ind2]
@@ -379,7 +380,7 @@ func (ns *Conn) SendCode6() int {
 		return -3
 	}
 	var buf [5]byte
-	buf[0] = byte(noxnet.MSG_CLIENT_PING)
+	buf[0] = byte(netmsg.MSG_CLIENT_PING)
 	ns.ticks22 = ns.g.now
 	ns.ticks23 = ns.ticks22
 	binary.LittleEndian.PutUint32(buf[1:], uint32(ns.ticks22/time.Millisecond))
@@ -422,12 +423,12 @@ func (ns *Conn) processStreamOp(packet []byte, out []byte, from netip.AddrPort) 
 		if ns.g.Debug {
 			ns.g.Log.Printf("processStreamOp: op=%d [%d]\n", op, len(packetCur))
 		}
-		switch noxnet.Op(op) {
+		switch netmsg.Op(op) {
 		default:
 			return 0
-		case noxnet.MSG_SERVER_CONNECT:
+		case netmsg.MSG_SERVER_CONNECT:
 			return ns.processStreamOp0(out, pidb, p1, from)
-		case noxnet.MSG_SERVER_ACCEPT:
+		case netmsg.MSG_SERVER_ACCEPT:
 			if len(packetCur) < 5 {
 				return 0
 			}
@@ -458,32 +459,32 @@ func (ns *Conn) processStreamOp(packet []byte, out []byte, from netip.AddrPort) 
 			out[2] = byte(code7)
 			binary.LittleEndian.PutUint32(out[3:], v)
 			return 7
-		case noxnet.MSG_CLIENT_PING:
+		case netmsg.MSG_CLIENT_PING:
 			return ns.processStreamOp6(pid.Get(), out, packetCur)
 		case code7:
 			return ns.processStreamOp7(pid.Get(), out)
-		case noxnet.MSG_CLIENT_PONG:
+		case netmsg.MSG_CLIENT_PONG:
 			return ns.processStreamOp8(pid.Get(), out, packetCur)
 		case code9:
 			return ns.g.processStreamOp9(pid, packetCur)
-		case noxnet.MSG_CLIENT_CLOSE:
+		case netmsg.MSG_CLIENT_CLOSE:
 			return ns.processClientClose(pid.Get(), out)
-		case noxnet.MSG_SERVER_CLOSE:
+		case netmsg.MSG_SERVER_CLOSE:
 			ns7 := pid.Get()
 			if ns7 == nil {
 				return 0
 			}
-			out[0] = byte(noxnet.MSG_SERVER_CLOSE_ACK)
+			out[0] = byte(netmsg.MSG_SERVER_CLOSE_ACK)
 			ns.callOnReceive(ns7, out[:1])
 			ns.Close()
 			return 0
-		case noxnet.MSG_SERVER_TRY_JOIN:
+		case netmsg.MSG_SERVER_TRY_JOIN:
 			return ns.processTryJoin(out, packet, p1, from)
-		case noxnet.MSG_SERVER_PASSWORD:
+		case netmsg.MSG_SERVER_PASSWORD:
 			return ns.processCheckPass(out, packet, p1, from)
-		case noxnet.MSG_SERVER_PONG:
+		case netmsg.MSG_SERVER_PONG:
 			return ns.g.processPong(out, packet, from)
-		case noxnet.MSG_ACCEPTED:
+		case netmsg.MSG_ACCEPTED:
 			if len(packetCur) < 1 {
 				return 0
 			}
@@ -512,7 +513,7 @@ func (ns *Conn) processClientClose(ns2 *Conn, out []byte) int {
 	if ns2 == nil || ns2.field38 == 1 {
 		return 0
 	}
-	out[0] = byte(noxnet.MSG_CLIENT_CLOSE_ACK)
+	out[0] = byte(netmsg.MSG_CLIENT_CLOSE_ACK)
 	ns.callOnReceive(ns2, out[:1])
 
 	ns.g.timing[ns.ind] = timingStruct{}
@@ -526,7 +527,7 @@ func (ns *Conn) processClientClose(ns2 *Conn, out []byte) int {
 	return 0
 }
 
-type CheckPassFunc func(p *noxnet.MsgServerPass) noxnet.Message
+type CheckPassFunc func(p *noxnet.MsgServerPass) netmsg.Message
 
 func (ns *Conn) processCheckPass(out []byte, packet []byte, p1 byte, from netip.AddrPort) int {
 	var p noxnet.MsgServerPass
@@ -540,7 +541,7 @@ func (ns *Conn) processCheckPass(out []byte, packet []byte, p1 byte, from netip.
 	}
 	ind2 := ns.g.getFreeNetStruct2Ind()
 	if ind2 < 0 {
-		out[2] = byte(noxnet.MSG_SERVER_JOIN_OK)
+		out[2] = byte(netmsg.MSG_SERVER_JOIN_OK)
 		return 3
 	}
 	nx := &ns.g.streams2[ind2]
@@ -608,12 +609,12 @@ func (ns *Conn) recvLoop(flags RecvFlags) int {
 		a0 := hdr[0]
 		h2 := ns.g.getForPacket(int(a0 & maskID))
 		seq := hdr[1]
-		op := noxnet.Op(hdr[2])
+		op := netmsg.Op(hdr[2])
 		if ns.g.Debug {
 			ns.g.Log.Printf("servNetInitialPackets: op=%d (%s)\n", int(op), op.String())
 		}
 		dst := ns
-		if op == noxnet.MSG_SERVER_DISCOVER {
+		if op == netmsg.MSG_SERVER_DISCOVER {
 			// Discover packets are not a part of the protocol, they are filtered out
 			// and handled separately. Responses are written directly to underlying conn.
 			n = ns.g.OnDiscover(ns.recv.Bytes(), tmp[:])
@@ -622,7 +623,7 @@ func (ns *Conn) recvLoop(flags RecvFlags) int {
 			}
 			goto continueX
 		}
-		if op >= noxnet.MSG_SERVER_TRY_JOIN && op <= noxnet.MSG_SERVER_JOIN_OK {
+		if op >= netmsg.MSG_SERVER_TRY_JOIN && op <= netmsg.MSG_SERVER_JOIN_OK {
 			inJoin = true
 		} else {
 			if a0 == anyID {
@@ -685,7 +686,7 @@ func (ns *Conn) recvLoop(flags RecvFlags) int {
 				}
 			}
 		}
-		if op < noxnet.MSG_CLIENT_ACCEPT {
+		if op < netmsg.MSG_CLIENT_ACCEPT {
 			n = ns.processStreamOp(ns.recv.Bytes(), tmp[:], src)
 			if n > 0 {
 				n, _ = ns.writeTo(tmp[:n], src)

@@ -1,7 +1,7 @@
 package opennox
 
 import (
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/spell"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -18,7 +18,7 @@ type spellBuffConf struct {
 	Defensive      bool
 	Orig           *server.Object
 	Offensive      bool
-	PointFX        noxnet.Op // play this point effect at the target
+	PointFX        netmsg.Op // play this point effect at the target
 }
 
 func castBuffSpell(spellID spell.ID, enc server.EnchantID, lvl int, targ *server.Object, opts spellBuffConf) int {

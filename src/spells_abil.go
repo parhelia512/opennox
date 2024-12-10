@@ -3,7 +3,7 @@ package opennox
 import (
 	"fmt"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/strman"
@@ -364,7 +364,7 @@ func (a *serverAbilities) do(u *server.Object, abil server.Ability) {
 func (a *serverAbilities) netAbilReportActive(u *server.Object, abil server.Ability, active bool) {
 	if u.Class().Has(object.ClassPlayer) {
 		var buf [3]byte
-		buf[0] = byte(noxnet.MSG_REPORT_ACTIVE_ABILITIES)
+		buf[0] = byte(netmsg.MSG_REPORT_ACTIVE_ABILITIES)
 		buf[1] = byte(abil)
 		buf[2] = byte(bool2int(active))
 		pl := u.ControllingPlayer()
@@ -375,7 +375,7 @@ func (a *serverAbilities) netAbilReportActive(u *server.Object, abil server.Abil
 func (a *serverAbilities) netAbilReportState(u *server.Object, abil server.Ability, st byte) {
 	if u.Class().Has(object.ClassPlayer) {
 		var buf [3]byte
-		buf[0] = byte(noxnet.MSG_REPORT_ABILITY_STATE)
+		buf[0] = byte(netmsg.MSG_REPORT_ABILITY_STATE)
 		buf[1] = byte(abil)
 		buf[2] = st
 		pl := u.ControllingPlayer()
@@ -387,7 +387,7 @@ func (a *serverAbilities) netAbilReset(u *server.Object, abil server.Ability) {
 	if u.Class().Has(object.ClassPlayer) {
 		pl := u.ControllingPlayer()
 		var buf [2]byte
-		buf[0] = byte(noxnet.MSG_RESET_ABILITIES)
+		buf[0] = byte(netmsg.MSG_RESET_ABILITIES)
 		buf[1] = byte(abil)
 		a.s.NetSendPacketXxx0(pl.Index(), buf[:2], 0, 1)
 	}

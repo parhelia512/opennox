@@ -10,6 +10,7 @@ import (
 	"github.com/opennox/libs/datapath"
 	"github.com/opennox/libs/ifs"
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/ntype"
@@ -36,7 +37,7 @@ func (s *Server) onPacketRaw(pli ntype.PlayerInd, data []byte) bool {
 	if noxflags.HasEngine(noxflags.EngineReplayWrite) {
 		s.nox_xxx_replayWriteMSgMB(pl, data)
 	}
-	op := noxnet.Op(data[0])
+	op := netmsg.Op(data[0])
 	switch op {
 	case 0x20:
 		if s.newPlayerFromPacket(pli, data[1:]) == 0 {
@@ -60,7 +61,7 @@ func (s *Server) onPacketRaw(pli ntype.PlayerInd, data []byte) bool {
 		return true
 	}
 	for len(data) > 0 {
-		op = noxnet.Op(data[0])
+		op = netmsg.Op(data[0])
 		n, ok := s.onPacketOp(pli, op, data, pl, u)
 		if !ok {
 			netstr.Log.Printf("SERVER: ERR: op=%d (%s) [%d:???]\n%02x %x", int(op), op.String(), op.Len(), data[0], data[1:])
@@ -78,17 +79,17 @@ func (s *Server) onPacketRaw(pli ntype.PlayerInd, data []byte) bool {
 	return true
 }
 
-func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *server.Player, u *server.Object) (int, bool) {
+func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *server.Player, u *server.Object) (int, bool) {
 	if n, ok, err := s.Server.OnPacketOpSub(pli, op, data, pl, u); err != nil {
 		return n, false
 	} else if ok {
 		return n, true
 	}
 	switch op {
-	case noxnet.MSG_NEED_TIMESTAMP:
+	case netmsg.MSG_NEED_TIMESTAMP:
 		legacy.Nox_xxx_netNeedTimestampStatus_4174F0(pl, 64)
 		return 1, true
-	case noxnet.MSG_TRY_ABILITY:
+	case netmsg.MSG_TRY_ABILITY:
 		if len(data) < 2 {
 			return 0, false
 		}
@@ -96,26 +97,26 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 			s.abilities.Do(u, server.Ability(data[1]))
 		}
 		return 2, true
-	case noxnet.MSG_CLIENT_READY:
+	case netmsg.MSG_CLIENT_READY:
 		server.Log.Printf("player ready: %d: %q", pl.Index(), pl.Name())
 		legacy.Nox_xxx_gameServerReadyMB_4DD180(pl.Index())
 		s.SendIncomingExt(pl.PlayerIndex())
 		return 1, true
-	case noxnet.MSG_SERVER_QUIT_ACK:
+	case netmsg.MSG_SERVER_QUIT_ACK:
 		serverQuitAck()
 		return 1, true
-	case noxnet.MSG_INCOMING_CLIENT:
+	case netmsg.MSG_INCOMING_CLIENT:
 		server.Log.Printf("incoming player: %d: %q", pl.Index(), pl.Name())
 		legacy.Nox_xxx_netPlayerIncomingServ_4DDF60(pl.Index())
 		return 1, true
-	case noxnet.MSG_OUTGOING_CLIENT:
+	case netmsg.MSG_OUTGOING_CLIENT:
 		nox_xxx_playerDisconnFinish_4DE530(pl.PlayerIndex(), 2)
 		return 1, true
-	case noxnet.MSG_REQUEST_TIMER_STATUS:
+	case netmsg.MSG_REQUEST_TIMER_STATUS:
 		v41 := legacy.Sub_40A220()
 		Nox_xxx_netTimerStatus_4D8F50(pli, v41)
 		return 1, true
-	case noxnet.MSG_TEXT_MESSAGE:
+	case netmsg.MSG_TEXT_MESSAGE:
 		var msg noxnet.MsgText
 		n, err := msg.Decode(data[1:])
 		if err != nil {
@@ -183,12 +184,12 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 			}
 		}
 		return msz, true
-	case noxnet.MSG_SYSOP_PW:
+	case netmsg.MSG_SYSOP_PW:
 		if len(data) < 21 {
 			return 0, false
 		}
 		var buf [2]byte
-		buf[0] = byte(noxnet.MSG_SYSOP_RESULT)
+		buf[0] = byte(netmsg.MSG_SYSOP_RESULT)
 		pass := legacy.Nox_xxx_sysopGetPass_40A630()
 		got := alloc.GoString16B(data[1:])
 		if pass == "" || pass != got {
@@ -203,7 +204,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 		}
 		s.NetSendPacketXxx0(pl.Index(), buf[:2], 0, 1)
 		return 1 + 20, true
-	case noxnet.MSG_SERVER_CMD:
+	case netmsg.MSG_SERVER_CMD:
 		if len(data) < 7 {
 			return 0, false
 		}
@@ -215,21 +216,21 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 		wtext = wtext[:2*sz]
 		nox_xxx_serverHandleClientConsole_443E90(pl, data[1], alloc.GoString16B(wtext))
 		return 5 + 2*sz, true
-	case noxnet.MSG_IMPORTANT_ACK:
+	case netmsg.MSG_IMPORTANT_ACK:
 		if len(data) < 5 {
 			return 0, false
 		}
 		id := binary.LittleEndian.Uint32(data[1:])
 		legacy.Nox_net_importantACK_4E55A0(pl.Index(), int(id))
 		return 5, true
-	case noxnet.MSG_REQUEST_MAP:
+	case netmsg.MSG_REQUEST_MAP:
 		s.PlayerGoObserver(pl, true, true)
 		if u != nil {
 			legacy.Nox_xxx_netChangeTeamMb_419570(u.TeamPtr(), uint32(pl.NetCode()))
 		}
 		s.MapSend.StartSendShared(pl.PlayerIndex())
 		return 1, true
-	case noxnet.MSG_REQUEST_SAVE_PLAYER:
+	case netmsg.MSG_REQUEST_SAVE_PLAYER:
 		if len(data) < 3 {
 			return 0, false
 		}
@@ -243,7 +244,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 			}
 		}
 		return 3, true
-	case noxnet.MSG_TEAM_MSG:
+	case netmsg.MSG_TEAM_MSG:
 		if len(data) < 10 {
 			return 0, false
 		}
@@ -278,7 +279,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 		default:
 			return 0, false
 		}
-	case noxnet.MSG_SOCIAL:
+	case netmsg.MSG_SOCIAL:
 		if len(data) < 2 {
 			return 0, false
 		}
@@ -291,7 +292,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op noxnet.Op, data []byte, pl *
 			nox_xxx_playerSetState_4FA020(u, server.PlayerState27) // TODO: should it be state 28 (point)?
 		}
 		return 2, true
-	case noxnet.MSG_DIALOG:
+	case netmsg.MSG_DIALOG:
 		if len(data) < 2 {
 			return 0, false
 		}

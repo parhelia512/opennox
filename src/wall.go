@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/script"
 	"github.com/opennox/libs/types"
@@ -400,7 +400,7 @@ func (s *Server) nox_xxx_wallPreDestroy_534DA0(pt image.Point) int {
 	v4 := s.Walls.DefByInd(int(wl.Tile1)).BreakSound()
 	v5 := sound.ByName(v4)
 	s.Audio.EventPos(v5, pos, 0, 0)
-	s.Nox_xxx_netSendPointFx_522FF0(noxnet.MSG_FX_SMOKE_BLAST, pos)
+	s.Nox_xxx_netSendPointFx_522FF0(netmsg.MSG_FX_SMOKE_BLAST, pos)
 	if !noxflags.HasGame(noxflags.GameModeQuest) {
 		if bricks := s.Walls.DefByInd(int(wl.Tile1)).BrickType42; bricks != 0 {
 			brick := byte(s.Rand.Logic.IntClamp(0, int(bricks)-1))

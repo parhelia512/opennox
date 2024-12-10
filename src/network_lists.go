@@ -3,7 +3,7 @@ package opennox
 import (
 	"encoding/binary"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/memmap"
@@ -142,7 +142,7 @@ func sub_57B930(arr *[255]server.PlayerNetData, f1, f2 uint16, frame uint32) byt
 }
 
 func nox_xxx_chkIsMsgTimestamp_4DF7F0(b []byte) bool {
-	return len(b) != 0 && (b[0] == byte(noxnet.MSG_TIMESTAMP) || b[0] == byte(noxnet.MSG_FULL_TIMESTAMP))
+	return len(b) != 0 && (b[0] == byte(netmsg.MSG_TIMESTAMP) || b[0] == byte(netmsg.MSG_FULL_TIMESTAMP))
 }
 
 func copyFull(dst []byte, src []byte) int {
@@ -185,7 +185,7 @@ func (s *Server) sendPoll(conn netlib.StreamID, buf []byte) int {
 	if nox_xxx_chkIsMsgTimestamp_4DF7F0(v7) {
 		off += copy(buf[off:off+len(v7)], v7)
 		if v9 := s.NetList.ByInd(pli, netlist.Kind2).Get(); len(v9) != 0 {
-			buf[off] = byte(noxnet.MSG_UPDATE_STREAM)
+			buf[off] = byte(netmsg.MSG_UPDATE_STREAM)
 			off++
 			n := sub_4DF810(buf[off:], v9)
 			if n == 0 {
@@ -204,7 +204,7 @@ func (s *Server) sendPoll(conn netlib.StreamID, buf []byte) int {
 		}
 	}
 	for b := s.NetList.ByInd(pli, netlist.Kind1).Get(); len(b) != 0; b = s.NetList.ByInd(pli, netlist.Kind1).Get() {
-		if b[0] != byte(noxnet.MSG_FX_SENTRY_RAY) || legacy.Get_dword_5d4594_2650652() != 1 || (s.Frame()%uint32(nox_xxx_rateGet_40A6C0()) == 0) {
+		if b[0] != byte(netmsg.MSG_FX_SENTRY_RAY) || legacy.Get_dword_5d4594_2650652() != 1 || (s.Frame()%uint32(nox_xxx_rateGet_40A6C0()) == 0) {
 			n := copyFull(buf[off:], b)
 			if n == 0 {
 				return off
@@ -227,7 +227,7 @@ func (s *Server) sendPoll(conn netlib.StreamID, buf []byte) int {
 }
 
 func sub_4DF810(b1 []byte, b2 []byte) int {
-	if len(b1) < 16 || b2[0] != byte(noxnet.MSG_PLAYER_OBJ) {
+	if len(b1) < 16 || b2[0] != byte(netmsg.MSG_PLAYER_OBJ) {
 		return 0
 	}
 	f1 := binary.LittleEndian.Uint16(b2[1:])
@@ -287,14 +287,14 @@ func sub_4DF9B0(b1, b2 []byte, full bool) int {
 	}
 	netPlayerK1 = f5
 	netPlayerK2 = f7
-	if b2[0] == byte(noxnet.MSG_COMPLEX_OBJ) || b2[0] == byte(noxnet.MSG_PLAYER_OBJ) {
+	if b2[0] == byte(netmsg.MSG_COMPLEX_OBJ) || b2[0] == byte(netmsg.MSG_PLAYER_OBJ) {
 		b1[off] = b2[9]
 		if b2[10] != 255 {
 			b1[off] |= 0x80
 			off++
 			b1[off] = b2[10]
 		}
-		if b2[0] == byte(noxnet.MSG_PLAYER_OBJ) {
+		if b2[0] == byte(netmsg.MSG_PLAYER_OBJ) {
 			off++
 			b1[off] = b2[11]
 		}

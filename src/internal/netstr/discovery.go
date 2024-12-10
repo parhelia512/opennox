@@ -6,6 +6,7 @@ import (
 	"net/netip"
 
 	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 )
 
 type LobbyWaitOptions struct {
@@ -39,25 +40,25 @@ func WaitForLobbyResults(conn net.PacketConn, srvAddr netip.Addr, flag RecvFlags
 			return 0, err
 		}
 		buf = buf[:n]
-		op := noxnet.Op(buf[2])
-		if op < noxnet.MSG_CLIENT_ACCEPT {
-			if op == noxnet.MSG_SERVER_INFO || srvAddr == from.Addr() {
+		op := netmsg.Op(buf[2])
+		if op < netmsg.MSG_CLIENT_ACCEPT {
+			if op == netmsg.MSG_SERVER_INFO || srvAddr == from.Addr() {
 				switch op {
-				case noxnet.MSG_SERVER_INFO:
+				case netmsg.MSG_SERVER_INFO:
 					if from.Addr().IsValid() {
 						opts.OnResult(from, buf)
 					}
-				case noxnet.MSG_PASSWORD_REQUIRED:
+				case netmsg.MSG_PASSWORD_REQUIRED:
 					opts.OnPassRequired()
-				case noxnet.MSG_SERVER_PING:
+				case netmsg.MSG_SERVER_PING:
 					opts.OnPing(from, buf)
-				case noxnet.MSG_SERVER_ERROR:
+				case netmsg.MSG_SERVER_ERROR:
 					if !opts.OnConnectErr(noxnet.ConnectError(buf[3])) {
 						break
 					}
-				case noxnet.MSG_SERVER_JOIN_OK:
+				case netmsg.MSG_SERVER_JOIN_OK:
 					opts.OnJoinOK()
-				case noxnet.MSG_SERVER_JOIN_FAIL:
+				case netmsg.MSG_SERVER_JOIN_FAIL:
 					opts.OnJoinFail()
 				}
 			}

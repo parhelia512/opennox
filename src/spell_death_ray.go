@@ -4,7 +4,7 @@ import (
 	"image"
 	"math"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/spell"
 
@@ -33,7 +33,7 @@ func castDeathRay(spellID spell.ID, a2, a3, a4 *server.Object, a5 *server.SpellA
 	rin := float32(s.Balance.Float("DeathRayInRadius"))
 	rout := float32(s.Balance.Float("DeathRayOutRadius"))
 	s.Nox_xxx_mapDamageUnitsAround(pos16, rout, rin, dmg, object.DamageZapRay, a3, nil, false)
-	s.Nox_xxx_netSendRayFx_5232F0(noxnet.MSG_FX_DEATH_RAY, pos4.Point(), pos16.Point())
+	s.Nox_xxx_netSendRayFx_5232F0(netmsg.MSG_FX_DEATH_RAY, pos4.Point(), pos16.Point())
 	snd := s.Spells.DefByInd(spellID).GetCastSound()
 	s.Audio.EventObj(snd, a4, 0, 0)
 	legacy.Nox_xxx_sMakeScorch_537AF0(pos16, 1)

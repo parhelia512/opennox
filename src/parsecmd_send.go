@@ -3,7 +3,7 @@ package opennox
 import (
 	"encoding/binary"
 
-	"github.com/opennox/libs/noxnet"
+	"github.com/opennox/libs/noxnet/netmsg"
 
 	"github.com/opennox/opennox/v1/legacy"
 	"github.com/opennox/opennox/v1/legacy/common/alloc"
@@ -12,7 +12,7 @@ import (
 
 func nox_xxx_netServerCmd_440950(id byte, cmd string) {
 	buf := make([]byte, 5+2*(len(cmd)+1))
-	buf[0] = byte(noxnet.MSG_SERVER_CMD)
+	buf[0] = byte(netmsg.MSG_SERVER_CMD)
 	buf[1] = id
 	binary.LittleEndian.PutUint16(buf[2:], uint16(legacy.ClientPlayerNetCode()))
 	buf[4] = 0
@@ -34,7 +34,7 @@ func nox_xxx_cmdSayDo_46A4B0(text string, a2 int) {
 
 func nox_console_sendSysOpPass_4409D0(pass string) {
 	buf := make([]byte, 21)
-	buf[0] = byte(noxnet.MSG_SYSOP_PW)
+	buf[0] = byte(netmsg.MSG_SYSOP_PW)
 	alloc.StrCopy16B(buf[1:17], pass)
 	binary.LittleEndian.PutUint16(buf[17:], 0)
 	binary.LittleEndian.PutUint16(buf[19:], uint16(legacy.ClientPlayerNetCode()))
