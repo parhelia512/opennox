@@ -6,7 +6,7 @@ toolchain go1.23.3
 
 require (
 	github.com/fxamacker/cbor/v2 v2.7.0
-	github.com/opennox/libs v0.0.0-20241207223715-7768549aac14
+	github.com/opennox/libs v0.0.0-20241210023655-975f72809b17
 	github.com/opennox/lobby v0.0.0-20241128123353-7ecb87bee49a
 	github.com/opennox/nat v0.3.1
 	github.com/opennox/noxcrypt v0.1.0

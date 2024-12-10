@@ -14,7 +14,6 @@ import (
 	"github.com/opennox/libs/ifs"
 	"github.com/opennox/libs/log"
 	"github.com/opennox/libs/noxnet"
-	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/script"
 	"github.com/opennox/libs/spell"
@@ -328,7 +327,7 @@ func (s *Server) nox_xxx_gameTick_4D2580_server_B(ticks uint64) bool {
 		return false
 	}
 	s.MapSend.Update()
-	s.NetXfer.Update(netxfer.Timestamp(s.Frame()))
+	s.NetXfer.Update(s.FrameTS())
 	if !noxflags.HasGame(noxflags.GamePause) {
 		s.updateUnits()
 		legacy.Sub_4EC720()

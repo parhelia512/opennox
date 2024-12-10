@@ -23,9 +23,7 @@ func (s NoxScriptNS) FrameRate() int {
 }
 
 func (s NoxScriptNS) Time() time.Duration {
-	fps := s.s.TickRate()
-	frame := s.s.Frame()
-	return time.Duration(float64(frame) / float64(fps) * float64(time.Second))
+	return s.s.FrameTS()
 }
 
 func (s NoxScriptNS) RandomFloat(min float32, max float32) float32 {

@@ -153,6 +153,10 @@ func (s *Server) SetFrame(v uint32) {
 	atomic.StoreUint32(&s.frame, v)
 }
 
+func (s *Server) FrameTS() time.Duration {
+	return time.Second * time.Duration(s.Frame()) / time.Duration(s.TickRate())
+}
+
 func (s *Server) IncFrame() {
 	atomic.AddUint32(&s.frame, 1)
 }

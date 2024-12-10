@@ -9,7 +9,6 @@ import (
 	"net/netip"
 
 	"github.com/opennox/libs/noxnet"
-	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/spell"
@@ -166,7 +165,7 @@ func (s *Server) OnPacketOpSub(pli ntype.PlayerInd, op noxnet.Op, data []byte, p
 			return 0, false, err
 		}
 		conn := s.NetStr.ByPlayer(pl)
-		s.NetXfer.Handle(XferConn{conn}, netxfer.Timestamp(s.Frame()), p.Msg)
+		s.NetXfer.Handle(XferConn{conn}, s.FrameTS(), p.Msg)
 		return 1 + n, true, nil
 	}
 	return 0, false, nil
