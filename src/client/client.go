@@ -87,6 +87,7 @@ type Client struct {
 	WallsYyy   []*server.Wall
 
 	Debug struct {
+		DrawCnt       int
 		ShowSight     bool
 		showSightData [][]image.Point
 	}

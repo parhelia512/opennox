@@ -15,6 +15,7 @@ import (
 	"github.com/opennox/libs/env"
 	"github.com/opennox/libs/log"
 
+	"github.com/opennox/opennox/v1/client"
 	"github.com/opennox/opennox/v1/client/gui"
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/memmap"
@@ -283,6 +284,7 @@ func (c *Client) nox_game_cdMaybeSwitchState_413800() {
 }
 
 func nox_xxx_clientResetSpriteAndGui_4357D0(noSkip bool) bool {
+	client.Log.Info("reset client state")
 	c := noxClient
 	legacy.ClientSetPlayerNetCode(0)
 	c.setClientPlayerUnit(nil)
@@ -753,6 +755,7 @@ func (c *Client) map_download_finish() int {
 	}
 	legacy.Nox_xxx_gui_43E1A0(0)
 	if !noxflags.HasEngine(noxflags.EngineNoRendering) {
+		client.Log.Info("fade after map download")
 		legacy.Set_nox_gameDisableMapDraw_5d4594_2650672(1)
 		c.r.FadeClearScreen(true, color.Black)
 	}
@@ -858,6 +861,7 @@ func nox_xxx_gameChangeMap_43DEB0() error {
 				nox_xxx_printCentered_445490(fmt.Sprintf(v8, v14))
 			}
 			if !noxflags.HasEngine(noxflags.EngineNoRendering) {
+				client.Log.Info("fade due to map change")
 				legacy.Set_nox_gameDisableMapDraw_5d4594_2650672(1)
 				c.r.FadeClearScreen(true, color.Black)
 			}

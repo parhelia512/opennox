@@ -21,6 +21,7 @@ func (c *Client) Nox_xxx_spriteCreate_48E970(typeID int, code uint16, x, y int) 
 	if dr != nil {
 		c.Nox_xxx_updateSpritePosition_49AA90(dr, x, y)
 	} else {
+		client.Log.Info("new object", "type", typeID, "netcode", netcode)
 		dr = c.Nox_xxx_spriteLoadAdd_45A360_drawable(typeID, image.Pt(x, y))
 		if dr == nil {
 			c.Nox_xxx_spriteLoadError_4356E0()

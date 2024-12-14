@@ -145,6 +145,7 @@ func (c *Client) nox_xxx_client_435F80_draw() bool {
 }
 
 func (c *Client) nox_xxx_clientDrawAll_436100_draw() {
+	c.Debug.DrawCnt++
 	v0 := platformTicks()
 	isTick := false
 	if int(v0-memmap.Uint64(0x5D4594, 814532)) >= int(memmap.Int32(0x587000, 85748)) {
@@ -171,7 +172,14 @@ func (c *Client) nox_xxx_clientDrawAll_436100_draw() {
 	}
 	legacy.Sub_430B50(vp.Screen.Min.X, vp.Screen.Min.Y, vp.Screen.Max.X, vp.Screen.Max.Y)
 	if id := legacy.ClientPlayerNetCode(); id != 0 {
-		c.setClientPlayerUnit(c.Objs.ByNetCodeDynamic(id))
+		pu := c.Objs.ByNetCodeDynamic(id)
+		if pu != nil {
+			c.setClientPlayerUnit(pu)
+		} else {
+			if c.Debug.DrawCnt%30 == 0 {
+				client.Log.Error("cannot get player unit", "connected", nox_client_isConnected(), "netcode", id)
+			}
+		}
 	}
 	if noxflags.HasEngine(noxflags.EngineNoRendering) {
 		legacy.Nox_xxx_clientDrawAll_436100_draw_A()

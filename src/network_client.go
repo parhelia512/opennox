@@ -178,8 +178,11 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		legacy.ClientSetPlayerNetCode(int(playerID))
 		pl := c.srv.Players.NewRaw(int(playerID))
 		if pl != nil {
+			client.Log.Info("setting player", "netcode", playerID)
 			pl.Field2068 = p.Unk2
 			setCurPlayer(pl)
+		} else {
+			client.Log.Error("cannot set player", "netcode", playerID)
 		}
 		if !noxflags.HasGame(noxflags.GameHost) {
 			legacy.Sub_57B920(memmap.PtrOff(0x5D4594, 1198020))
@@ -346,6 +349,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		}
 		if nox_client_isConnected() && !noxflags.HasEngine(noxflags.EngineNoRendering) {
 			if p.Out == 1 {
+				client.Log.Info("fade out packet", "menu", p.Menu)
 				legacy.Set_nox_gameDisableMapDraw_5d4594_2650672(0)
 				sub_413A00(1)
 			}
