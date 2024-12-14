@@ -109,6 +109,9 @@ type clientDrawables struct {
 
 func (c *clientDrawables) New() *Drawable {
 	dr := c.Alloc.NewObject()
+	if dr == nil {
+		return nil
+	}
 	dr.clientHandle = c.c.handle
 	return dr
 }
