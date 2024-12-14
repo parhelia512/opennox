@@ -41,12 +41,12 @@ type XferConn struct {
 	Conn netlib.SendStream
 }
 
-func (c XferConn) SendReliableMsg(m netmsg.Message) error {
+func (c XferConn) SendReliable(m netmsg.Message) error {
 	_, err := c.Conn.SendReliableMsg(m)
 	return err
 }
 
-func (c XferConn) SendUnreliableMsg(m netmsg.Message) error {
+func (c XferConn) SendUnreliable(m netmsg.Message) error {
 	_, err := c.Conn.SendUnreliableMsg(m, true)
 	return err
 }

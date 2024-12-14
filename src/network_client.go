@@ -174,7 +174,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 		if err != nil {
 			return -1
 		}
-		playerID := nox_xxx_netClearHighBit_578B30(p.NetCode)
+		playerID := nox_xxx_netClearHighBit_578B30(uint16(p.NetCode))
 		legacy.ClientSetPlayerNetCode(int(playerID))
 		pl := c.srv.Players.NewRaw(int(playerID))
 		if pl != nil {

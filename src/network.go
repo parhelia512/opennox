@@ -458,7 +458,7 @@ func (s *Server) sendSettings(u *server.Object) {
 	}
 	{
 		buf, err := netmsg.Append(nil, &noxnet.MsgJoinData{
-			NetCode: uint16(s.GetUnitNetCode(u)),
+			NetCode: noxnet.NetCode(s.GetUnitNetCode(u)),
 			Unk2:    uint32(pl.Field2068),
 		})
 		if err != nil {
