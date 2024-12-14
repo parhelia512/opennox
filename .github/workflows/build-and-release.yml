@@ -179,7 +179,6 @@ jobs:
       - name: Docker build
         run: |
           make build-server-docker
-          make build-server-demo-docker
 
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -193,23 +192,59 @@ jobs:
         if: github.ref == 'refs/heads/dev'
         run: |
           docker push $DOCKER_IMAGE_NAME:dev
-          docker push $DOCKER_IMAGE_NAME:dev-demo
 
       - name: Push tagged
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           export VERSION=$(git name-rev --tags --name-only $(git rev-parse HEAD))
           docker tag $DOCKER_IMAGE_NAME:dev $DOCKER_IMAGE_NAME:${VERSION}
-          docker tag $DOCKER_IMAGE_NAME:dev-demo $DOCKER_IMAGE_NAME:${VERSION}-demo
           docker push $DOCKER_IMAGE_NAME:${VERSION}
-          docker push $DOCKER_IMAGE_NAME:${VERSION}-demo
 
       - name: Push latest
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           docker tag $DOCKER_IMAGE_NAME:dev $DOCKER_IMAGE_NAME:latest
-          docker tag $DOCKER_IMAGE_NAME:dev-demo $DOCKER_IMAGE_NAME:demo
           docker push $DOCKER_IMAGE_NAME:latest
+
+  docker_server_demo:
+    name: Docker server build (with demo)
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || (github.ref == 'refs/heads/dev') || (github.ref == 'refs/heads/ci_tests')
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Docker build
+        run: |
+          make build-server-demo-docker
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        if: startsWith(github.ref, 'refs/tags/') || (github.ref == 'refs/heads/dev')
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push latest
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          docker push $DOCKER_IMAGE_NAME:dev-demo
+
+      - name: Push tagged
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          export VERSION=$(git name-rev --tags --name-only $(git rev-parse HEAD))
+          docker tag $DOCKER_IMAGE_NAME:dev-demo $DOCKER_IMAGE_NAME:${VERSION}-demo
+          docker push $DOCKER_IMAGE_NAME:${VERSION}-demo
+
+      - name: Push latest
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker tag $DOCKER_IMAGE_NAME:dev-demo $DOCKER_IMAGE_NAME:demo
           docker push $DOCKER_IMAGE_NAME:demo
 
   release_repackage_linux_gzip:
