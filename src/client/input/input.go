@@ -2,14 +2,11 @@ package input
 
 import (
 	"image"
+	"log/slog"
 
 	"github.com/opennox/libs/client/keybind"
 	"github.com/opennox/libs/client/seat"
-	"github.com/opennox/libs/log"
-)
-
-var (
-	Log = log.New("input")
+	noxlog "github.com/opennox/libs/log"
 )
 
 type Sequencer interface {
@@ -19,6 +16,7 @@ type Sequencer interface {
 var _ Sequencer = (*Handler)(nil)
 
 type Handler struct {
+	log *slog.Logger
 	inp seat.Input
 	m   *mouseHandler
 	k   *keyboardHandler
@@ -30,10 +28,11 @@ type Handler struct {
 }
 
 // New creates a new input handler.
-func New(inp seat.Input, chk bool, lang int) *Handler {
-	h := &Handler{inp: inp}
-	h.m = newMouseHandler(h, chk)
-	h.k = newKeyboardHandler(h, chk)
+func New(log *slog.Logger, inp seat.Input, chk bool, lang int) *Handler {
+	log = noxlog.WithSystem(log, "input")
+	h := &Handler{log: log, inp: inp}
+	h.m = newMouseHandler(log, h, chk)
+	h.k = newKeyboardHandler(log, h, chk)
 	h.SetLanguage(lang)
 	inp.OnInput(h.InputEvent)
 	return h
@@ -231,10 +230,10 @@ func (h *Handler) onWindow(ev seat.WindowEvent) {
 			fnc()
 		}
 	case seat.WindowFocused:
-		Log.Println("focused")
+		h.log.Debug("focused")
 		// TODO
 	case seat.WindowUnfocused:
-		Log.Println("unfocused")
+		h.log.Debug("unfocused")
 		// TODO
 	}
 }

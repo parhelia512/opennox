@@ -32,12 +32,12 @@ func nox_new_window_from_file(name string, fnc gui.WindowFunc) *gui.Window {
 }
 
 func newWindowFromFile(g *gui.GUI, name string, fnc gui.WindowFunc) *gui.Window {
-	guiLog.Printf("load: %q", name)
+	guiLog.Debug("load", "name", name)
 	path := filepath.Join("window", name)
 
 	f, err := ifs.Open(path)
 	if err != nil {
-		guiLog.Printf("cannot load file %q: %v", path, err)
+		guiLog.Error("cannot load file", "path", path, "err", err)
 		return nil
 	}
 	defer f.Close()

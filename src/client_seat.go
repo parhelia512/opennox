@@ -38,7 +38,7 @@ func (c *Client) initSeat(sz image.Point) error {
 		return err
 	}
 
-	inp := input.New(c.Seat, false, c.Strings().Lang())
+	inp := input.New(c.Log, c.Seat, false, c.Strings().Lang())
 	c.Inp = inp
 
 	inp.OnQuit(mainloopStop)

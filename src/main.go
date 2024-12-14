@@ -264,14 +264,14 @@ func RunArgs(args []string) (gerr error) {
 		}
 	})
 	noxflags.OnGameSet(func(f noxflags.GameFlag) {
-		log.Printf("game flag set: %v", f)
+		noxServer.Log.Debug("game flag set", "flag", f)
 		legacy.Nox_xxx_guiChatShowHide_445730(noxflags.GetGame().Mode() != noxflags.GameModeChat)
 		if f.Has(noxflags.GameSuddenDeath) && noxflags.HasGame(noxflags.GameHost) {
 			noxServer.NetPrintLineToAll("Settings.c:SuddenDeathStart")
 		}
 	})
 	noxflags.OnGameUnset(func(f noxflags.GameFlag) {
-		log.Printf("game flag unset: %v", f)
+		noxServer.Log.Debug("game flag unset", "flag", f)
 		if f.Has(noxflags.GameSuddenDeath) {
 			noxServer.flag3592 = false
 		}

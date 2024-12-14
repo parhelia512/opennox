@@ -3,6 +3,7 @@ package input
 import (
 	"fmt"
 	"image"
+	"log/slog"
 
 	"github.com/opennox/libs/client/keybind"
 	"github.com/opennox/libs/client/seat"
@@ -118,9 +119,10 @@ type noxMouseEvent struct {
 	Seq     uint
 }
 
-func newMouseHandler(s Sequencer, chk bool) *mouseHandler {
+func newMouseHandler(log *slog.Logger, s Sequencer, chk bool) *mouseHandler {
 	def := image.Point{X: seat.DefaultWidth, Y: seat.DefaultHeight}
 	h := &mouseHandler{
+		log:   log,
 		seq:   s,
 		chk:   chk,
 		sens:  1.0,
@@ -131,6 +133,7 @@ func newMouseHandler(s Sequencer, chk bool) *mouseHandler {
 }
 
 type mouseHandler struct {
+	log    *slog.Logger
 	seq    Sequencer
 	chk    bool
 	bounds image.Rectangle
@@ -251,7 +254,7 @@ func (h *mouseHandler) pushEvent(e noxMouseEvent) bool {
 	case h.queue <- e:
 		return true
 	default:
-		Log.Println("cannot keep up, mouse event dropped")
+		h.log.Warn("cannot keep up, mouse event dropped")
 		return false
 	}
 }
@@ -261,7 +264,9 @@ func (h *mouseHandler) SetMouseBounds(r image.Rectangle) {
 }
 
 func (h *mouseHandler) setMouseBounds(r image.Rectangle) {
-	Log.Printf("mouse bounds: %v", r)
+	if h.bounds != r {
+		h.log.Info("mouse bounds", "rect", r)
+	}
 	h.bounds = r
 }
 

@@ -1,6 +1,8 @@
 package input
 
 import (
+	"log/slog"
+
 	"github.com/opennox/libs/client/keybind"
 	"github.com/opennox/libs/client/seat"
 )
@@ -27,8 +29,9 @@ type noxKeyEvent struct {
 	Seq     uint
 }
 
-func newKeyboardHandler(s Sequencer, chk bool) *keyboardHandler {
+func newKeyboardHandler(log *slog.Logger, s Sequencer, chk bool) *keyboardHandler {
 	h := &keyboardHandler{
+		log:                 log,
 		seq:                 s,
 		chk:                 chk,
 		keyboardEventQueue:  make(chan noxKeyEvent, keyboardEventBuf),
@@ -39,6 +42,7 @@ func newKeyboardHandler(s Sequencer, chk bool) *keyboardHandler {
 }
 
 type keyboardHandler struct {
+	log                  *slog.Logger
 	seq                  Sequencer
 	chk                  bool
 	imeBuffer            string
@@ -151,7 +155,7 @@ func (h *keyboardHandler) pushKeyEvent(e noxKeyEvent) {
 	select {
 	case h.keyboardEventQueue <- e:
 	default:
-		Log.Println("cannot keep up, keyboard event dropped")
+		h.log.Warn("cannot keep up, keyboard event dropped")
 	}
 }
 

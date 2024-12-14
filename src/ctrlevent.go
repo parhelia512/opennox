@@ -14,7 +14,6 @@ import (
 	"github.com/opennox/libs/player"
 
 	"github.com/opennox/opennox/v1/client/gui"
-	"github.com/opennox/opennox/v1/client/input"
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/memmap"
 	"github.com/opennox/opennox/v1/common/sound"
@@ -754,7 +753,7 @@ func nox_client_parseConfigHotkeysLine_42CF50(a1 string) int {
 		}
 		i := strings.IndexByte(line, '=')
 		if i < 0 {
-			input.Log.Printf("invalid config line: %q", line)
+			noxClient.Log.Error("invalid input config", "line", line)
 			continue
 		}
 		key, val := strings.TrimSpace(line[:i]), strings.TrimSpace(line[i+1:])
