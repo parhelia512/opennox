@@ -8,10 +8,8 @@ import (
 	"os"
 	"sync/atomic"
 
-	"github.com/opennox/libs/datapath"
-	"github.com/opennox/libs/log"
-
 	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/datapath"
 )
 
 func init() {
@@ -33,9 +31,10 @@ var screenshotSeq uint32
 func makeScreenshot() {
 	// Screenshot will wait for the next clean frame, so must run in a goroutine
 	go func() {
+		log := noxClient.Log
 		img, err := noxClient.Screenshot(context.Background())
 		if err != nil {
-			log.Println("cannot take screenshot:", err)
+			log.Error("cannot take screenshot", "err", err)
 			return
 		}
 		base := datapath.Data("nox")
@@ -46,7 +45,7 @@ func makeScreenshot() {
 			if os.IsExist(err) {
 				continue
 			} else if err != nil {
-				log.Println("cannot save screenshot:", err)
+				log.Error("cannot save screenshot", "err", err)
 				return
 			}
 			w = f
@@ -55,12 +54,12 @@ func makeScreenshot() {
 		defer w.Close()
 		err = png.Encode(w, img)
 		if err != nil {
-			log.Println("cannot encode screenshot:", err)
+			log.Error("cannot encode screenshot", "err", err)
 			return
 		}
 		err = w.Close()
 		if err != nil {
-			log.Println("cannot save screenshot:", err)
+			log.Error("cannot save screenshot", "err", err)
 			return
 		}
 	}()

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"log/slog"
 	"net/netip"
 	"os"
 	"path/filepath"
@@ -19,8 +20,8 @@ const (
 )
 
 func init() {
-	RegisterBackend(StaticFile, func(ctx context.Context, out chan<- Server) error {
-		list, err := staticIPs(StaticFile)
+	RegisterBackend("static", func(ctx context.Context, log *slog.Logger, out chan<- Server) error {
+		list, err := staticIPs(log, StaticFile)
 		if len(list) == 0 {
 			return err
 		}
@@ -36,11 +37,12 @@ func init() {
 	})
 }
 
-func staticIPs(path string) ([]Server, error) {
+func staticIPs(log *slog.Logger, path string) ([]Server, error) {
 	name := filepath.Base(path)
+	log = log.With("path", name)
 	f, err := os.Open(path)
 	if os.IsNotExist(err) {
-		Log.Printf("no %s file", name)
+		log.Warn("no file")
 		return nil, nil
 	} else if err != nil {
 		return nil, fmt.Errorf("cannot read %s: %w", name, err)
@@ -61,13 +63,13 @@ func staticIPs(path string) ([]Server, error) {
 		if err != nil {
 			ip, err := netip.ParseAddr(line)
 			if err != nil {
-				last = fmt.Errorf("cannot parse server IP in %s: %q: %v", name, line, err)
-				Log.Println(last)
+				last = fmt.Errorf("cannot parse server IP: %q: %v", line, err)
+				log.Error("cannot parse", "err", last)
 				continue
 			}
 			addr = netip.AddrPortFrom(ip, common.GamePort)
 		}
-		Log.Printf("%s: %v", name, addr)
+		log.Info("result", "addr", addr)
 		out = append(out, Server{
 			Source:   name,
 			Priority: priorityStatic,
@@ -80,7 +82,7 @@ func staticIPs(path string) ([]Server, error) {
 	}
 	if err := sc.Err(); err != nil {
 		last = fmt.Errorf("error reading %s: %w", name, err)
-		Log.Println(last)
+		log.Error("read error", "err", last)
 	}
 	return out, last
 }

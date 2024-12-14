@@ -4,6 +4,7 @@ package discover
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"net"
 	"net/netip"
 	"sync"
@@ -11,8 +12,6 @@ import (
 
 	"github.com/opennox/lobby"
 	"golang.org/x/sync/errgroup"
-
-	"github.com/opennox/libs/log"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 )
@@ -28,10 +27,6 @@ const (
 	priorityXWIS   = 1
 )
 
-var (
-	Log = log.New("discover")
-)
-
 type Server struct {
 	lobby.Game
 	Source   string
@@ -41,7 +36,7 @@ type Server struct {
 	NoPing   bool // server doesn't support UDP pings
 }
 
-type SearchFunc func(ctx context.Context, out chan<- Server) error
+type SearchFunc func(ctx context.Context, log *slog.Logger, out chan<- Server) error
 
 var (
 	backends = make(map[string]SearchFunc)
@@ -53,7 +48,10 @@ func RegisterBackend(name string, fnc SearchFunc) {
 	if _, ok := backends[name]; ok {
 		panic("already registered: " + name)
 	}
-	backends[name] = fnc
+	backends[name] = func(ctx context.Context, log *slog.Logger, out chan<- Server) error {
+		log = log.With("src", name)
+		return fnc(ctx, log, out)
+	}
 }
 
 // RegisterFallback register a new fallback server discovery backend.
@@ -68,7 +66,7 @@ func isTimeout(err error) bool {
 	return err != nil && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded))
 }
 
-func serversWith(ctx context.Context, out chan<- Server, list map[string]SearchFunc) error {
+func serversWith(ctx context.Context, log *slog.Logger, out chan<- Server, list map[string]SearchFunc) error {
 	var (
 		wg   sync.WaitGroup
 		errc = make(chan error, 1)
@@ -78,8 +76,8 @@ func serversWith(ctx context.Context, out chan<- Server, list map[string]SearchF
 		name, fnc := name, fnc
 		go func() {
 			defer wg.Done()
-			if err := fnc(ctx, out); err != nil && !isTimeout(err) {
-				Log.Printf("%s: %v", name, err)
+			if err := fnc(ctx, log, out); err != nil && !isTimeout(err) {
+				log.Warn("discover error", "src", name, "err", err)
 				select {
 				case errc <- err:
 				default:
@@ -100,13 +98,13 @@ type ServerFunc func(s Server) error
 
 // EachServer discovers Nox servers and calls fnc for each of them sequentially.
 // It will not ping the servers additionally. See PingEachServer.
-func EachServer(ctx context.Context, fnc ServerFunc) error {
-	return eachServer(ctx, nil, fnc)
+func EachServer(ctx context.Context, log *slog.Logger, fnc ServerFunc) error {
+	return eachServer(ctx, log, nil, fnc)
 }
 
 // PingEachServer discovers Nox servers, pings them via UDP and calls fnc for each of them sequentially.
 // If pc is provided, it will be used to make ping requests and receive responses.
-func PingEachServer(ctx context.Context, pc *net.UDPConn, fnc ServerFunc) error {
+func PingEachServer(ctx context.Context, log *slog.Logger, pc *net.UDPConn, fnc ServerFunc) error {
 	if pc == nil {
 		l, err := net.ListenUDP("udp4", &net.UDPAddr{IP: nil, Port: 0})
 		if err != nil {
@@ -115,7 +113,7 @@ func PingEachServer(ctx context.Context, pc *net.UDPConn, fnc ServerFunc) error 
 		defer l.Close()
 		pc = l
 	}
-	return eachServer(ctx, pc, fnc)
+	return eachServer(ctx, log, pc, fnc)
 }
 
 func mergeInfo(g1 lobby.Game, g2 *lobby.Game) lobby.Game {
@@ -136,8 +134,8 @@ func mergeInfo(g1 lobby.Game, g2 *lobby.Game) lobby.Game {
 	return g1
 }
 
-func eachServer(rctx context.Context, pc *net.UDPConn, fnc ServerFunc) error {
-	Log.Println("searching for servers...")
+func eachServer(rctx context.Context, log *slog.Logger, pc *net.UDPConn, fnc ServerFunc) error {
+	log.Info("searching for servers")
 	ctx1 := rctx
 	dt1, dt2 := discoverTimeout, discoverTimeout
 	if deadline, ok := rctx.Deadline(); ok {
@@ -146,34 +144,37 @@ func eachServer(rctx context.Context, pc *net.UDPConn, fnc ServerFunc) error {
 	}
 	ctx1, cancel1 := context.WithTimeout(rctx, dt1)
 	defer cancel1()
-	n, err1 := eachServerWith(ctx1, pc, fnc, backends)
+	n, err1 := eachServerWith(ctx1, log, pc, fnc, backends)
 	if err1 != nil {
-		Log.Println("search:", err1)
+		log.Warn("search", "err", err1)
 	}
 	if n != 0 {
 		return err1
 	}
-	Log.Println("no servers, searching with fallback...")
+	log.Warn("no servers, searching with fallback")
 	ctx2, cancel2 := context.WithTimeout(rctx, dt2)
 	defer cancel2()
-	n, err2 := eachServerWith(ctx2, pc, fnc, fallback)
+	n, err2 := eachServerWith(ctx2, log, pc, fnc, fallback)
 	if n != 0 {
 		return err2
 	}
 	if err2 != nil {
-		Log.Println("fallback search:", err2)
+		log.Error("fallback search", "err", err2)
+		if err1 != nil {
+			log.Error("search failed", "err", err1)
+		}
 	}
 	return err1
 }
 
-func eachServerWith(ctx context.Context, pc *net.UDPConn, fnc ServerFunc, blist map[string]SearchFunc) (int, error) {
+func eachServerWith(ctx context.Context, log *slog.Logger, pc *net.UDPConn, fnc ServerFunc, blist map[string]SearchFunc) (int, error) {
 	start := time.Now()
 	out := make(chan Server, 10)
 	errc := make(chan error, 1)
 
 	go func() {
 		defer close(out)
-		if err := serversWith(ctx, out, blist); err != nil {
+		if err := serversWith(ctx, log, out, blist); err != nil {
 			errc <- err
 		}
 	}()
@@ -181,7 +182,7 @@ func eachServerWith(ctx context.Context, pc *net.UDPConn, fnc ServerFunc, blist 
 	final := out
 	if pc != nil {
 		final = make(chan Server, 10)
-		pinger := NewPinger(pc)
+		pinger := NewPinger(log, pc)
 		defer pinger.Close()
 		wg, ctx := errgroup.WithContext(ctx)
 		for i := 0; i < 3; i++ {
@@ -192,7 +193,7 @@ func eachServerWith(ctx context.Context, pc *net.UDPConn, fnc ServerFunc, blist 
 						start := time.Now()
 						g, err := pinger.Ping(ctx, netip.AddrPortFrom(s.IP, uint16(s.Port)))
 						if err != nil {
-							Log.Printf("ping error: %s: %v", s.Source, err)
+							log.Warn("ping error", "src", s.Source, "err", err)
 						} else {
 							s.Ping = time.Since(start)
 							s.Game = mergeInfo(s.Game, g)
@@ -216,7 +217,7 @@ func eachServerWith(ctx context.Context, pc *net.UDPConn, fnc ServerFunc, blist 
 
 	n := 0
 	defer func() {
-		Log.Printf("found %d server(s) in %v", n, time.Since(start))
+		log.Info("found servers", "n", n, "dt", time.Since(start))
 	}()
 	for s := range final {
 		n++
@@ -232,17 +233,17 @@ func eachServerWith(ctx context.Context, pc *net.UDPConn, fnc ServerFunc, blist 
 	return n, nil
 }
 
-func ListServers(ctx context.Context) ([]Server, error) {
+func ListServers(ctx context.Context, log *slog.Logger) ([]Server, error) {
 	l, err := net.ListenUDP("udp4", &net.UDPAddr{IP: nil, Port: 0})
 	if err != nil {
 		return nil, err
 	}
 	defer l.Close()
-	return listServersWith(ctx, l)
+	return listServersWith(ctx, log, l)
 }
 
-func ListServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
-	return listServersWith(ctx, pc)
+func ListServersWith(ctx context.Context, log *slog.Logger, pc *net.UDPConn) ([]Server, error) {
+	return listServersWith(ctx, log, pc)
 }
 
 func (a Server) key() serverKey {
@@ -254,7 +255,7 @@ type serverKey struct {
 	Port int
 }
 
-func listServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
+func listServersWith(ctx context.Context, log *slog.Logger, pc *net.UDPConn) ([]Server, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel func()
 		ctx, cancel = context.WithTimeout(ctx, discoverTimeout)
@@ -272,7 +273,7 @@ func listServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
 	)
 	go func() {
 		defer close(pingDone)
-		ping := NewPinger(pc)
+		ping := NewPinger(log, pc)
 		defer ping.Close()
 		var (
 			remaining int
@@ -291,7 +292,7 @@ func listServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
 					NoPing: true,
 				}
 			} else {
-				Log.Printf("ping: cannot find server: %s:%d", g.Address, g.Port)
+				log.Warn("cannot find server", "addr", g.Address, "port", g.Port)
 			}
 		}
 	pingLoop:
@@ -304,7 +305,7 @@ func listServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
 					break pingLoop
 				}
 				if err := ping.SendPing(pingOut, netip.AddrPortFrom(s.IP, uint16(s.Port))); err != nil {
-					Log.Printf("ping: cannot ping server %s:%d: %v", s.IP, s.Port, err)
+					log.Warn("cannot ping server", "addr", s.IP, "port", s.Port, "err", err)
 				} else {
 					remaining++
 				}
@@ -319,14 +320,14 @@ func listServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
 		for remaining > 0 {
 			select {
 			case <-ctx.Done():
-				Log.Printf("ping timeout for %d/%d servers", remaining, len(seen))
+				log.Info("ping result", "timeout", remaining, "total", len(seen))
 				break loop
 			case g := <-pingOut:
 				procPing(g)
 			}
 		}
 	}()
-	err := EachServer(ctx, func(s Server) error {
+	err := EachServer(ctx, log, func(s Server) error {
 		key := s.key()
 
 		seenMu.Lock()
@@ -346,7 +347,7 @@ func listServersWith(ctx context.Context, pc net.PacketConn) ([]Server, error) {
 		return nil
 	})
 	if err != nil {
-		Log.Printf("list servers: %v", err)
+		log.Warn("list servers", "err", err)
 	}
 	close(pingIn)
 	<-pingDone

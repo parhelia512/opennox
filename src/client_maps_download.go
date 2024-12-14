@@ -5,12 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"log/slog"
 	"path/filepath"
 	"strings"
 
 	"github.com/opennox/libs/client/keybind"
 	"github.com/opennox/libs/datapath"
-	"github.com/opennox/libs/log"
+	noxlog "github.com/opennox/libs/log"
 	"github.com/opennox/libs/maps"
 
 	"github.com/opennox/opennox/v1/client/gui"
@@ -20,7 +21,7 @@ import (
 )
 
 type clientMapDownload struct {
-	log        *log.Logger
+	log        *slog.Logger
 	inProgress bool
 	downloadOK bool
 	cancel     func()
@@ -36,7 +37,7 @@ type clientMapDownload struct {
 }
 
 func (c *clientMapDownload) Init(cl *Client) {
-	c.log = log.New("mapsend")
+	c.log = noxlog.WithSystem(cl.Log, "mapsend")
 	c.ndl = maps.NewNativeDownloader(datapath.Maps())
 	c.iface.setMapPath = cl.srv.nox_xxx_gameSetMapPath_409D70
 	c.iface.sendCancelMap = cl.Nox_xxx_cliSendCancelMap_43CAB0
@@ -56,7 +57,7 @@ func (c *clientMapDownload) setDownloadOK(v bool) {
 }
 
 func (c *clientMapDownload) deleteFile() {
-	c.log.Println("delete downloaded map")
+	c.log.Info("delete downloaded map")
 	c.ndl.CancelAndDelete()
 	c.setDownloading(false)
 	c.setDownloadOK(true)
@@ -100,7 +101,7 @@ func (c *clientMapDownload) startNative(name string, sz uint) error {
 		mdir = datapath.Maps(mname)
 		fpath = filepath.Join(mdir, mname+".nxz")
 	}
-	c.log.Println("downloading map to:", fpath)
+	c.log.Info("downloading map to", "path", fpath)
 	if err := c.ndl.Start(fpath, sz); err != nil {
 		return err
 	}
@@ -109,10 +110,10 @@ func (c *clientMapDownload) startNative(name string, sz uint) error {
 
 func (c *clientMapDownload) onMapDownloadStart(name string, sz uint) {
 	name = strings.TrimSuffix(strings.ToLower(name), maps.Ext)
-	c.log.Printf("download start (native): %q, %d", name, int(sz))
+	c.log.Info("download start", "proto", "udp", "name", name, "size", int(sz))
 	c.native = true
 	if err := c.startNative(name, sz); err != nil {
-		c.log.Println("download start failed:", err)
+		c.log.Error("download start failed", "err", err)
 		c.iface.sendCancelMap()
 		c.setDownloading(false)
 		c.setDownloadOK(false)
@@ -141,14 +142,14 @@ func (c *clientMapDownload) setProgress(val int) int {
 }
 
 func (c *clientMapDownload) onMapDownloadAbort() {
-	c.log.Printf("download aborted by the server")
+	c.log.Info("download aborted by the server")
 	c.deleteFile()
 	c.setDownloading(false)
 	c.setDownloadOK(false)
 }
 
 func (c *clientMapDownload) Cancel() {
-	c.log.Printf("map download cancelled")
+	c.log.Info("map download cancelled")
 	if c.native {
 		c.cancelNative()
 		return
@@ -158,7 +159,7 @@ func (c *clientMapDownload) Cancel() {
 		c.cancel()
 		c.cancel = nil
 		if err := <-c.done; err != nil && err != context.Canceled {
-			c.log.Println(err)
+			c.log.Error("map download failed", "err", err)
 		}
 		c.done = nil
 	}

@@ -2,9 +2,9 @@ package discover
 
 import (
 	"context"
+	"log/slog"
 	"math/rand"
 	"net"
-	"net/netip"
 	"time"
 
 	"github.com/opennox/libs/common"
@@ -17,7 +17,7 @@ const (
 func init() {
 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
 	const backend = "lan"
-	RegisterBackend(backend, func(ctx context.Context, out chan<- Server) error {
+	RegisterBackend(backend, func(ctx context.Context, log *slog.Logger, out chan<- Server) error {
 		if deadline, ok := ctx.Deadline(); ok {
 			if dt := time.Until(deadline); dt > lanTimeout {
 				var cancel func()
@@ -46,7 +46,7 @@ func init() {
 			buf := make([]byte, 256)
 			for {
 				buf = buf[:cap(buf)]
-				n, addr, err := l.ReadFromUDP(buf)
+				n, addr, err := l.ReadFromUDPAddrPort(buf)
 				if err != nil {
 					errc <- err
 					return
@@ -56,13 +56,16 @@ func init() {
 				if m == nil || m.Token != token {
 					continue
 				}
-				ip, _ := netip.AddrFromSlice(addr.IP.To4())
-				if g := convGameInfo(getAddr(addr), m, buf); g != nil {
+				if !addr.Addr().Is4() {
+					log.Warn("skipping IPv6 response", "addr", addr)
+					continue
+				}
+				if g := convGameInfo(addr, m, buf); g != nil {
 					select {
 					case <-ctx.Done():
 						return
 					case out <- Server{
-						IP:       ip,
+						IP:       addr.Addr(),
 						Source:   backend,
 						Priority: priorityLAN,
 						Ping:     time.Since(start),

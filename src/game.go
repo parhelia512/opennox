@@ -729,7 +729,7 @@ func (s *Server) nox_xxx_servInitialMapLoad_4D17F0() bool {
 		return false
 	}
 	if debugMainloop {
-		log.Println("gameStateFunc = nox_xxx_gameTick_4D2580_server")
+		s.Log.Debug("gameStateFunc = nox_xxx_gameTick_4D2580_server")
 	}
 	s.SetUpdateFunc(s.nox_xxx_gameTick_4D2580_server)
 	s.NetList.ResetAllInd(netlist.Kind1)

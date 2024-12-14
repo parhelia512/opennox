@@ -98,7 +98,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *
 		}
 		return 2, true
 	case netmsg.MSG_CLIENT_READY:
-		server.Log.Printf("player ready: %d: %q", pl.Index(), pl.Name())
+		s.Log.Info("player ready", "ind", pl.Index(), "name", pl.Name())
 		legacy.Nox_xxx_gameServerReadyMB_4DD180(pl.Index())
 		s.SendIncomingExt(pl.PlayerIndex())
 		return 1, true
@@ -106,10 +106,11 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *
 		serverQuitAck()
 		return 1, true
 	case netmsg.MSG_INCOMING_CLIENT:
-		server.Log.Printf("incoming player: %d: %q", pl.Index(), pl.Name())
+		s.Log.Info("incoming player", "ind", pl.Index(), "name", pl.Name())
 		legacy.Nox_xxx_netPlayerIncomingServ_4DDF60(pl.Index())
 		return 1, true
 	case netmsg.MSG_OUTGOING_CLIENT:
+		s.Log.Info("outgoing player", "ind", pl.Index(), "name", pl.Name())
 		nox_xxx_playerDisconnFinish_4DE530(pl.PlayerIndex(), 2)
 		return 1, true
 	case netmsg.MSG_REQUEST_TIMER_STATUS:
@@ -127,9 +128,13 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *
 		if pl != nil && (pl.Field3680>>2)&0x1 != 0 {
 			return msz, true
 		}
+		var pu *server.Object
+		if pl != nil {
+			pu = pl.PlayerUnit
+		}
 		orig := text
 		if !msg.Flags.Has(noxnet.TextTeam) { // global chat
-			text = s.CallOnChat(nil, pl, pl.PlayerUnit, text)
+			text = s.CallOnChat(nil, pl, pu, text)
 			if text == "" {
 				return msz, true // mute
 			}
@@ -159,7 +164,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *
 		if tcl == nil {
 			return msz, true
 		}
-		text = s.CallOnChat(tcl, pl, pl.PlayerUnit, text)
+		text = s.CallOnChat(tcl, pl, pu, text)
 		if text == "" {
 			return msz, true // mute
 		}

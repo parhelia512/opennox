@@ -139,18 +139,18 @@ func (s *Server) NetXferHandle(ind ntype.PlayerInd, data netxfer.Data) bool {
 func (s *Server) netXferHandleCBOR(ind ntype.PlayerInd, data []byte) {
 	var arr []xferCBOR
 	if err := cbor.Unmarshal(data, &arr); err != nil {
-		Log.Printf("cannot decode CBOR xfer: %v", err)
+		s.Log.Error("cannot decode CBOR xfer", "err", err)
 		return
 	}
 	for _, m := range arr {
 		rt, ok := netXferCBORTypes[m.Type]
 		if !ok {
-			Log.Printf("unsupported CBOR xfer %q", m.Type)
+			s.Log.Error("unsupported CBOR xfer", "type", m.Type)
 			continue
 		}
 		obj := reflect.New(rt).Interface().(NetXferExt)
 		if err := cbor.Unmarshal(m.Data, obj); err != nil {
-			Log.Printf("cannot decode CBOR xfer %q: %v", m.Type, err)
+			s.Log.Error("cannot decode CBOR xfer", "type", m.Type, "err", err)
 			continue
 		}
 		s.handleCBORXfer(ind, obj)

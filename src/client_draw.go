@@ -177,7 +177,7 @@ func (c *Client) nox_xxx_clientDrawAll_436100_draw() {
 			c.setClientPlayerUnit(pu)
 		} else {
 			if c.Debug.DrawCnt%30 == 0 {
-				client.Log.Error("cannot get player unit", "connected", nox_client_isConnected(), "netcode", id)
+				c.Log.Error("cannot get player unit", "connected", nox_client_isConnected(), "netcode", id)
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package opennox
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/opennox/libs/datapath"
@@ -14,15 +15,15 @@ import (
 
 var soloAllowMP = os.Getenv("NOX_SOLO_MP") == "true"
 
-func scanMaps() (maps.MapList, error) {
-	return maps.Scan(datapath.Data(maps.Dir), &maps.ScanOptions{
+func scanMaps(log *slog.Logger) (maps.MapList, error) {
+	return maps.Scan(log, datapath.Data(maps.Dir), &maps.ScanOptions{
 		Solo: soloAllowMP,
 	})
 }
 
-func nox_common_scanAllMaps_4D07F0() error {
+func nox_common_scanAllMaps_4D07F0(log *slog.Logger) error {
 	nox_common_list_clear_425760(legacy.Get_nox_common_maplist())
-	list, err := scanMaps()
+	list, err := scanMaps(log)
 	if err != nil && len(list) == 0 {
 		return err
 	}

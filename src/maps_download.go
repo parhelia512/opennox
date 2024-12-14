@@ -14,7 +14,7 @@ var mapsend struct {
 func init() {
 	if os.Getenv("NOX_MAPS_HTTP") != "false" {
 		registerOnDataPathSet(func() {
-			mapsend.srv = maps.NewServer(datapath.Maps())
+			mapsend.srv = maps.NewServer(noxServer.Log, datapath.Maps())
 			mapsend.srv.RegisterOnMux(noxServer.HTTP())
 		})
 	}

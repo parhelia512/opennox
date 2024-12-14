@@ -19,11 +19,11 @@ static void nox_window_call_tooltip_func(nox_window* win, nox_window_data* data,
 import "C"
 import (
 	"image"
+	"log/slog"
 	"runtime/debug"
 	"unsafe"
 
 	noxcolor "github.com/opennox/libs/color"
-	"github.com/opennox/libs/log"
 
 	"github.com/opennox/opennox/v1/client/gui"
 )
@@ -33,7 +33,7 @@ type nox_window = C.nox_window
 func AsWindowP(win unsafe.Pointer) *gui.Window {
 	w := (*gui.Window)(win)
 	if false && cgoSafe && w.ID() == DeadWord {
-		log.Println("memory corruption detected")
+		slog.Error("memory corruption detected")
 		debug.PrintStack()
 		C.abort()
 	}

@@ -3,6 +3,7 @@ package noxrender
 import (
 	"image"
 	"image/png"
+	"log/slog"
 	"math"
 	"os"
 	"testing"
@@ -16,7 +17,7 @@ func TestDrawCircle(t *testing.T) {
 	sz := image.Pt(100, 100)
 	d := newRenderData(sz.X, sz.Y)
 	img := noximage.NewImage16(image.Rectangle{Max: sz})
-	r := NewRender(nil)
+	r := NewRender(slog.Default(), nil)
 	r.SetPixBuffer(img)
 	r.SetData(d)
 
@@ -48,7 +49,7 @@ func TestDrawLines(t *testing.T) {
 	sz := image.Pt(100, 100)
 	d := newRenderData(sz.X, sz.Y)
 	img := noximage.NewImage16(image.Rectangle{Max: sz})
-	r := NewRender(nil)
+	r := NewRender(slog.Default(), nil)
 	r.SetPixBuffer(img)
 	r.SetData(d)
 	c := sz.Div(2)

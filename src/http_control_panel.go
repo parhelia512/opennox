@@ -2,6 +2,7 @@ package opennox
 
 import (
 	"context"
+	"log/slog"
 
 	octl "github.com/szhublox/opennoxcontrol"
 )
@@ -12,6 +13,7 @@ func init() {
 	configBoolPtr("server.control.allow_map_change", "NOX_SERVER_HTTP_ALLOWS_MAP_CHANGE", false, &opts.AllowMapChange)
 	registerOnDataPathSet(func() {
 		game := &gameControlHTTP{
+			log: noxServer.Log,
 			// enforce these flags from our side as well
 			allowCmds:      opts.AllowCommands,
 			allowMapChange: opts.AllowMapChange,
@@ -22,6 +24,7 @@ func init() {
 }
 
 type gameControlHTTP struct {
+	log            *slog.Logger
 	allowCmds      bool
 	allowMapChange bool
 }
@@ -51,7 +54,7 @@ func (g *gameControlHTTP) GameInfo() (octl.Info, error) {
 }
 
 func (g *gameControlHTTP) ListMaps() ([]octl.Map, error) {
-	list, err := scanMaps()
+	list, err := scanMaps(g.log)
 	var out []octl.Map
 	for _, l := range list {
 		out = append(out, octl.Map{

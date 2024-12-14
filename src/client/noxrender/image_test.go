@@ -9,6 +9,7 @@ import (
 	"image/draw"
 	"image/png"
 	"io"
+	"log/slog"
 	"math"
 	"os"
 	"path/filepath"
@@ -534,7 +535,7 @@ func TestDrawImage(t *testing.T) {
 						d.SetColorMultA(b.mult)
 					}
 
-					r := NewRender(nil)
+					r := NewRender(slog.Default(), nil)
 					r.SetPixBuffer(pix)
 					r.SetData(d)
 

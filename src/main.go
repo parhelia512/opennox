@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"log/slog"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -67,24 +68,6 @@ func registerOnDataPathSet(fnc func()) {
 // Nox only works on 32bit
 var _ = [1]struct{}{}[unsafe.Sizeof(int(0))-4]
 
-func writeLogsToDir(dir string) error {
-	if dir == "" {
-		dir = filepath.Dir(os.Args[0])
-		if sdir := env.AppUserDir(); sdir != "" {
-			dir = sdir
-		}
-		dir = filepath.Join(dir, "logs")
-	}
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return err
-	}
-	name := "opennox.log"
-	if isDedicatedServer {
-		name = "opennox-server.log"
-	}
-	return log.WriteToFile(filepath.Join(dir, name))
-}
-
 func RunArgs(args []string) (gerr error) {
 	defer func() {
 		switch r := recover().(type) {
@@ -140,11 +123,18 @@ func RunArgs(args []string) (gerr error) {
 	if err := flags.Parse(args[1:]); err != nil {
 		return err
 	}
+	log := log.NewSlog(slog.Default())
 	if !env.IsE2E() {
-		if err := writeLogsToDir(*fLogs); err != nil {
-			log.Println("cannot persist logs:", err)
+		logDir := *fLogs
+		if logDir == "" {
+			logDir = defaultLogDir()
 		}
-		defer log.Close()
+		if err := writeLogsToDir(logDir); err != nil {
+			slog.Warn("cannot persist logs", "dir", logDir, "err", err)
+		} else {
+			slog.Info("writing logs to", "dir", logDir)
+		}
+		defer closeLog()
 	} else {
 		e2eInit()
 		defer e2eStop()
@@ -168,9 +158,9 @@ func RunArgs(args []string) (gerr error) {
 			}
 		}()
 	}
-	noxServer = NewServer(noxConsole, strMan)
+	noxServer = NewServer(log.Logger, noxConsole, strMan)
 	var err error
-	noxClient, err = NewClient(noxConsole, noxServer)
+	noxClient, err = NewClient(log.Logger, noxConsole, noxServer)
 	if err != nil {
 		return err
 	}
@@ -368,7 +358,7 @@ func RunArgs(args []string) (gerr error) {
 	// manual spell cast timeout (in frames)
 	spellTimeout = noxServer.SecToFramesF(msmul)
 
-	if err := nox_common_scanAllMaps_4D07F0(); err != nil {
+	if err := nox_common_scanAllMaps_4D07F0(noxServer.Log); err != nil {
 		return fmt.Errorf("cannot find maps: %w", err)
 	}
 	keyBinding = keybind.New(noxClient.Strings())
@@ -504,7 +494,7 @@ func sub_4AA9C0() int {
 }
 
 func cleanup() {
-	log.Println("cleanup")
+	slog.Info("cleanup")
 	writeConfigLegacy("nox.cfg")
 	nox_xxx_freeScreenParticles_4314D0()
 	sub_413960()

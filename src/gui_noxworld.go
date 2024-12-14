@@ -5,11 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"log/slog"
 	"net"
 	"net/netip"
 	"time"
 	"unsafe"
 
+	noxlog "github.com/opennox/libs/log"
 	"github.com/opennox/libs/noxnet"
 	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/lobby"
@@ -26,7 +28,7 @@ import (
 )
 
 var (
-	lobbyBroadcast      net.PacketConn
+	lobbyBroadcast      *net.UDPConn
 	discoverDone        = make(chan []discover.Server, 1)
 	dword_5d4594_815060 int
 )
@@ -57,8 +59,9 @@ func (s *LobbyServerInfo) String() string {
 	return fmt.Sprintf("{%q, %q (%s), %d/%d,%s F:%v, M:%q, L:%d}", addr, s.Name, s.Source, s.Players.Cur, s.Players.Max, ping, s.Flags, s.Map, s.Level)
 }
 
-func onLobbyServerPacket(addr string, port int, name string, packet []byte) bool {
-	discover.Log.Printf("ignoring server response: %s:%d, %q", addr, port, name)
+func onLobbyServerPacket(log *slog.Logger, addr string, port int, name string, packet []byte) bool {
+	log = noxlog.WithSystem(log, "discover")
+	log.Debug("ignoring server response", "addr", addr, "port", port, "name", name)
 	return false
 	/*
 		ticks := uint64(binary.LittleEndian.Uint32(packet[44:]))
@@ -109,7 +112,7 @@ func nox_client_refreshServerList_4378B0() {
 	ctx := context.Background()
 	winNewDialogID(legacy.Get_nox_wol_wnd_world_814980(), "Wolchat.c:PleaseWait", "C:\\NoxPost\\src\\client\\shell\\noxworld.c")
 	noxServer.NetStr.Responded = false
-	go discoverAndPingServers(ctx)
+	go discoverAndPingServers(ctx, noxClient.Log)
 	legacy.Set_dword_5d4594_815104(0)
 	legacy.Set_qword_5d4594_815068(
 		// next auto-refresh
@@ -120,6 +123,7 @@ func sub_438770_waitList() {
 	if dword_5d4594_815060 != 0 {
 		return
 	}
+	log := noxlog.WithSystem(noxClient.Log, "discover")
 	timer := time.NewTimer(10 * time.Millisecond)
 	defer timer.Stop()
 	var list []discover.Server
@@ -145,7 +149,7 @@ func sub_438770_waitList() {
 		if g.Res.HighRes || g.Res.Width > 1024 || g.Res.Height > 768 {
 			v = noxProtoVersionHighRes
 		}
-		clientOnLobbyServer(&LobbyServerInfo{
+		clientOnLobbyServer(log, &LobbyServerInfo{
 			Server:  g,
 			Flags:   gameModeToFlags(g.Mode),
 			Status:  status,
@@ -182,18 +186,19 @@ func sub_554D10() int {
 	return 0
 }
 
-func clientOnLobbyServer(info *LobbyServerInfo) int {
-	discover.Log.Printf("server response: %s", info)
+func clientOnLobbyServer(log *slog.Logger, info *LobbyServerInfo) int {
+	log = noxlog.WithSystem(log, "discover")
+	log.Info("server response", "info", info)
 	if legacy.Get_nox_wol_server_result_cnt_815088() >= 2500 || legacy.Get_dword_5d4594_815044() != 0 || dword_5d4594_815060 != 0 {
-		discover.Log.Printf("OnLobbyServer_4375F0: ignoring server %q: don't need more results", info.Address)
+		log.Warn("ignoring server: don't need more results", "addr", info.Address)
 		return 0
 	}
 	if info.Address == "" {
-		discover.Log.Printf("OnLobbyServer_4375F0: ignoring server %q: invalid address", info.Address)
+		log.Warn("ignoring server: invalid address", "addr", info.Address)
 		return 0
 	}
 	if !legacy.Sub_4A0410(info.Address, info.Port) {
-		discover.Log.Printf("OnLobbyServer_4375F0: ignoring server %q: duplicate?", info.Address)
+		log.Warn("ignoring server: duplicate?", "addr", info.Address)
 		return 0
 	}
 	srv, freeSrv := alloc.New(legacy.Nox_gui_server_ent_t{})
@@ -258,7 +263,7 @@ func waitForLobbyResults(conn net.PacketConn, flag netstr.RecvFlags) (int, error
 			port := int(addr.Port())
 			name := data[72:]
 			name = name[:alloc.StrLenS(name)]
-			onLobbyServerPacket(saddr, port, string(name), data)
+			onLobbyServerPacket(noxClient.Log, saddr, port, string(name), data)
 		},
 		OnPassRequired: func() {
 			if legacy.Sub_43B6D0() != 0 {

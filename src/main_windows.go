@@ -3,7 +3,7 @@
 package opennox
 
 import (
-	glog "log"
+	stdlog "log"
 	"os"
 	"syscall"
 
@@ -30,8 +30,10 @@ func init() {
 	if err != nil {
 		return
 	}
-	os.Stdout = os.NewFile(uintptr(hout), "/dev/stdout")
-	os.Stderr = os.NewFile(uintptr(herr), "/dev/stderr")
-	glog.SetOutput(os.Stderr)
-	log.SetOutput(os.Stderr)
+	stdout := os.NewFile(uintptr(hout), "/dev/stdout")
+	stderr := os.NewFile(uintptr(herr), "/dev/stderr")
+	os.Stdout = stdout
+	os.Stderr = stderr
+	stdlog.SetOutput(stderr)
+	log.AddHandler(log.NewTextHandler(stderr))
 }

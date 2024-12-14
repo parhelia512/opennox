@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"log/slog"
 	"unsafe"
 
 	noxcolor "github.com/opennox/libs/color"
@@ -341,12 +342,12 @@ func (p *RenderData) ShouldDrawText() bool {
 	return !noxflags.HasEngine(noxflags.EngineNoTextRendering)
 }
 
-func NewRender(f Framer) *NoxRender {
+func NewRender(log *slog.Logger, f Framer) *NoxRender {
 	r := &NoxRender{f: f}
 	r.initText()
 	r.initColorTablesRev()
 	r.Part.initParticles()
-	r.Bag.init()
+	r.Bag.init(log)
 	return r
 }
 

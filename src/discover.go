@@ -3,8 +3,10 @@ package opennox
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"time"
 
+	noxlog "github.com/opennox/libs/log"
 	"github.com/opennox/lobby"
 
 	"github.com/opennox/opennox/v1/common/discover"
@@ -23,17 +25,18 @@ func isCtxTimeout(err error) bool {
 
 // discoverAndPingServers discovers game servers and sends them to the UI.
 // It should run in a goroutine, and will communicate via discoverDone channel.
-func discoverAndPingServers(ctx context.Context) {
+func discoverAndPingServers(ctx context.Context, log *slog.Logger) {
+	log = noxlog.WithSystem(log, "discover")
 	start := time.Now()
-	list, err := discover.ListServersWith(ctx, lobbyBroadcast)
+	list, err := discover.ListServersWith(ctx, log, lobbyBroadcast)
 	if err != nil && !isCtxTimeout(err) {
-		discover.Log.Println(err)
+		log.Error("discover failed", "err", err)
 	}
 	select {
 	case discoverDone <- list:
-		discover.Log.Printf("done in %v", time.Since(start))
+		log.Info("done", "dt", time.Since(start))
 	default:
-		discover.Log.Printf("discarded in %v", time.Since(start))
+		log.Info("discarded", "dt", time.Since(start))
 	}
 }
 

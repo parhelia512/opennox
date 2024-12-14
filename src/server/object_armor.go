@@ -62,7 +62,7 @@ func (s *Server) Nox_xxx_equipArmor_415AB0() {
 			it.DestroyedTypeInd = s.Types.ClientTypeByID(it.DestroyedName)
 		}
 		if it.TypeInd == 0 {
-			Log.Printf("cannot find type ID for armor %q", it.Name)
+			s.Log.Error("cannot find type ID for armor", "id", it.Name)
 		}
 	}
 	s.Armor.ready = true

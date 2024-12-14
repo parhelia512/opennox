@@ -3,6 +3,7 @@ package discover
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"math/rand"
 	"net/netip"
 	"time"
@@ -15,8 +16,8 @@ func init() {
 	xwisRand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	xwisName := fmt.Sprintf("jack%06x", xwisRand.Intn(0x1000000))
 	const backend = "xwis"
-	RegisterFallback("xwis", func(ctx context.Context, out chan<- Server) error {
-		Log.Printf(backend+": using name: %s", xwisName)
+	RegisterFallback("xwis", func(ctx context.Context, log *slog.Logger, out chan<- Server) error {
+		log.Info("using name", "user", xwisName)
 		cli, err := xwis.NewClient(ctx, xwisName, xwisName)
 		if err != nil {
 			return err
@@ -32,12 +33,13 @@ func init() {
 			if r.Game == nil {
 				continue
 			}
+			log := log.With("addr", r.Game.Addr, "name", r.Game.Name)
 			ip, err := netip.ParseAddr(r.Game.Addr)
 			if err != nil {
-				Log.Printf(backend+": %q (%s): %v", r.Game.Addr, r.Game.Name, err)
+				log.Warn("cannot parse", "err", err)
 				continue
 			}
-			Log.Printf(backend+": %s (%s)", ip, r.Game.Name)
+			log.Info("result")
 			select {
 			case <-ctx.Done():
 				return ctx.Err()

@@ -3,6 +3,7 @@ package discover
 import (
 	"context"
 	"encoding/binary"
+	"log/slog"
 	"math/rand"
 	"net"
 	"net/netip"
@@ -22,13 +23,13 @@ const (
 )
 
 // PingAll pings all servers in a list and merges the results back to the slice.
-func PingAll(ctx context.Context, pc *net.UDPConn, arr []Server) error {
+func PingAll(ctx context.Context, log *slog.Logger, pc *net.UDPConn, arr []Server) error {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel func()
 		ctx, cancel = context.WithTimeout(ctx, pingTimeout)
 		defer cancel()
 	}
-	p := NewPinger(pc)
+	p := NewPinger(log, pc)
 	defer p.Close()
 
 	var (
@@ -42,7 +43,7 @@ func PingAll(ctx context.Context, pc *net.UDPConn, arr []Server) error {
 		s := &arr[i]
 		byKey[s.key()] = s
 		if err := p.SendPing(out, netip.AddrPortFrom(s.IP, uint16(s.Port))); err != nil {
-			Log.Printf("ping: cannot ping server %s:%d: %v", s.IP, s.Port, err)
+			log.Warn("cannot ping server", "addr", s.IP, "port", s.Port, "err", err)
 			last = err
 		} else {
 			remaining++
@@ -52,7 +53,7 @@ loop:
 	for remaining > 0 {
 		select {
 		case <-ctx.Done():
-			Log.Printf("ping timeout for %d/%d servers", remaining, len(arr))
+			log.Info("pinged", "timeout", remaining, "total", len(arr))
 			break loop
 		case g := <-out:
 			remaining--
@@ -61,7 +62,7 @@ loop:
 				s.Game = mergeInfo(s.Game, g)
 				s.NoPing = true
 			} else {
-				Log.Printf("ping: cannot find server: %s:%d", g.Address, g.Port)
+				log.Warn("cannot find server", "addr", g.Address, "port", g.Port)
 			}
 		}
 	}
@@ -69,8 +70,9 @@ loop:
 }
 
 // NewPinger creates a pinger for game servers with an existing net.PacketConn.
-func NewPinger(pc net.PacketConn) *Pinger {
+func NewPinger(log *slog.Logger, pc *net.UDPConn) *Pinger {
 	p := &Pinger{
+		log:     log,
 		pc:      pc,
 		stop:    make(chan struct{}),
 		done:    make(chan struct{}),
@@ -82,7 +84,8 @@ func NewPinger(pc net.PacketConn) *Pinger {
 }
 
 type Pinger struct {
-	pc   net.PacketConn
+	log  *slog.Logger
+	pc   *net.UDPConn
 	stop chan struct{}
 	done chan struct{}
 
@@ -109,7 +112,7 @@ func (p *Pinger) read() {
 	buf := make([]byte, 256)
 	for {
 		buf = buf[:cap(buf)]
-		n, addr, err := p.pc.ReadFrom(buf)
+		n, addr, err := p.pc.ReadFromUDPAddrPort(buf)
 		if err != nil {
 			select {
 			case <-p.stop:
@@ -135,7 +138,7 @@ func (p *Pinger) read() {
 		if ch == nil {
 			continue
 		}
-		g := convGameInfo(getAddr(addr), m, buf)
+		g := convGameInfo(addr, m, buf)
 		if g == nil {
 			continue
 		}
@@ -148,7 +151,7 @@ func (p *Pinger) read() {
 }
 
 func (p *Pinger) SendPing(out chan<- *lobby.Game, addr netip.AddrPort) error {
-	Log.Printf("pinging %s", addr)
+	p.log.Info("pinging", "addr", addr)
 	p.mu.Lock()
 	if err := p.err; err != nil {
 		p.mu.Unlock()
@@ -188,21 +191,6 @@ func encodeGameDiscovery(token uint32) []byte {
 		panic(err)
 	}
 	return data
-}
-
-func getAddr(addr net.Addr) netip.AddrPort {
-	switch a := addr.(type) {
-	case nil:
-	case interface{ AddrPort() netip.AddrPort }:
-		return a.AddrPort()
-	case *net.TCPAddr:
-		return a.AddrPort()
-	case *net.UDPAddr:
-		return a.AddrPort()
-	default:
-		Log.Printf("unsupported address type: %T", a)
-	}
-	return netip.AddrPort{}
 }
 
 func decodeGameInfo(buf []byte) *discover.MsgServerInfo {

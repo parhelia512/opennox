@@ -45,7 +45,7 @@ func (c *Client) map_download_start() {
 	c.mapsend.setDownloading(true)
 	c.mapsend.setDownloadOK(true)
 	if _, err := c.mapDownloadLoop(true); err != nil {
-		c.mapsend.log.Println(err)
+		c.mapsend.log.Error("download failed", "err", err)
 	}
 }
 
@@ -66,35 +66,35 @@ func (c *Client) mapDownloadLoop(first bool) (bool, error) {
 
 		hport := server.InferHTTPPort(legacy.ClientGetServerPort())
 		srv := fmt.Sprintf("%s:%d", clientGetServerHost(), hport)
-		c.mapsend.log.Printf("checking map download API on server %q", srv)
-		cli, err := maps.NewClient(ctx, srv)
+		c.mapsend.log.Info("checking map download API on server", "addr", srv)
+		cli, err := maps.NewClient(ctx, c.Log, srv)
 		if err != nil {
 			if err == maps.ErrAPIUnsupported {
-				c.mapsend.log.Println("map API check:", err)
+				c.mapsend.log.Info("map API check", "err", err)
 			} else {
-				c.mapsend.log.Println("cannot check map API:", err)
+				c.mapsend.log.Warn("cannot check map API", "err", err)
 			}
 			cancel()
 			c.mapsend.native = true
 		} else {
-			c.mapsend.log.Println("map API supported")
+			c.mapsend.log.Info("map API supported")
 			errc := make(chan error, 1)
 			c.mapsend.cancel = cancel
 			c.mapsend.done = errc
 			c.mapsend.native = false
 
 			name := strings.TrimSuffix(strings.ToLower(clientGetServerMap()), maps.Ext)
-			c.mapsend.log.Printf("download start (http): %q", name)
+			c.mapsend.log.Info("download start", "proto", "http", "name", name)
 			go func() {
 				defer cli.Close()
 				defer close(errc)
 
 				err := cli.DownloadMap(ctx, datapath.Data(maps.Dir), name)
 				if err != nil {
-					c.mapsend.log.Println("download failed:", err)
+					c.mapsend.log.Error("download failed", "err", err)
 					errc <- err
 				} else {
-					c.mapsend.log.Println("download complete")
+					c.mapsend.log.Info("download complete")
 				}
 			}()
 		}

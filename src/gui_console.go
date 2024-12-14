@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"log/slog"
+	"strings"
 
 	"github.com/opennox/libs/client/keybind"
 	"github.com/opennox/libs/console"
+	"github.com/opennox/libs/log"
 
 	"github.com/opennox/opennox/v1/client/gui"
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -23,6 +26,7 @@ var (
 
 func init() {
 	consoleMux.Add(guiCon)
+	log.AddHandler(guiCon)
 	guiCon.c.Register(&console.Command{
 		Token: "clear", HelpID: "clearhelp",
 		Flags: console.ClientServer,
@@ -51,6 +55,8 @@ func nox_gui_console_Hide_4512B0() int {
 	return bool2int(guiCon.Hide())
 }
 
+var _ log.Handler = (*guiConsole)(nil)
+
 type guiConsole struct {
 	c           *console.Console
 	password    string
@@ -64,6 +70,35 @@ type guiConsole struct {
 
 func (c *guiConsole) Enable(v bool) {
 	c.enabled = v
+}
+
+func (c *guiConsole) Enabled(ctx context.Context, level slog.Level) bool {
+	const cur = slog.LevelWarn
+	return c.enabled && level >= cur
+}
+
+func (c *guiConsole) Handle(ctx context.Context, r slog.Record) error {
+	if !c.Enabled(ctx, r.Level) {
+		return nil
+	}
+	const logFlags = log.PrintSys
+	var buf strings.Builder
+	if err := log.PrintRecord(&buf, logFlags, r); err != nil {
+		return err
+	}
+	cl := console.ColorLightYellow
+	switch r.Level {
+	case slog.LevelDebug:
+		cl = console.ColorDarkGrey
+	case slog.LevelInfo:
+		cl = console.ColorLightGrey
+	case slog.LevelWarn:
+		cl = console.ColorYellow
+	case slog.LevelError:
+		cl = console.ColorRed
+	}
+	c.Print(cl, buf.String())
+	return nil
 }
 
 func (c *guiConsole) Print(cl console.Color, str string) {

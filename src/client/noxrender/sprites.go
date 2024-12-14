@@ -8,6 +8,7 @@ import (
 	"image"
 	"image/jpeg"
 	"image/png"
+	"log/slog"
 	"os"
 	"path"
 	"path/filepath"
@@ -111,7 +112,7 @@ func (img *Image) loadOverride() []byte {
 
 	im, err := img.c.ImageByBagSection(sect, offs)
 	if err != nil {
-		log.Println(err)
+		img.c.log.Error("cannot load sprite", "err", err)
 		return nil
 	} else if im == nil {
 		return nil
@@ -206,6 +207,7 @@ func (b *RenderSprites) ReadVideoBag() error {
 }
 
 type RenderSprites struct {
+	log      *slog.Logger
 	bag      *bag.File
 	byHandle map[ImageHandle]*Image
 	byIndex  []*Image
@@ -217,7 +219,8 @@ type RenderSprites struct {
 	zip    *zip.ReadCloser
 }
 
-func (b *RenderSprites) init() {
+func (b *RenderSprites) init(log *slog.Logger) {
+	b.log = log
 	b.byHandle = make(map[ImageHandle]*Image)
 }
 
@@ -383,7 +386,7 @@ func (b *RenderSprites) ImageByBagSection(sect, offs int) (*pcx.Image, error) {
 	b.once.Do(func() {
 		if err := b.loadAndIndexVideoBag(); err != nil {
 			b.err = err
-			log.Println(err)
+			b.log.Error("cannot index bag file", "err", err)
 		}
 	})
 	if b.err != nil {

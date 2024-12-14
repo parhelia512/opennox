@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"math"
 	"strconv"
 	"strings"
@@ -218,6 +219,7 @@ func RegisterObjectXfer(name string, fnc unsafe.Pointer) {
 }
 
 type serverObjTypes struct {
+	log   *slog.Logger
 	first *ObjectType
 	byInd []*ObjectType
 	byID  map[string]*ObjectType
@@ -258,7 +260,8 @@ type serverObjTypes struct {
 	ClientTypeByID func(id string) int
 }
 
-func (s *serverObjTypes) init() {
+func (s *serverObjTypes) init(log *slog.Logger) {
+	s.log = log
 	s.dropSoundTable = make(map[uint16]sound.ID)
 	s.pickupSoundTable = make(map[uint16]sound.ID)
 	s.playerAnimFrames = make([][2]int, len(playerAnimTypes))
@@ -387,6 +390,7 @@ func (s *serverObjTypes) ReadObjectType(thg *things.Thing) error {
 	}
 	typ.ind = uint16(len(s.byInd))
 	s.byInd = append(s.byInd, typ)
+	log := s.log.With("type", typ.ID(), "id", typ.Ind())
 
 	if thg.Mass != 0 {
 		typ.Mass = float32(thg.Mass)
@@ -414,33 +418,33 @@ func (s *serverObjTypes) ReadObjectType(thg *things.Thing) error {
 		typ.Speed = fv
 		typ.SpeedBase = fv
 	}
-	for _, s := range thg.Class {
-		v, err := object.ParseClass(string(s))
+	for _, c := range thg.Class {
+		v, err := object.ParseClass(string(c))
 		if err != nil {
-			Log.Printf("%q (%d): %v", typ.ID(), typ.Ind(), err)
+			log.Warn("cannot parse", "class", c, "err", err)
 		}
 		typ.class |= v
 	}
-	for _, s := range thg.SubClass {
-		v, err := object.ParseSubClass(string(s))
+	for _, c := range thg.SubClass {
+		v, err := object.ParseSubClass(string(c))
 		if err != nil {
-			Log.Printf("%q (%d): %v", typ.ID(), typ.Ind(), err)
+			log.Warn("cannot parse", "subclass", c, "err", err)
 		}
 		typ.subclass |= v
 	}
-	for _, s := range thg.Flags {
-		v, err := object.ParseFlag(string(s))
+	for _, c := range thg.Flags {
+		v, err := object.ParseFlag(string(c))
 		if err != nil {
-			Log.Printf("%q (%d): %v", typ.ID(), typ.Ind(), err)
+			log.Warn("cannot parse", "flag", c, "err", err)
 		}
 		typ.flags |= v
 	}
 	if len(thg.Material) != 0 {
 		typ.material = 0
-		for _, s := range thg.Material {
-			v, err := object.ParseMaterial(string(s))
+		for _, c := range thg.Material {
+			v, err := object.ParseMaterial(string(c))
 			if err != nil {
-				Log.Printf("%q (%d): %v", typ.ID(), typ.Ind(), err)
+				log.Warn("cannot parse", "material", c, "err", err)
 			}
 			typ.material |= v
 		}

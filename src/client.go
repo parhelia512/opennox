@@ -2,6 +2,7 @@ package opennox
 
 import (
 	"image"
+	"log/slog"
 	"unsafe"
 
 	"github.com/opennox/libs/console"
@@ -29,8 +30,8 @@ const (
 	configVideoStretch   = "video.stretch"
 )
 
-func NewClient(pr console.Printer, srv *Server) (*Client, error) {
-	cl := client.NewClient(pr, srv.Server)
+func NewClient(log *slog.Logger, pr console.Printer, srv *Server) (*Client, error) {
+	cl := client.NewClient(log, pr, srv.Server)
 	c := &Client{
 		Client: cl,
 		srv:    srv,

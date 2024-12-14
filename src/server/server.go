@@ -2,13 +2,14 @@ package server
 
 import (
 	"context"
+	"log/slog"
 	"net/netip"
 	"sync/atomic"
 	"time"
 	"unsafe"
 
 	"github.com/opennox/libs/common"
-	"github.com/opennox/libs/log"
+	noxlog "github.com/opennox/libs/log"
 	"github.com/opennox/libs/noxnet/netxfer"
 	"github.com/opennox/libs/platform"
 	"github.com/opennox/libs/strman"
@@ -23,8 +24,6 @@ import (
 	"github.com/opennox/opennox/v1/internal/netstr"
 )
 
-var Log = log.New("server")
-
 var (
 	serverLast uintptr // atomic
 	servers    gsync.Map[uintptr, *Server]
@@ -35,8 +34,14 @@ func getServer(h uintptr) *Server {
 	return s
 }
 
-func New(pr console.Printer, sm *strman.StringManager) *Server {
+func New(log *slog.Logger, pr console.Printer, sm *strman.StringManager) *Server {
+	if log == nil {
+		log = noxlog.New("server").Logger
+	} else {
+		log = noxlog.WithSystem(log, "server")
+	}
 	s := &Server{
+		Log:     log,
 		Printer: pr, sm: sm,
 		loopHooks: make(chan func()),
 		port:      common.GamePort,
@@ -57,7 +62,7 @@ func New(pr console.Printer, sm *strman.StringManager) *Server {
 	s.NetStr.GameFrame = s.Frame
 	s.NetStr.KeyRand = s.Rand.Logic.IntClamp
 	s.NetStr.PacketDropRand = s.Rand.Other.Int
-	s.Types.init()
+	s.Types.init(s.Log)
 	s.Objs.init(s.handle)
 	s.Modif.init(sm)
 	s.Players.init(s)
@@ -74,6 +79,7 @@ func New(pr console.Printer, sm *strman.StringManager) *Server {
 type ObjectScriptID uint32
 
 type Server struct {
+	Log *slog.Logger
 	console.Printer
 	handle     uintptr
 	sm         *strman.StringManager

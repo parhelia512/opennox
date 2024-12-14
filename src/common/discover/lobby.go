@@ -2,6 +2,7 @@ package discover
 
 import (
 	"context"
+	"log/slog"
 	"net/netip"
 
 	"github.com/opennox/lobby"
@@ -22,20 +23,21 @@ func newLobbyClient() *lobby.Client {
 
 func init() {
 	const backend = "lobby"
-	RegisterBackend(backend, func(ctx context.Context, out chan<- Server) error {
+	RegisterBackend(backend, func(ctx context.Context, log *slog.Logger, out chan<- Server) error {
 		cli := newLobbyClient()
 		rooms, err := cli.ListGames(ctx)
 		if err != nil {
 			return err
 		}
 		for _, g := range rooms {
+			log := log.With("addr", g.Address, "name", g.Name)
 			ip, err := netip.ParseAddr(g.Address)
 			if err != nil {
-				Log.Printf("lobby: %q (%s): %v", g.Address, g.Name, err)
+				log.Error("cannot parse address", "err", err)
 				continue
 			}
 			g := g.Game
-			Log.Printf("lobby: %s (%s)", ip, g.Name)
+			log.Info("result")
 			select {
 			case <-ctx.Done():
 				return ctx.Err()

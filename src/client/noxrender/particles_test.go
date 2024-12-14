@@ -8,6 +8,7 @@ import (
 	"image/draw"
 	"image/png"
 	"io"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"testing"
@@ -76,7 +77,7 @@ func TestDrawParticle(t *testing.T) {
 			pix := newBlack16(csz.X, csz.Y)
 			d := newRenderData(csz.X, csz.Y)
 
-			r := NewRender(nil)
+			r := NewRender(slog.Default(), nil)
 			r.SetPixBuffer(pix)
 			r.SetData(d)
 

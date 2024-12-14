@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"log/slog"
 	"path/filepath"
 	"strings"
 	"unsafe"
@@ -61,9 +62,9 @@ func init() {
 	nat.LogUPNP = log.New("nat-upnp").Logger
 }
 
-func NewServer(pr console.Printer, sm *strman.StringManager) *Server {
+func NewServer(log *slog.Logger, pr console.Printer, sm *strman.StringManager) *Server {
 	s := &Server{
-		Server: server.New(pr, sm),
+		Server: server.New(log, pr, sm),
 	}
 	s.Server.ExtServer = unsafe.Pointer(s)
 	s.Server.CurrentMapXxx = s.nox_server_currentMapGetFilename_409B30

@@ -2,12 +2,13 @@ package client
 
 import (
 	"image"
+	"log/slog"
 	"sync/atomic"
 	"unsafe"
 
 	"github.com/opennox/libs/client/seat"
 	"github.com/opennox/libs/console"
-	"github.com/opennox/libs/log"
+	noxlog "github.com/opennox/libs/log"
 	"github.com/opennox/libs/strman"
 
 	"github.com/opennox/opennox/v1/client/gui"
@@ -21,10 +22,6 @@ import (
 )
 
 var (
-	Log = log.New("client")
-)
-
-var (
 	clientLast uintptr // atomic
 	clients    gsync.Map[uintptr, *Client]
 )
@@ -34,10 +31,16 @@ func getClient(h uintptr) *Client {
 	return s
 }
 
-func NewClient(pr console.Printer, s *server.Server) *Client {
+func NewClient(log *slog.Logger, pr console.Printer, s *server.Server) *Client {
+	if log == nil {
+		log = noxlog.New("client").Logger
+	} else {
+		log = noxlog.WithSystem(log, "client")
+	}
 	c := &Client{
+		Log:     log,
 		Printer: pr, Server: s,
-		r:          noxrender.NewRender(s),
+		r:          noxrender.NewRender(log, s),
 		Cursor:     gui.CursorSelect,
 		CursorPrev: gui.Cursor17,
 	}
@@ -57,6 +60,7 @@ func NewClient(pr console.Printer, s *server.Server) *Client {
 }
 
 type Client struct {
+	Log *slog.Logger
 	console.Printer
 	handle     uintptr
 	ExtClient  unsafe.Pointer // populated by the caller of New
@@ -105,7 +109,7 @@ func (c *Client) GameAddStateCode(code gui.StateID) {
 	if !c.state.Push(code) {
 		return
 	}
-	Log.Println("state code:", code)
+	c.Log.Info("new state", "cur", code)
 }
 
 func (c *Client) GameGetStateCode() gui.StateID {
@@ -114,7 +118,7 @@ func (c *Client) GameGetStateCode() gui.StateID {
 
 func (c *Client) GamePopState() {
 	c.state.Pop()
-	Log.Println("state code:", c.state.Current())
+	c.Log.Info("pop state", "cur", c.state.Current())
 }
 
 func (c *Client) GamePopStateUntil(code gui.StateID) {

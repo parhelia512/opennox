@@ -42,11 +42,11 @@ func listenOnFreePort(log *log.Logger, port int) (net.PacketConn, int, error) {
 	}
 }
 
-func Listen(addr netip.AddrPort) (net.PacketConn, error) {
+func Listen(addr netip.AddrPort) (*net.UDPConn, error) {
 	return listen(Log, addr)
 }
 
-func listen(log *log.Logger, addr netip.AddrPort) (net.PacketConn, error) {
+func listen(log *log.Logger, addr netip.AddrPort) (*net.UDPConn, error) {
 	log.Printf("listen udp %s", addr)
 	l, err := net.ListenUDP("udp4", net.UDPAddrFromAddrPort(addr))
 	if err != nil {
