@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/opennox/libs/common"
 	"github.com/opennox/libs/console"
 	"github.com/opennox/libs/datapath"
 	"github.com/opennox/libs/ifs"
@@ -242,7 +241,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *
 		if noxflags.HasGame(noxflags.GameModeQuest) && pl.Index() != server.HostPlayerIndex && pl.IsActive() && u != nil && u.UpdateDataPlayer().Field138 == 1 {
 			s.PlayerDisconnect(pl, 2)
 		} else {
-			fname := datapath.Save(common.SaveDir, "_temp_.dat")
+			fname := datapath.Save("_temp_.dat")
 			defer ifs.Remove(fname)
 			if savePlayerData(fname, pl.PlayerIndex()) {
 				sub41CFA0(fname, pl.PlayerIndex())
