@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"image"
 	"math"
 	"unsafe"
@@ -156,6 +157,14 @@ func (c *clientDrawables) freeIndex2D() {
 
 func (c *clientDrawables) FirstList1() *Drawable {
 	return c.List1
+}
+
+func (c *clientDrawables) AllList1() []*Drawable {
+	var out []*Drawable
+	for dr := c.List1; dr != nil; dr = dr.NextPtr {
+		out = append(out, dr)
+	}
+	return out
 }
 
 func (c *clientDrawables) FirstList2() *Drawable {
@@ -891,4 +900,27 @@ func (s *Drawable) LinkType(typeID int, typ *ObjectType) {
 		d.Field_112_0 = -1
 		d.Field_112_2 = -1
 	}
+}
+
+type debugObject struct {
+	NetCode int          `json:"netcode"`
+	Class   object.Class `json:"class"`
+	Flags   object.Flags `json:"flags,omitempty"`
+	Pos     image.Point  `json:"pos"`
+}
+
+func (s *Drawable) dump() *debugObject {
+	if s == nil {
+		return nil
+	}
+	return &debugObject{
+		NetCode: int(s.NetCode32),
+		Class:   s.Class(),
+		Flags:   s.Flags(),
+		Pos:     s.Pos(),
+	}
+}
+
+func (s *Drawable) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.dump())
 }
