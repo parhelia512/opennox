@@ -79,7 +79,7 @@ func nox_game_exit_xxx2() {
 	nox_game_exit_xxx_43DE60()
 }
 
-func mainloopFrameLimit() {
+func (c *Client) mainloopFrameLimit() {
 	if !useFrameLimit {
 		return
 	}
@@ -88,7 +88,7 @@ func mainloopFrameLimit() {
 			return
 		}
 		if dt := nox_ticks_getNext(); dt > 0 {
-			noxServer.LoopSleep(dt)
+			c.srv.LoopSleep(dt)
 		}
 		return
 	}
@@ -99,7 +99,7 @@ func mainloopStop() {
 	mainloopStopError = true
 }
 
-func mainloop_43E290(exitPath bool) {
+func (c *Client) mainloop_43E290(exitPath bool) {
 	if debugMainloop {
 		log.Printf("mainloop_43E290 (%s)\n", caller(1))
 		defer func() {
@@ -109,19 +109,16 @@ func mainloop_43E290(exitPath bool) {
 	mainloopStopError = false
 	mainloopContinue = true
 	continueMenuOrHost = true
-	*memmap.PtrUint32(0x5D4594, 816400) = noxServer.SecToFrames(60)
+	c.srv.mainloopInit()
 
 	// XXX
-	noxClient.mapsend.setDownloading(false)
+	c.mapsend.setDownloading(false)
 
 mainloop:
 	for mainloopContinue && !mainloopStopError {
-		cntMainloop.Inc()
-		if mainloopHook != nil {
-			mainloopHook()
-		}
-		noxServer.RunLoopHooks()
-		if noxClient.mapsend.Downloading() {
+		c.srv.mainloopPre()
+
+		if c.mapsend.Downloading() {
 			if done, err := noxClient.mapDownloadLoop(false); !done {
 				continue mainloop
 			} else if err != nil {
@@ -140,7 +137,7 @@ mainloop:
 					gameLog.Println("change game map:", err)
 				}
 				// XXX
-				if noxClient.mapsend.Downloading() {
+				if c.mapsend.Downloading() {
 					continue mainloop
 				}
 				mainloopContinue = false
@@ -151,18 +148,18 @@ mainloop:
 				goto MAINLOOP_EXIT
 			}
 		}
-		noxServer.SetRateLimit(30)
-		noxClient.processInput()
-		noxClient.nox_game_cdMaybeSwitchState_413800()
+		c.Server.SetRateLimit(30)
+		c.processInput()
+		c.nox_game_cdMaybeSwitchState_413800()
 
-		if !noxServer.Update() {
+		if !c.srv.Update() {
 			goto MAINLOOP_EXIT
 		}
-		if !noxClient.Update() {
+		if !c.Update() {
 			goto MAINLOOP_EXIT
 		}
 
-		mainloopFrameLimit()
+		c.mainloopFrameLimit()
 		if mainloopContinue && !mainloopStopError {
 			// unwind the stack and continue the mainloop
 			continue mainloop
@@ -178,12 +175,12 @@ mainloop:
 			if err != nil {
 				log.Println(err)
 				if again {
-					cmainLoop()
+					c.cmainLoop()
 				}
 				continue mainloop
 			}
 			if again {
-				mainloop_43E290(true)
+				c.mainloop_43E290(true)
 			}
 			continue mainloop
 		}
@@ -195,9 +192,51 @@ mainloop:
 			continue mainloop
 		}
 		// repeat
-		cmainLoop()
+		c.cmainLoop()
 		continue mainloop
 	}
+}
+
+func (s *Server) mainloopInit() {
+	*memmap.PtrUint32(0x5D4594, 816400) = s.SecToFrames(60)
+}
+
+func (s *Server) mainloopPre() {
+	cntMainloop.Inc()
+	if mainloopHook != nil {
+		mainloopHook()
+	}
+	s.RunLoopHooks()
+}
+
+func (s *Server) MainLoop() error {
+	noxflags.SetGame(noxflags.GameHost)
+	noxflags.SetGame(noxflags.GameOnline)
+	s.nox_xxx_gameSetMapPath_409D70("so_beach.map")
+	setVersionCode(NOX_CLIENT_VERS_CODE)
+	s.Rand.Reset()
+	s.SetInitialFrame()
+	if err := s.newSession(); err != nil {
+		return err
+	}
+	//if err := initGameSession435CC0(); err != nil {
+	//	return err
+	//}
+	if err := s.InitialMapLoad(); err != nil {
+		return err
+	}
+	legacy.Sub_43AA70()
+	s.mainloopInit()
+	for !mainloopStopError {
+		s.mainloopPre()
+
+		s.SetRateLimit(30)
+		if !s.Update() {
+			break
+		}
+		s.RateWait()
+	}
+	return nil
 }
 
 func mainloopConnectOrHost() (again bool, _ error) {
@@ -331,7 +370,7 @@ func caller(skip int) string {
 	return fmt.Sprintf("%s, %s:%d", fnc, filepath.Base(file), line)
 }
 
-func cmainLoop() {
+func (c *Client) cmainLoop() {
 	if debugMainloop {
 		log.Printf("cmainLoop (%s)\n", caller(1))
 		defer func() {
@@ -352,7 +391,7 @@ func cmainLoop() {
 		g_v20 = false
 	}
 	noxAudioServe()
-	mainloop_43E290(false)
+	c.mainloop_43E290(false)
 }
 
 func CONNECT_OR_HOST() error {

@@ -686,7 +686,6 @@ extern unsigned int dword_5d4594_2650652;
 extern void* dword_5d4594_1548532;
 extern unsigned int dword_5d4594_1556144;
 extern unsigned int dword_5d4594_251744;
-extern unsigned int dword_5d4594_815052;
 extern unsigned int dword_5d4594_1049508;
 extern unsigned int nox_client_translucentFrontWalls_805844;
 

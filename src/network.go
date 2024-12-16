@@ -217,11 +217,8 @@ func (s *Server) listen(ctx context.Context, port int) error {
 
 func nox_xxx_servNetInitialPackets_552A80_discover(src, dst []byte) int {
 	// received a lobby info request from the client
-	if true {
-		// send server info packet
-		return legacy.Nox_server_makeServerInfoPacket_554040(src, dst)
-	}
-	return 0
+	// send server info packet
+	return legacy.Nox_server_makeServerInfoPacket_554040(src, dst)
 }
 
 func netSendGauntlet() {

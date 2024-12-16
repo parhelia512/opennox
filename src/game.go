@@ -718,15 +718,14 @@ func nox_client_getChatMap_49FF40() string {
 	return defaultChatMap
 }
 
-func (s *Server) nox_xxx_servInitialMapLoad_4D17F0() bool {
+func (s *Server) InitialMapLoad() error {
 	legacy.Sub_4E79B0(0)
 	if s.nox_server_currentMapGetFilename_409B30() == "" {
 		s.nox_xxx_gameSetMapPath_409D70("tutorial.map")
 	}
 	s.MapSend.Reset()
 	if err := s.nox_xxx_mapExitAndCheckNext_4D1860_server(); err != nil {
-		gameLog.Println(err)
-		return false
+		return err
 	}
 	if debugMainloop {
 		s.Log.Debug("gameStateFunc = nox_xxx_gameTick_4D2580_server")
@@ -736,6 +735,14 @@ func (s *Server) nox_xxx_servInitialMapLoad_4D17F0() bool {
 	noxflags.SetGame(noxflags.GameFlag18)
 	legacy.Nox_xxx_netGameSettings_4DEF00()
 	legacy.Nox_server_gameUnsetMapLoad_40A690()
+	return nil
+}
+
+func (s *Server) nox_xxx_servInitialMapLoad_4D17F0() bool {
+	if err := s.InitialMapLoad(); err != nil {
+		gameLog.Println(err)
+		return false
+	}
 	return true
 }
 
