@@ -378,7 +378,7 @@ func guiOpenNPCDialogRaw(title string, snd sound.ID, pic string, flags server.Di
 	legacy.Nox_xxx_wnd_46ABB0(root, 1)
 	root.ShowModal()
 	*memmap.PtrUint32(0x5D4594, 1123528) = uint32(snd)
-	legacy.Nox_xxx_playDialogFile_44D900(alloc.GoString((*byte)(*memmap.PtrPtr(0x5D4594, 1115312))), 100)
+	legacy.Dialogs.PlayFile(alloc.GoString((*byte)(*memmap.PtrPtr(0x5D4594, 1115312))), 100)
 	legacy.Set_dword_5d4594_1123520(1)
 }
 

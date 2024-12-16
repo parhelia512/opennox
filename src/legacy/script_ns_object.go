@@ -38,6 +38,3 @@ func Sub_516D00(a1 *server.Object) {
 func Nox_xxx_netSendChat_528AC0(a1 *server.Object, a2 string, a3 uint16) {
 	C.nox_xxx_netSendChat_528AC0(asObjectC(a1), internWStr(a2), C.ushort(a3))
 }
-func Nox_xxx_playDialogFile_44D900(a1 string, a2 int) {
-	C.nox_xxx_playDialogFile_44D900(internCStr(a1), C.int(a2))
-}
