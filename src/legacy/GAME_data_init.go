@@ -19,7 +19,6 @@ package legacy
 #include "GAME5_2.h"
 #include "client__system__parsecmd.h"
 #include "common__object__modifier.h"
-#include "server__system__cscrfunc.h"
 #include "server__script__script.h"
 #include "client__draw__animdraw.h"
 #include "client__draw__canidraw.h"

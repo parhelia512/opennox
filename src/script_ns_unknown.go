@@ -1,9 +1,16 @@
 package opennox
 
-func (s noxScriptNS) Unused5e(str string) int {
-	//TODO implement me
-	panic("implement me")
+import (
+	"github.com/opennox/libs/strman"
+
+	"github.com/opennox/opennox/v1/legacy"
+)
+
+func (s noxScriptNS) Unused5e(id string) int {
+	str := s.s.Strings().GetStringInFile(strman.ID(id), "CScrFunc.c")
+	return legacy.Sub_512E80(str)
 }
+
 func (s noxScriptNS) Unused74(arg1 int, arg2 int) {}
 
 func (s noxScriptNS) Unknownb8(id int) bool {

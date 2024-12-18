@@ -2,7 +2,6 @@ package legacy
 
 /*
 #include "defs.h"
-int nox_script_Fn5E_513F70();
 int nox_script_SetQuestInt_514BE0();
 int nox_script_SetQuestFloat_514C10();
 int nox_script_GetQuestInt_514C40();
@@ -28,6 +27,7 @@ int nox_script_OblivionGive_516890();
 int nox_script_PlayerIsTrading_5166E0();
 int nox_script_SetShopkeeperGreet_516BE0();
 void nox_script_StartupScreen_516600_A();
+int sub_512E80(wchar2_t* a1);
 */
 import "C"
 import (
@@ -76,8 +76,12 @@ func Nox_script_StartupScreen_516600_A() {
 	C.nox_script_StartupScreen_516600_A()
 }
 
+func Sub_512E80(str string) int {
+	cstr, _ := CWString(str)
+	return int(C.sub_512E80(cstr))
+}
+
 var noxScriptBuiltins = [asm.BuiltinGetScore + 1]noxscript.Builtin{
-	asm.BuiltinUnused5e:            wrapScriptC(C.nox_script_Fn5E_513F70),
 	asm.BuiltinSetQuestStatus:      wrapScriptC(C.nox_script_SetQuestInt_514BE0),
 	asm.BuiltinSetQuestStatusFloat: wrapScriptC(C.nox_script_SetQuestFloat_514C10),
 	asm.BuiltinGetQuestStatus:      wrapScriptC(C.nox_script_GetQuestInt_514C40),

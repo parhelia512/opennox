@@ -40,7 +40,7 @@ int dword_5d4594_2386848 = 0;
 unsigned int dword_5d4594_2386852 = 0;
 
 //----- (00512E80) --------------------------------------------------------
-int sub_512E80(int a1) {
+int sub_512E80(wchar2_t* a1) {
 	int v1; // eax
 
 	v1 = dword_5d4594_1599628;
@@ -563,19 +563,5 @@ int nox_script_SetShopkeeperGreet_516BE0() {
 	if (v2) {
 		sub_548FE0(v2, nox_script_getString_512E40(v0));
 	}
-	return 0;
-}
-
-//----- (00513F70) --------------------------------------------------------
-int nox_script_Fn5E_513F70() {
-	int v0;      // eax
-	wchar2_t* v1; // eax
-	int v2;      // eax
-
-	v0 = nox_script_pop();
-	v1 = nox_strman_loadString_40F1D0(nox_script_getString_512E40(v0), 0,
-									  "C:\\NoxPost\\src\\Server\\System\\CScrFunc.c", 2901);
-	v2 = sub_512E80((int)v1);
-	nox_script_push(v2);
 	return 0;
 }

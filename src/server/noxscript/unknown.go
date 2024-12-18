@@ -12,6 +12,7 @@ func init() {
 	Register(asm.BuiltinUnused5b, nsUnused5b)
 	Register(asm.BuiltinUnused5c, nsUnused5c)
 	Register(asm.BuiltinUnused5d, nsUnused5d)
+	Register(asm.BuiltinUnused5e, nsUnused5e)
 	Register(asm.BuiltinUnused74, nsUnused74)
 	Register(asm.BuiltinUnknownc4, nsUnknownc4)
 }
@@ -72,6 +73,13 @@ func nsUnused5d(s VM) int {
 	a2 := int(s.PopI32())
 	a1 := int(s.PopI32())
 	s.NoxScript().Unused5d(a1, a2)
+	return 0
+}
+
+func nsUnused5e(s VM) int {
+	a1 := s.PopString()
+	val := s.NoxScript().Unused5e(a1)
+	s.PushI32(int32(val))
 	return 0
 }
 
