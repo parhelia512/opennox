@@ -1026,6 +1026,10 @@ func (obj *Object) InitDataGlyph() *GlyphInitData {
 	return initDataAs[GlyphInitData](obj)
 }
 
+func (obj *Object) InitDataGold() *GoldInitData {
+	return initDataAs[GoldInitData](obj)
+}
+
 func (obj *Object) InitDataShopkeeper() *ShopkeeperInitData {
 	return initDataAs[ShopkeeperInitData](obj)
 }

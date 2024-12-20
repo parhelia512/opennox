@@ -795,6 +795,9 @@ func (p *Player) NetCode() int {
 }
 
 func (p *Player) Gold() int {
+	if p == nil {
+		return 0
+	}
 	return int(p.GoldVal)
 }
 

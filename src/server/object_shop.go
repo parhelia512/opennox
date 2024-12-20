@@ -1,5 +1,9 @@
 package server
 
+type GoldInitData struct {
+	Amount uint32 // 0, 0
+}
+
 type ShopkeeperInitData struct {
 	Field0    uint32   // 0, 0
 	Field4    uint32   // 1, 4

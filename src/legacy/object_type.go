@@ -45,7 +45,7 @@ func init() {
 	server.RegisterObjectInit("ShopkeeperInit", C.nox_xxx_unitMonsterInit_4F0040, unsafe.Sizeof(server.ShopkeeperInitData{}))
 	server.RegisterObjectInit("SkullInit", C.sub_4F0450, 8)
 	server.RegisterObjectInit("DirectionInit", C.sub_4F0490, 8)
-	server.RegisterObjectInit("GoldInit", C.nox_xxx_unitInitGold_4F04B0, 4)
+	server.RegisterObjectInit("GoldInit", C.nox_xxx_unitInitGold_4F04B0, unsafe.Sizeof(server.GoldInitData{}))
 }
 
 //export nox_xxx_unitDefGetCount_4E3AC0
@@ -158,6 +158,9 @@ func sub_415EC0(a1 *C.char) int {
 
 func Get_nox_xxx_XFerInvLight_4F5AA0() unsafe.Pointer {
 	return unsafe.Pointer(C.nox_xxx_XFerInvLight_4F5AA0)
+}
+func Get_nox_xxx_unitInitGold_4F04B0() unsafe.Pointer {
+	return unsafe.Pointer(C.nox_xxx_unitInitGold_4F04B0)
 }
 func Nox_call_objectType_new_go(a1 unsafe.Pointer, a2 *server.Object) {
 	C.nox_call_objectType_new_go((*[0]byte)(a1), asObjectC(a2))

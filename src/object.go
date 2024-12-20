@@ -1266,11 +1266,36 @@ func (obj *Object) GetGold() int {
 	if obj == nil {
 		return 0
 	}
-	return legacy.Nox_object_getGold_4FA6D0(obj.SObj())
+	if obj.Init == legacy.Get_nox_xxx_unitInitGold_4F04B0() {
+		idata := obj.SObj().InitDataGold()
+		return int(idata.Amount)
+	}
+	if obj.Class().Has(object.ClassPlayer) {
+		ud := obj.SObj().UpdateDataPlayer()
+		return ud.Player.Gold()
+	}
+	return 0
+}
+
+func (obj *Object) SetGold(amount int) {
+	if obj == nil {
+		return
+	}
+	if obj.Init == legacy.Get_nox_xxx_unitInitGold_4F04B0() {
+		idata := obj.SObj().InitDataGold()
+		idata.Amount = uint32(amount)
+		return
+	}
+	obj.ChangeGold(amount - obj.GetGold())
 }
 
 func (obj *Object) ChangeGold(delta int) {
 	if obj == nil {
+		return
+	}
+	if obj.Init == legacy.Get_nox_xxx_unitInitGold_4F04B0() {
+		idata := obj.SObj().InitDataGold()
+		idata.Amount = uint32(int(idata.Amount) + delta)
 		return
 	}
 	legacy.Nox_object_setGold_4FA620(obj.SObj(), delta)
