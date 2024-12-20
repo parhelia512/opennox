@@ -14,10 +14,12 @@ import (
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/things"
+	"github.com/opennox/libs/types"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/sound"
 	"github.com/opennox/opennox/v1/legacy/common/alloc"
+	"github.com/opennox/opennox/v1/legacy/common/ccall"
 )
 
 var (
@@ -197,11 +199,42 @@ func RegisterObjectDeathParse(name string, fnc ObjectParseFunc) {
 	deathParseFuncs[name] = fnc
 }
 
-func RegisterObjectDrop(name string, fnc unsafe.Pointer) {
+type DropFuncPtr struct {
+	Ptr unsafe.Pointer
+}
+
+func (p DropFuncPtr) Get() DropFunc {
+	if p.Ptr == nil {
+		return nil
+	}
+	return objDrop.Get(p.Ptr)
+}
+
+type DropFunc func(obj, obj2 *Object, pos types.Pointf) bool
+
+var objDrop = ccall.NewFuncs(func(cfnc unsafe.Pointer) DropFunc {
+	return func(obj, obj2 *Object, pos types.Pointf) bool {
+		cpos, free := alloc.New(types.Pointf{})
+		defer free()
+		*cpos = pos
+
+		return ccall.CallIntPtr3(cfnc, obj.CObj(), obj2.CObj(), unsafe.Pointer(cpos)) != 0
+	}
+})
+
+func RegisterObjectDropC(name string, cfnc unsafe.Pointer) {
 	if _, ok := dropFuncs[name]; ok {
 		panic("already registered")
 	}
-	dropFuncs[name] = fnc
+	dropFuncs[name] = cfnc
+}
+
+func RegisterObjectDrop(name string, cfnc unsafe.Pointer, fnc DropFunc) {
+	if _, ok := dropFuncs[name]; ok {
+		panic("already registered")
+	}
+	dropFuncs[name] = cfnc
+	objDrop.Register(cfnc, fnc)
 }
 
 func RegisterObjectPickup(name string, fnc unsafe.Pointer) {
@@ -882,7 +915,7 @@ type ObjectType struct {
 	DamageSound     unsafe.Pointer
 	Death           unsafe.Pointer
 	DeathData       unsafe.Pointer
-	Drop            unsafe.Pointer
+	Drop            DropFuncPtr
 	Init            unsafe.Pointer
 	InitData        unsafe.Pointer
 	InitDataSize    uintptr
@@ -1169,7 +1202,7 @@ func (t *ObjectType) parseDrop(d *things.ProcFunc) error {
 		// TODO: add "unknown" drop as a nop types
 		return nil
 	}
-	t.Drop = fnc
+	t.Drop.Ptr = fnc
 	if parse, ok := dropParseFuncs[d.Name]; ok {
 		if err := parse(t, d.Args); err != nil {
 			return err

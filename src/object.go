@@ -875,19 +875,8 @@ func (obj *Object) CallPickup(it server.Obj, a3, a4 int) bool {
 	return obj.SObj().CallPickup(server.ToObject(it), a3, a4)
 }
 
-func (obj *Object) CallDrop(it server.Obj, pos types.Pointf) int {
-	if obj.Drop == nil {
-		return 0
-	}
-	switch obj.Drop {
-	case unsafe.Pointer(legacy.Get_nox_objectDropAudEvent_4EE2F0()):
-		cpos, free := alloc.New(types.Pointf{})
-		defer free()
-		*cpos = pos
-		return int(nox_objectDropAudEvent_4EE2F0(obj.SObj(), server.ToObject(it), cpos))
-	default:
-		return obj.SObj().CallDrop(it, pos)
-	}
+func (obj *Object) CallDrop(it server.Obj, pos types.Pointf) bool {
+	return obj.SObj().CallDrop(it, pos)
 }
 
 func (obj *Object) forceDrop(item *server.Object) int { // nox_xxx_invForceDropItem_4ED930
