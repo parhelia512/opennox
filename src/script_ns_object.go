@@ -6,6 +6,7 @@ import (
 
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
+	"github.com/opennox/libs/strman"
 	"github.com/opennox/libs/types"
 	ns4 "github.com/opennox/noxscript/ns/v4"
 	"github.com/opennox/noxscript/ns/v4/class"
@@ -635,6 +636,10 @@ func (obj nsObj) RetreatLevel(percent float32) {
 
 func (obj nsObj) ResumeLevel(percent float32) {
 	obj.Object.SetRegroupLevel(percent)
+}
+
+func (obj nsObj) SetShopText(id ns4.StringID) {
+	obj.Object.SetShopText(strman.ID(id))
 }
 
 func (obj nsObj) OnEvent(ev ns4.ObjectEvent, fnc ns4.Func) {

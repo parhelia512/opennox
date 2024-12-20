@@ -550,18 +550,3 @@ LABEL_7:
 	}
 	return 0;
 }
-
-//----- (00516BE0) --------------------------------------------------------
-int nox_script_SetShopkeeperGreet_516BE0() {
-	int v0; // esi
-	int v1; // eax
-	int v2; // eax
-
-	v0 = nox_script_pop();
-	v1 = nox_script_pop();
-	v2 = nox_server_scriptValToObjectPtr_511B60(v1);
-	if (v2) {
-		sub_548FE0(v2, nox_script_getString_512E40(v0));
-	}
-	return 0;
-}

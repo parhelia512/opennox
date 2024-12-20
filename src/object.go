@@ -1369,6 +1369,10 @@ func (obj *Object) SetColor(ind int, cl color.Color) {
 	obj.SObj().SetColor(ind, cl)
 }
 
+func (obj *Object) SetShopText(id strman.ID) {
+	obj.SObj().SetShopText(id)
+}
+
 func sub_534020(a1 *server.Object) int32 {
 	return int32((a1.ObjSubClass >> 10) & 1)
 }

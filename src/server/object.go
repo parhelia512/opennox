@@ -11,6 +11,7 @@ import (
 
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/script"
+	"github.com/opennox/libs/strman"
 	"github.com/opennox/libs/types"
 	ns4 "github.com/opennox/noxscript/ns/v4"
 
@@ -1025,6 +1026,10 @@ func (obj *Object) InitDataGlyph() *GlyphInitData {
 	return initDataAs[GlyphInitData](obj)
 }
 
+func (obj *Object) InitDataShopkeeper() *ShopkeeperInitData {
+	return initDataAs[ShopkeeperInitData](obj)
+}
+
 func updateDataAs[T any](obj *Object) *T {
 	if alloc.IsDead(obj.UpdateData) {
 		panic("object already deleted")
@@ -1939,6 +1944,19 @@ func (obj *Object) SetColor(ind int, cl color.Color) {
 	} else if obj.Class().Has(object.ClassPlayer) {
 		panic("not implemented")
 	}
+}
+
+func (obj *Object) SetShopText(id strman.ID) {
+	if obj == nil {
+		return
+	}
+	if !obj.Class().Has(object.ClassMonster) {
+		return
+	} else if !obj.SubClass().AsMonster().Has(object.MonsterShopkeeper) {
+		return
+	}
+	idata := obj.InitDataShopkeeper()
+	alloc.StrCopyZero(idata.ShopText[:], string(id))
 }
 
 func (obj *Object) Inventory() []*Object {

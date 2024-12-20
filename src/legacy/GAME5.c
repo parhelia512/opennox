@@ -2347,13 +2347,6 @@ void nox_xxx_scriptDialog_548D30(nox_object_t* a1p, char a2) {
 	}
 }
 
-//----- (00548FE0) --------------------------------------------------------
-void sub_548FE0(int a1, const char* a2) {
-	if (a1 && a2 && *(uint8_t*)(a1 + 8) & 2 && *(uint8_t*)(a1 + 12) & 8 && strlen(a2) < 0x20) {
-		strcpy((char*)(*(uint32_t*)(a1 + 692) + 1684), a2);
-	}
-}
-
 //----- (00549040) --------------------------------------------------------
 int nox_xxx_monsterLoadStrikeFn_549040(int a1, char* a2) {
 	const char* v3;    // esi

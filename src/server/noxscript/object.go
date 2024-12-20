@@ -95,6 +95,7 @@ func init() {
 	Register(asm.BuiltinSetCallback, nsSetCallback)
 	Register(asm.BuiltinHitLocation, nsHitLocation)
 	Register(asm.BuiltinHitFarLocation, nsHitFarLocation)
+	Register(asm.BuiltinSetShopkeeperText, nsSetShopkeeperText)
 }
 
 func nsGetTrigger(vm VM) int {
@@ -838,6 +839,15 @@ func nsHitFarLocation(vm VM) int {
 	obj := vm.PopObjectNS()
 	if obj != nil {
 		obj.HitRanged(pos)
+	}
+	return 0
+}
+
+func nsSetShopkeeperText(vm VM) int {
+	str := vm.PopString()
+	obj := vm.PopObjectNS()
+	if obj != nil {
+		obj.SetShopText(ns4.StringID(str))
 	}
 	return 0
 }
