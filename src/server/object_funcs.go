@@ -83,8 +83,8 @@ func init() {
 
 	RegisterObjectCollide("NoCollide", nil, 0)
 
-	RegisterObjectUse("AmmoUse", nil, 3)
-	RegisterObjectUse("BowUse", nil, 1)
+	RegisterObjectUseC("AmmoUse", nil, 3)
+	RegisterObjectUseC("BowUse", nil, 1)
 }
 
 type ObjectParseFunc func(objt *ObjectType, args []string) error
@@ -136,11 +136,38 @@ func RegisterObjectCollideParse(name string, fnc ObjectParseFunc) {
 	collideParseFuncs[name] = fnc
 }
 
-func RegisterObjectUse(name string, fnc unsafe.Pointer, sz uintptr) {
+type UseFuncPtr struct {
+	Ptr unsafe.Pointer
+}
+
+func (p UseFuncPtr) Get() UseFunc {
+	if p.Ptr == nil {
+		return nil
+	}
+	return objUse.Get(p.Ptr)
+}
+
+type UseFunc func(obj, obj2 *Object) bool
+
+var objUse = ccall.NewFuncs(func(cfnc unsafe.Pointer) UseFunc {
+	return func(obj, obj2 *Object) bool {
+		return ccall.CallIntPtr2(cfnc, obj.CObj(), obj2.CObj()) != 0
+	}
+})
+
+func RegisterObjectUseC(name string, cfnc unsafe.Pointer, sz uintptr) {
 	if _, ok := useFuncs[name]; ok {
 		panic("already registered")
 	}
-	useFuncs[name] = objectDefFunc{Func: fnc, DataSize: sz}
+	useFuncs[name] = objectDefFunc{Func: cfnc, DataSize: sz}
+}
+
+func RegisterObjectUse(name string, cfnc unsafe.Pointer, fnc UseFunc, sz uintptr) {
+	if _, ok := useFuncs[name]; ok {
+		panic("already registered")
+	}
+	useFuncs[name] = objectDefFunc{Func: cfnc, DataSize: sz}
+	objUse.Register(cfnc, fnc)
 }
 
 func RegisterObjectUseParse(name string, fnc ObjectParseFunc) {

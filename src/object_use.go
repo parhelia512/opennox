@@ -10,21 +10,21 @@ import (
 	"github.com/opennox/opennox/v1/server"
 )
 
-func nox_xxx_useConsume_53EE10(obj, item *server.Object) int {
+func nox_xxx_useConsume_53EE10(obj, item *server.Object) bool {
 	s := noxServer
 	if !item.Class().Has(object.ClassFood) {
-		return 1
+		return true
 	}
 	if item.SubClass().AsFood().Has(object.FoodPotion) {
-		return 1
+		return true
 	}
 	if obj.HealthData == nil || item.UseData == nil {
-		return 1
+		return true
 	}
 	if obj.HealthData.Cur >= obj.HealthData.Max {
-		return 1
+		return true
 	}
-	use := (*server.ConsumeUseData)(item.UseData)
+	use := item.UseDataConsume()
 	dhp := int(use.Value)
 	legacy.Nox_xxx_unitAdjustHP_4EE460(obj, dhp)
 	if obj.Class().Has(object.ClassPlayer) {
@@ -50,10 +50,10 @@ func nox_xxx_useConsume_53EE10(obj, item *server.Object) int {
 		s.Audio.EventObj(sound.SoundMonsterEatFood, obj, 0, 0)
 	}
 	s.DelayedDelete(item)
-	return 1
+	return true
 }
 
-func nox_xxx_useMushroom_53ECE0(obj, item *server.Object) int {
+func nox_xxx_useMushroom_53ECE0(obj, item *server.Object) bool {
 	s := noxServer
 	if int32(obj.Poison540) != 0 {
 		legacy.Nox_xxx_removePoison_4EE9D0(obj)
@@ -65,37 +65,37 @@ func nox_xxx_useMushroom_53ECE0(obj, item *server.Object) int {
 	}
 	legacy.Nox_xxx_buffApplyTo_4FF380(obj, server.ENCHANT_CONFUSED, int(s.SecToFrames(10)), 5)
 	s.DelayedDelete(item)
-	return 1
+	return true
 }
 
-func nox_xxx_useCiderConfuse_53EF00(obj, item *server.Object) int {
+func nox_xxx_useCiderConfuse_53EF00(obj, item *server.Object) bool {
 	s := noxServer
 	if obj == nil || item == nil || obj.HealthData == nil {
-		return 1
+		return true
 	}
 	legacy.Nox_xxx_buffApplyTo_4FF380(obj, server.ENCHANT_CONFUSED, int(s.SecToFrames(5)), 4)
 	s.NetPriMsgToPlayer(obj, "Use.c:CiderConfuse", 0)
-	res := nox_xxx_useConsume_53EE10(obj, item)
-	if res != 0 {
+	ok := nox_xxx_useConsume_53EE10(obj, item)
+	if ok {
 		s.DelayedDelete(item)
 	}
-	return res
+	return ok
 }
 
-func nox_xxx_useEnchant_53ED60(obj, item *server.Object) int {
+func nox_xxx_useEnchant_53ED60(obj, item *server.Object) bool {
 	s := noxServer
-	if use := (*server.EnchantUseData)(item.UseData); use != nil {
+	if use := item.UseDataEnchant(); use != nil {
 		ench := server.EnchantID(use.Enchant)
 		dur := int(use.Dur)
 		legacy.Nox_xxx_buffApplyTo_4FF380(obj, ench, dur, 5)
 	}
 	s.DelayedDelete(item)
-	return 1
+	return true
 }
 
-func nox_xxx_useCast_53ED90(obj, item *server.Object) int {
+func nox_xxx_useCast_53ED90(obj, item *server.Object) bool {
 	s := noxServer
-	if use := (*server.CastUseData)(item.UseData); use != nil {
+	if use := item.UseDataCast(); use != nil {
 		var pos types.Pointf
 		if obj.Class().Has(object.ClassPlayer) {
 			ud := obj.UpdateDataPlayer()
@@ -108,16 +108,16 @@ func nox_xxx_useCast_53ED90(obj, item *server.Object) int {
 		}, 4)
 	}
 	s.DelayedDelete(item)
-	return 1
+	return true
 }
 
-func nox_xxx_usePotion_53EF70(obj, potion *server.Object) int {
+func nox_xxx_usePotion_53EF70(obj, potion *server.Object) bool {
 	s := noxServer
 	if obj.Class().Has(object.ClassPlayer) && obj.Flags().Has(object.FlagDead) {
-		return 0
+		return false
 	}
 	consumed := false
-	use := (*server.PotionUseData)(potion.UseData)
+	use := potion.UseDataPotion()
 	if use != nil && potion.SubClass().AsFood().Has(object.FoodHealthPotion) && obj.HealthData != nil && obj.HealthData.Cur < obj.HealthData.Max {
 		dhp := int(use.Value)
 		if obj.Class().Has(object.ClassPlayer) {
@@ -177,5 +177,5 @@ func nox_xxx_usePotion_53EF70(obj, potion *server.Object) int {
 	if consumed {
 		s.DelayedDelete(potion)
 	}
-	return 1
+	return true
 }

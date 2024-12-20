@@ -145,9 +145,10 @@ func nox_xxx_pickupPotion_4F37D0(obj *server.Object, potion *server.Object, a3, 
 		return false
 	}
 	if !s.Players.CheckXxx(obj) {
+		use := potion.UseDataPotion()
 		consumed := false
-		if potion.UseData != nil && potion.SubClass().AsFood().Has(object.FoodHealthPotion) && obj.HealthData != nil {
-			dhp := int(*(*int32)(potion.UseData))
+		if use != nil && potion.SubClass().AsFood().Has(object.FoodHealthPotion) && obj.HealthData != nil {
+			dhp := int(use.Value)
 			if obj.Class().Has(object.ClassPlayer) {
 				ud := obj.UpdateDataPlayer()
 				if mult := s.Players.ClassStatsMult(ud.Player.PlayerClass()); mult != nil {
@@ -160,9 +161,9 @@ func nox_xxx_pickupPotion_4F37D0(obj *server.Object, potion *server.Object, a3, 
 				consumed = true
 			}
 		}
-		if potion.UseData != nil && potion.SubClass().AsFood().Has(object.FoodManaPotion) && obj.Class().Has(object.ClassPlayer) {
+		if use != nil && potion.SubClass().AsFood().Has(object.FoodManaPotion) && obj.Class().Has(object.ClassPlayer) {
 			ud := obj.UpdateDataPlayer()
-			dmp := int(*(*int32)(potion.UseData))
+			dmp := int(use.Value)
 			if mult := s.Players.ClassStatsMult(ud.Player.PlayerClass()); mult != nil {
 				dmp = int(float64(dmp) * float64(mult.Mana))
 			}

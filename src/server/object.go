@@ -665,7 +665,7 @@ type Object struct {
 	DamageSound   unsafe.Pointer             // 180, 720
 	Death         unsafe.Pointer             // 181, 724
 	DeathData     unsafe.Pointer             // 182, 728
-	Use           unsafe.Pointer             // 183, 732
+	Use           UseFuncPtr                 // 183, 732
 	UseData       unsafe.Pointer             // 184, 736
 	Field185      uint32                     // 185, 740
 	Update        unsafe.Pointer             // 186, 744; func(*Object)
@@ -1079,6 +1079,30 @@ func (obj *Object) UpdateDataObelisk() *ObeliskUpdateData {
 		panic(obj.SubClass().AsOther().String())
 	}
 	return updateDataAs[ObeliskUpdateData](obj)
+}
+
+func useDataAs[T any](obj *Object) *T {
+	if alloc.IsDead(obj.UseData) {
+		panic("object already deleted")
+	}
+	// TODO: verify this conversion by checking ObjectType
+	return (*T)(obj.UseData)
+}
+
+func (obj *Object) UseDataCast() *CastUseData {
+	return useDataAs[CastUseData](obj)
+}
+
+func (obj *Object) UseDataPotion() *PotionUseData {
+	return useDataAs[PotionUseData](obj)
+}
+
+func (obj *Object) UseDataConsume() *ConsumeUseData {
+	return useDataAs[ConsumeUseData](obj)
+}
+
+func (obj *Object) UseDataEnchant() *EnchantUseData {
+	return useDataAs[EnchantUseData](obj)
 }
 
 func (obj *Object) TeamPtr() *ObjectTeam {

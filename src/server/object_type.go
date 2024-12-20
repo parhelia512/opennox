@@ -704,7 +704,7 @@ type ObjectType struct {
 	Update          unsafe.Pointer
 	UpdateData      unsafe.Pointer
 	UpdateDataSize  uintptr
-	Use             unsafe.Pointer
+	Use             UseFuncPtr
 	UseData         unsafe.Pointer
 	UseDataSize     uintptr
 	Xfer            unsafe.Pointer
@@ -916,7 +916,7 @@ func (t *ObjectType) parseUse(d *things.ProcFunc) error {
 		// TODO: add "unknown" use as a nop types
 		return nil
 	}
-	t.Use = def.Func
+	t.Use.Ptr = def.Func
 	t.UseData = nil
 	t.UseDataSize = def.DataSize
 	if def.DataSize == 0 {
