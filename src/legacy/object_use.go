@@ -48,9 +48,9 @@ func init() {
 	server.RegisterObjectUseC("WarpReadUse", C.sub_53F830, 260)
 	server.RegisterObjectUseC("WandUse", C.nox_xxx_useLesserFireballStaff_53F290, 116)
 	server.RegisterObjectUseC("WandCastUse", C.nox_xxx_useWandCastSpell_53F4F0, 116)
-	server.RegisterObjectUseC("SpellRewardUse", C.nox_xxx_useSpellReward_53F9E0, 1)
-	server.RegisterObjectUseC("AbilityRewardUse", C.nox_xxx_useAbilityReward_53FAE0, 1)
-	server.RegisterObjectUseC("FieldGuideUse", C.sub_53F930, 64)
+	server.RegisterObjectUseC("SpellRewardUse", C.nox_xxx_useSpellReward_53F9E0, unsafe.Sizeof(server.SpellRewardUseData{}))
+	server.RegisterObjectUseC("AbilityRewardUse", C.nox_xxx_useAbilityReward_53FAE0, unsafe.Sizeof(server.AbilityRewardUseData{}))
+	server.RegisterObjectUseC("FieldGuideUse", C.sub_53F930, unsafe.Sizeof(server.FieldGuideUseData{}))
 
 	server.RegisterObjectUseParse("WandUse", wrapObjectUseParseC(C.sub_536260))
 	server.RegisterObjectUseParse("WandCastUse", wrapObjectUseParseC(C.sub_5361B0))
@@ -58,7 +58,7 @@ func init() {
 
 func wrapObjectUseParseC(ptr unsafe.Pointer) server.ObjectParseFunc {
 	return func(objt *server.ObjectType, args []string) error {
-		if Nox_call_objectType_parseUse_go(ptr, strings.Join(args, " "), objt.UseData) == 0 {
+		if Nox_call_objectType_parseUse_go(ptr, strings.Join(args, " "), objt.UseData.Ptr) == 0 {
 			return fmt.Errorf("cannot parse use data for %q", objt.ID())
 		}
 		return nil
@@ -99,4 +99,28 @@ func nox_xxx_useConsume_53EE10(cobj1 *nox_object_t, cobj2 *nox_object_t) int {
 //export nox_xxx_usePotion_53EF70
 func nox_xxx_usePotion_53EF70(cobj1 *nox_object_t, cobj2 *nox_object_t) int {
 	return bool2int(Nox_xxx_usePotion_53EF70(asObjectS(cobj1), asObjectS(cobj2)))
+}
+
+func Get_nox_xxx_usePotion_53EF70() unsafe.Pointer {
+	return C.nox_xxx_usePotion_53EF70
+}
+
+func Get_nox_xxx_useSpellReward_53F9E0() unsafe.Pointer {
+	return C.nox_xxx_useSpellReward_53F9E0
+}
+
+func Get_nox_xxx_useAbilityReward_53FAE0() unsafe.Pointer {
+	return C.nox_xxx_useAbilityReward_53FAE0
+}
+
+func Get_nox_xxx_useEnchant_53ED60() unsafe.Pointer {
+	return C.nox_xxx_useEnchant_53ED60
+}
+
+func Get_nox_xxx_useCast_53ED90() unsafe.Pointer {
+	return C.nox_xxx_useCast_53ED90
+}
+
+func Get_sub_53F930() unsafe.Pointer {
+	return C.sub_53F930
 }

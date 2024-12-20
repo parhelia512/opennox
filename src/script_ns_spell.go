@@ -1,14 +1,19 @@
 package opennox
 
 import (
+	"unsafe"
+
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/things"
 	ns4 "github.com/opennox/noxscript/ns/v4"
+	nab "github.com/opennox/noxscript/ns/v4/abil"
 	"github.com/opennox/noxscript/ns/v4/enchant"
 	nsp "github.com/opennox/noxscript/ns/v4/spell"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/legacy"
+	"github.com/opennox/opennox/v1/legacy/common/alloc"
 	"github.com/opennox/opennox/v1/server"
 )
 
@@ -67,6 +72,99 @@ func (s noxScriptNS) NewTrap(pos ns4.Positioner, spells []ns4.TrapSpell) ns4.Obj
 		idata.SpellsCnt++
 	}
 	return s.toObj(trap)
+}
+
+func newUseItem[T comparable, P interface {
+	*T
+	server.UseData
+}](s noxScriptNS, typ string, pos ns4.Positioner, cfnc unsafe.Pointer, noPickup bool, data T) ns4.Obj {
+	obj := s.createObject(typ, pos)
+	if obj == nil {
+		return nil
+	}
+	use, _ := alloc.New[T](data)
+	*use = data
+	var puse P = use
+	obj.SetUse(cfnc, puse)
+	if noPickup {
+		obj.SetPickup(nil)
+	}
+	return s.toObj(obj)
+}
+
+func (s noxScriptNS) newPotion(typ string, pos ns4.Positioner, val int) ns4.Obj {
+	return newUseItem(s, typ, pos, legacy.Get_nox_xxx_usePotion_53EF70(), false, server.PotionUseData{
+		Value: int32(val),
+	})
+}
+
+func (s noxScriptNS) NewHealthPotion(pos ns4.Positioner, health int) ns4.Obj {
+	return s.newPotion("RedPotion", pos, health)
+}
+
+func (s noxScriptNS) NewManaPotion(pos ns4.Positioner, mana int) ns4.Obj {
+	return s.newPotion("BluePotion", pos, mana)
+}
+
+func (s noxScriptNS) NewSpellBook(pos ns4.Positioner, name nsp.Spell) ns4.Obj {
+	sp := spell.ParseID(string(name))
+	if !sp.Valid() {
+		return s.CreateObject("CommonSpellBook", pos)
+	}
+	typ := "CommonSpellBook"
+	flags := s.s.Spells.Flags(sp)
+	if flags.Has(things.SpellClassWizard) {
+		typ = "WizardSpellBook"
+	} else if flags.Has(things.SpellClassConjurer) {
+		typ = "ConjurerSpellBook"
+	}
+	return newUseItem(s, typ, pos, legacy.Get_nox_xxx_useSpellReward_53F9E0(), false, server.SpellRewardUseData{
+		Spell: byte(sp),
+	})
+}
+
+func (s noxScriptNS) NewAbilityBook(pos ns4.Positioner, name nab.Ability) ns4.Obj {
+	a := s.s.abilities.nox_xxx_abilityNameToN_424D80(string(name))
+	if !a.Valid() {
+		return s.CreateObject("AbilityBook", pos)
+	}
+	return newUseItem(s, "AbilityBook", pos, legacy.Get_nox_xxx_useAbilityReward_53FAE0(), false, server.AbilityRewardUseData{
+		Ability: byte(a),
+	})
+}
+
+func (s noxScriptNS) NewEnchantUseItem(typ ns4.ObjTypeName, pos ns4.Positioner, enc enchant.Enchant, dur ns4.Duration) ns4.Obj {
+	if typ == "" {
+		typ = "YellowPotion"
+	}
+	id, ok := server.ParseEnchant(string(enc))
+	if !ok {
+		return s.CreateObject(typ, pos)
+	}
+	return newUseItem(s, typ, pos, legacy.Get_nox_xxx_useEnchant_53ED60(), true, server.EnchantUseData{
+		Enchant: int32(id),
+		Dur:     int32(s.s.AsFrames(dur)),
+	})
+}
+
+func (s noxScriptNS) NewSpellUseItem(typ ns4.ObjTypeName, pos ns4.Positioner, name nsp.Spell, lvl int) ns4.Obj {
+	if typ == "" {
+		typ = "SpellBook"
+	}
+	sp := spell.ParseID(string(name))
+	if !sp.Valid() {
+		return s.CreateObject(typ, pos)
+	}
+	return newUseItem(s, typ, pos, legacy.Get_nox_xxx_useCast_53ED90(), true, server.CastUseData{
+		Spell: int32(sp),
+		// TODO: pass spell level in ExtData
+	})
+}
+
+func (s noxScriptNS) NewFieldGuide(pos ns4.Positioner, creature string) ns4.Obj {
+	var data server.FieldGuideUseData
+	data.SetCreature(creature)
+	return newUseItem(s, "FieldGuide", pos, legacy.Get_sub_53F930(), false, data)
 }
 
 func (obj nsObj) AwardSpell(name nsp.Spell) bool {

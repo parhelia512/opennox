@@ -415,10 +415,7 @@ func (s *serverObjTypes) Free() {
 			alloc.FreePtr(typ.UpdateData)
 			typ.UpdateData = nil
 		}
-		if typ.UseData != nil {
-			alloc.FreePtr(typ.UseData)
-			typ.UseData = nil
-		}
+		typ.UseData.Free()
 		*typ = ObjectType{}
 	}
 	s.first = nil
@@ -705,7 +702,7 @@ type ObjectType struct {
 	UpdateData      unsafe.Pointer
 	UpdateDataSize  uintptr
 	Use             UseFuncPtr
-	UseData         unsafe.Pointer
+	UseData         UseDataPtr
 	UseDataSize     uintptr
 	Xfer            unsafe.Pointer
 	Create          unsafe.Pointer
@@ -917,13 +914,13 @@ func (t *ObjectType) parseUse(d *things.ProcFunc) error {
 		return nil
 	}
 	t.Use.Ptr = def.Func
-	t.UseData = nil
+	t.UseData.Ptr = nil
 	t.UseDataSize = def.DataSize
 	if def.DataSize == 0 {
 		return nil
 	}
 	data, _ := alloc.Malloc(def.DataSize)
-	t.UseData = data
+	t.UseData.SetPtr(data)
 	if parse, ok := useParseFuncs[d.Name]; ok {
 		if err := parse(t, d.Args); err != nil {
 			return err

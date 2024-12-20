@@ -18,7 +18,7 @@ func nox_xxx_useConsume_53EE10(obj, item *server.Object) bool {
 	if item.SubClass().AsFood().Has(object.FoodPotion) {
 		return true
 	}
-	if obj.HealthData == nil || item.UseData == nil {
+	if obj.HealthData == nil || item.UseData.Ptr == nil {
 		return true
 	}
 	if obj.HealthData.Cur >= obj.HealthData.Max {

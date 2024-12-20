@@ -289,9 +289,7 @@ func (s *serverObjects) FreeObject(obj *Object) int {
 	if obj.CollideData != nil {
 		obj.CollideData = nil
 	}
-	if obj.UseData != nil {
-		obj.UseData = nil
-	}
+	obj.UseData.Free()
 	if obj.UpdateData != nil {
 		obj.UpdateData = nil
 	}
@@ -357,8 +355,8 @@ func (s *serverObjects) NewObject(t *ObjectType) *Object {
 	obj.Use = t.Use
 	if t.UseDataSize != 0 {
 		data, _ := alloc.Make([]byte{}, t.UseDataSize)
-		obj.UseData = unsafe.Pointer(&data[0])
-		copy(data, unsafe.Slice((*byte)(t.UseData), t.UseDataSize))
+		copy(data, unsafe.Slice((*byte)(t.UseData.Ptr), t.UseDataSize))
+		obj.UseData.SetPtr(unsafe.Pointer(&data[0]))
 	}
 	obj.Update = t.Update
 	if t.UpdateDataSize != 0 {
@@ -666,7 +664,7 @@ type Object struct {
 	Death         unsafe.Pointer             // 181, 724
 	DeathData     unsafe.Pointer             // 182, 728
 	Use           UseFuncPtr                 // 183, 732
-	UseData       unsafe.Pointer             // 184, 736
+	UseData       UseDataPtr                 // 184, 736
 	Field185      uint32                     // 185, 740
 	Update        unsafe.Pointer             // 186, 744; func(*Object)
 	UpdateData    unsafe.Pointer             // 187, 748
@@ -1081,28 +1079,44 @@ func (obj *Object) UpdateDataObelisk() *ObeliskUpdateData {
 	return updateDataAs[ObeliskUpdateData](obj)
 }
 
-func useDataAs[T any](obj *Object) *T {
-	if alloc.IsDead(obj.UseData) {
-		panic("object already deleted")
-	}
-	// TODO: verify this conversion by checking ObjectType
-	return (*T)(obj.UseData)
+func (obj *Object) SetUse(cfnc unsafe.Pointer, data UseData) {
+	obj.Use.Ptr = cfnc
+	obj.UseData.Set(data)
 }
 
 func (obj *Object) UseDataCast() *CastUseData {
-	return useDataAs[CastUseData](obj)
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsCast()
 }
 
 func (obj *Object) UseDataPotion() *PotionUseData {
-	return useDataAs[PotionUseData](obj)
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsPotion()
 }
 
 func (obj *Object) UseDataConsume() *ConsumeUseData {
-	return useDataAs[ConsumeUseData](obj)
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsConsume()
 }
 
 func (obj *Object) UseDataEnchant() *EnchantUseData {
-	return useDataAs[EnchantUseData](obj)
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsEnchant()
+}
+
+func (obj *Object) UseDataSpellReward() *SpellRewardUseData {
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsSpellReward()
+}
+
+func (obj *Object) UseDataAbilityReward() *AbilityRewardUseData {
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsAbilityReward()
+}
+
+func (obj *Object) UseDataFieldGuide() *FieldGuideUseData {
+	// TODO: verify this conversion by checking ObjectType
+	return obj.UseData.AsFieldGuide()
 }
 
 func (obj *Object) TeamPtr() *ObjectTeam {
@@ -1434,6 +1448,10 @@ func (obj *Object) CallCollide(a2, a3 int) {
 	if obj.Collide != nil {
 		ccall.CallVoidUPtr3(obj.Collide, uintptr(obj.CObj()), uintptr(a2), uintptr(a3))
 	}
+}
+
+func (obj *Object) SetPickup(cfnc unsafe.Pointer) {
+	obj.Pickup.Ptr = cfnc
 }
 
 func (obj *Object) CallPickup(who *Object, a3, a4 int) bool {

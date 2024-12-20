@@ -33,7 +33,7 @@ func (s noxScriptNS) asObj(obj ns4.Obj) *server.Object {
 	return o.Object.SObj()
 }
 
-func (s noxScriptNS) ObjectType(name string) ns4.ObjType {
+func (s noxScriptNS) ObjectType(name ns4.ObjTypeName) ns4.ObjType {
 	typ := s.s.Types.ByID(name)
 	if typ == nil {
 		return nil
@@ -57,15 +57,23 @@ func (s noxScriptNS) ObjectByHandle(h ns4.ObjHandle) ns4.Obj {
 	return s.toObj(obj)
 }
 
-func (s noxScriptNS) CreateObject(typ string, p ns4.Positioner) ns4.Obj {
+func (s noxScriptNS) createObject(typ ns4.ObjTypeName, p ns4.Positioner) *server.Object {
 	if p == nil {
 		return nil
 	}
-	obj := s.s.NewObjectByTypeID(typ)
+	obj := s.s.NewObjectByTypeID(string(typ))
 	if obj == nil {
 		return nil
 	}
 	s.s.CreateObjectAt(obj, nil, p.Pos())
+	return obj
+}
+
+func (s noxScriptNS) CreateObject(typ ns4.ObjTypeName, p ns4.Positioner) ns4.Obj {
+	obj := s.createObject(typ, p)
+	if obj == nil {
+		return nil
+	}
 	return s.toObj(obj)
 }
 
@@ -190,8 +198,8 @@ type nsObjType struct {
 	t *server.ObjectType
 }
 
-func (typ nsObjType) Name() string {
-	return typ.t.ID()
+func (typ nsObjType) Name() ns4.ObjTypeName {
+	return ns4.ObjTypeName(typ.t.ID())
 }
 
 func (typ nsObjType) Index() int {
