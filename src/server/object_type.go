@@ -237,11 +237,38 @@ func RegisterObjectDrop(name string, cfnc unsafe.Pointer, fnc DropFunc) {
 	objDrop.Register(cfnc, fnc)
 }
 
-func RegisterObjectPickup(name string, fnc unsafe.Pointer) {
+type PickupFuncPtr struct {
+	Ptr unsafe.Pointer
+}
+
+func (p PickupFuncPtr) Get() PickupFunc {
+	if p.Ptr == nil {
+		return nil
+	}
+	return objPickup.Get(p.Ptr)
+}
+
+type PickupFunc func(who, it *Object, a3, a4 int) bool
+
+var objPickup = ccall.NewFuncs(func(cfnc unsafe.Pointer) PickupFunc {
+	return func(who, it *Object, a3, a4 int) bool {
+		return ccall.CallIntUPtr4(cfnc, uintptr(who.CObj()), uintptr(it.CObj()), uintptr(a3), uintptr(a4)) != 0
+	}
+})
+
+func RegisterObjectPickupC(name string, cfnc unsafe.Pointer) {
 	if _, ok := pickupFuncs[name]; ok {
 		panic("already registered")
 	}
-	pickupFuncs[name] = fnc
+	pickupFuncs[name] = cfnc
+}
+
+func RegisterObjectPickup(name string, cfnc unsafe.Pointer, fnc PickupFunc) {
+	if _, ok := pickupFuncs[name]; ok {
+		panic("already registered")
+	}
+	pickupFuncs[name] = cfnc
+	objPickup.Register(cfnc, fnc)
 }
 
 func RegisterObjectXfer(name string, fnc unsafe.Pointer) {
@@ -919,7 +946,7 @@ type ObjectType struct {
 	Init            unsafe.Pointer
 	InitData        unsafe.Pointer
 	InitDataSize    uintptr
-	Pickup          unsafe.Pointer
+	Pickup          PickupFuncPtr
 	Update          unsafe.Pointer
 	UpdateData      unsafe.Pointer
 	UpdateDataSize  uintptr
@@ -1225,7 +1252,7 @@ func (t *ObjectType) parsePickup(d *things.ProcFunc) error {
 		// TODO: add "unknown" pickup as a nop types
 		return nil
 	}
-	t.Pickup = fnc
+	t.Pickup.Ptr = fnc
 	if parse, ok := pickupParseFuncs[d.Name]; ok {
 		if err := parse(t, d.Args); err != nil {
 			return err

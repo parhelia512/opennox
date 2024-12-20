@@ -51,7 +51,7 @@ func nox_xxx_inventoryServPlace_4F36F0(obj *server.Object, it *server.Object, a3
 	return true
 }
 
-func nox_xxx_pickupDefault_4F31E0(obj, item *server.Object, a3 int) bool {
+func nox_xxx_pickupDefault_4F31E0(obj, item *server.Object, a3, a4 int) bool {
 	s := noxServer
 	if !noxflags.HasGame(noxflags.GameModeQuest) && item.TeamPtr().Has() && !obj.TeamPtr().SameAs(item.TeamPtr()) {
 		if tm := s.Teams.ByID(item.TeamVal.ID); tm != nil {
@@ -94,12 +94,12 @@ func nox_xxx_pickupDefault_4F31E0(obj, item *server.Object, a3 int) bool {
 	return true
 }
 
-func nox_objectPickupAudEvent_4F3D50(obj1 *server.Object, obj2 *server.Object, a3 int) bool {
+func nox_objectPickupAudEvent_4F3D50(obj1 *server.Object, obj2 *server.Object, a3, a4 int) bool {
 	s := noxServer
 	if obj1 == nil || obj2 == nil {
 		return false
 	}
-	if !nox_xxx_pickupDefault_4F31E0(obj1, obj2, a3) {
+	if !nox_xxx_pickupDefault_4F31E0(obj1, obj2, a3, a4) {
 		return false
 	}
 	if snd := s.PickupSound(obj2.TypeInd); snd != 0 {
@@ -137,7 +137,7 @@ func nox_xxx_playerClassCanUseItem_57B3D0(item *server.Object, cl player.Class) 
 	return ((byte(1) << cl) & sub_57B370(item.Class(), item.SubClass(), int(item.TypeInd))) != 0
 }
 
-func nox_xxx_pickupPotion_4F37D0(obj *server.Object, potion *server.Object, a3 int) bool {
+func nox_xxx_pickupPotion_4F37D0(obj *server.Object, potion *server.Object, a3, a4 int) bool {
 	s := noxServer
 	if noxflags.HasGame(0x2000) && !noxflags.HasGame(4096) && obj.Class().Has(object.ClassPlayer) && !nox_xxx_playerClassCanUseItem_57B3D0(potion, obj.UpdateDataPlayer().Player.PlayerClass()) {
 		s.NetPriMsgToPlayer(obj, "pickup.c:ObjectEquipClassFail", 0)
@@ -185,7 +185,7 @@ func nox_xxx_pickupPotion_4F37D0(obj *server.Object, potion *server.Object, a3 i
 		}
 	}
 	legacy.Nox_xxx_decay_5116F0(potion)
-	ok := nox_xxx_pickupDefault_4F31E0(obj, potion, a3)
+	ok := nox_xxx_pickupDefault_4F31E0(obj, potion, a3, a4)
 	if ok {
 		s.Audio.EventObj(sound.SoundPotionPickup, obj, 0, 0)
 	}

@@ -141,7 +141,7 @@ type serverObjects struct {
 	PendingActions  []func()
 
 	XFerInvLight  unsafe.Pointer
-	DefaultPickup func(obj, item *Object, a3 int) bool
+	DefaultPickup PickupFunc
 }
 
 func (s *serverObjects) init(h uintptr) {
@@ -659,7 +659,7 @@ type Object struct {
 	Collide       unsafe.Pointer             // 174, 696; func(*Object, *Object, int)
 	CollideData   unsafe.Pointer             // 175, 700
 	Xfer          unsafe.Pointer             // 176, 704; func(*Object, int) int
-	Pickup        unsafe.Pointer             // 177, 708; func(*Object, *Object, int, int) int
+	Pickup        PickupFuncPtr              // 177, 708
 	Drop          DropFuncPtr                // 178, 712
 	Damage        unsafe.Pointer             // 179, 716; func(*Object, *Object, int, int, int) int
 	DamageSound   unsafe.Pointer             // 180, 720
@@ -1413,10 +1413,10 @@ func (obj *Object) CallCollide(a2, a3 int) {
 }
 
 func (obj *Object) CallPickup(who *Object, a3, a4 int) bool {
-	if obj.Pickup == nil {
-		return obj.Server().Objs.DefaultPickup(who, obj, a3)
+	if obj.Pickup.Ptr == nil {
+		return obj.Server().Objs.DefaultPickup(who, obj, a3, a4)
 	}
-	return ccall.CallIntUPtr4(obj.Pickup, uintptr(who.CObj()), uintptr(obj.CObj()), uintptr(a3), uintptr(a4)) != 0
+	return obj.Pickup.Get()(who, obj, a3, a4)
 }
 
 func (obj *Object) CallDamage(who Obj, a3 Obj, dmg int, typ object.DamageType) bool {
