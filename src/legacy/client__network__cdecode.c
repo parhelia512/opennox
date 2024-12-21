@@ -2409,7 +2409,7 @@ int nox_xxx_netOnPacketRecvCli_48EA70_switch(int a1, int op, unsigned char* data
 				LODWORD(v5) = nox_xxx_getTeamByID_418AB0(*(uint32_t*)(data + 2));
 				v280 = (wchar2_t*)v5;
 				if ((uint32_t)v5) {
-					nox_wcscpy(v387, (const wchar2_t*)v5);
+					nox_wcsncpy(v387, (const wchar2_t*)v5, 256);
 					sub_418F20(v280, 0);
 					sub_456EA0(v387);
 				}

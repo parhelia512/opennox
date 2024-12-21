@@ -36,9 +36,9 @@ void nox_xxx_cliBuildJournalString_469BC0() {
 		v2 = *(uint32_t*)(v0 + 3644); // Likely v2 is nox_playerInfo_journal*
 		v11 = v1;
 		for (i = -v1; v2; i += v11 + v12) {
-			strcpy(v13, "Journal:");
+			strncpy(v13, "Journal:", sizeof(v13));
 			HIWORD(v4) = 0;
-			strcat(&v13, (const char*)v2);
+			strncat(&v13, (const char*)v2, sizeof(v13)-1);
 			LOWORD(v4) = *(uint16_t*)(v2 + 72);
 			v5 = v4 - 2;
 			if (v5) {
@@ -47,19 +47,19 @@ void nox_xxx_cliBuildJournalString_469BC0() {
 					if (v6 == 4) {
 						v8 = nox_strman_loadString_40F1D0("Journal:HintLabel", 0,
 														  "C:\\NoxPost\\src\\client\\Gui\\GUIJourn.c", 64);
-						nox_wcscpy(v14, v8);
+						nox_wcsncpy(v14, v8, sizeof(v14)/2);
 					} else {
 						v14[0] = 0;
 					}
 				} else {
 					v9 = nox_strman_loadString_40F1D0("Journal:CompletedLabel", 0,
 													  "C:\\NoxPost\\src\\client\\Gui\\GUIJourn.c", 60);
-					nox_wcscpy(v14, v9);
+					nox_wcsncpy(v14, v9, sizeof(v14)/2);
 				}
 			} else {
 				v10 = nox_strman_loadString_40F1D0("Journal:QuestLabel", 0, "C:\\NoxPost\\src\\client\\Gui\\GUIJourn.c",
 												   56);
-				nox_wcscpy(v14, v10);
+				nox_wcsncpy(v14, v10, sizeof(v14)/2);
 			}
 			nox_wcscat(v14, L" ");
 			v7 = nox_strman_loadString_40F1D0((char*)&v13, 0, "C:\\NoxPost\\src\\client\\Gui\\GUIJourn.c", 74);

@@ -476,7 +476,7 @@ LABEL_14:
 	v7 = nox_strman_loadString_40F1D0("IdentifyItem", 0, "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c", 2545);
 	nox_swprintf((wchar2_t*)getMemAt(0x5D4594, 1063124), L"%s ", v7);
 	v8 = nox_xxx_clientAskInfoMb_4BF050(*(wchar2_t**)&dword_5d4594_1063116);
-	nox_wcscpy(v75, v8);
+	nox_wcsncpy(v75, v8, sizeof(v75)/2);
 	if (!nox_wcscmp(v75, (const wchar2_t*)getMemAt(0x5D4594, 1063652))) {
 		dword_5d4594_1063120 = 0;
 	}
@@ -496,7 +496,7 @@ LABEL_14:
 		} else {
 			v12 = nox_strman_loadString_40F1D0("IdentifyDurabilityIndestructable", 0,
 											   "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c", 2583);
-			nox_wcscpy(v75, v12);
+			nox_wcsncpy(v75, v12, sizeof(v75)/2);
 		}
 	} else {
 		switch (sub_57B190(*(uint16_t*)(dword_5d4594_1063116 + 292), *(uint16_t*)(dword_5d4594_1063116 + 294))) {
@@ -614,20 +614,20 @@ LABEL_14:
 			nox_swprintf(v75, v54, v57);
 		}
 		nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
-		nox_wcscpy(v75, L"  ");
+		nox_wcsncpy(v75, L"  ", sizeof(v75)/2);
 		v59 = v68;
 		v35 = nox_strman_loadString_40F1D0("BaseDamageLabel", 0, "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c", 2785);
 		nox_swprintf(v76, v35, v59);
 		nox_wcscat(v75, v76);
 		nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
-		nox_wcscpy(v75, L"  ");
+		nox_wcsncpy(v75, L"  ", sizeof(v75)/2);
 		v60 = v69;
 		v36 = nox_strman_loadString_40F1D0("StrengthDamageLabel", 0, "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c", 2792);
 		nox_swprintf(v76, v36, v60);
 		nox_wcscat(v75, v76);
 		nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
 		if (v72 > 0.0) {
-			nox_wcscpy(v75, L"  ");
+			nox_wcsncpy(v75, L"  ", sizeof(v75)/2);
 			v61 = v72;
 			v37 = nox_strman_loadString_40F1D0("FireDamageLabel", 0, "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c", 2801);
 			nox_swprintf(v76, v37, v61);
@@ -635,7 +635,7 @@ LABEL_14:
 			nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
 		}
 		if (v71 > 0.0) {
-			nox_wcscpy(v75, L"  ");
+			nox_wcsncpy(v75, L"  ", sizeof(v75)/2);
 			v62 = v71;
 			v38 = nox_strman_loadString_40F1D0("ElectricalDamageLabel", 0, "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c",
 											   2811);
@@ -687,7 +687,7 @@ LABEL_72:
 				nox_swprintf(v75, v45);
 				nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
 				v46 = 0;
-				nox_wcscpy(v75, L"  ");
+				nox_wcsncpy(v75, L"  ", sizeof(v75)/2);
 				nox_swprintf(v76, *(const wchar2_t**)(*(uint32_t*)(v43 + 8) + 16));
 				nox_wcscat(v75, v76);
 				nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
@@ -705,7 +705,7 @@ LABEL_72:
 					v73 = 0;
 					v46 = 0;
 				}
-				nox_wcscpy(v75, L"  ");
+				nox_wcsncpy(v75, L"  ", sizeof(v75)/2);
 				nox_swprintf(v76, *(const wchar2_t**)(*(uint32_t*)(v43 + 12) + 16));
 				nox_wcscat(v75, v76);
 				nox_window_call_field_94((int)v10, 16397, (int)v75, -1);
@@ -903,7 +903,7 @@ void nox_client_makePlayerStatsDlg_463880(int* a1) {
 	}
 	nox_xxx_drawSetTextColor_434390(v72);
 	wchar2_t* v31 = nox_strman_loadString_40F1D0("StatsArmorLabel", 0, "C:\\NoxPost\\src\\Client\\Gui\\guiinv.c", 2072);
-	nox_wcscpy(v77, v31);
+	nox_wcsncpy(v77, v31, sizeof(v77)/2);
 	int v75 = 0;
 	nox_xxx_drawGetStringSize_43F840(0, v77, &v75, 0, 0);
 	nox_xxx_drawStringWrap_43FAF0(0, v77, v10, v30, 0, 0);
