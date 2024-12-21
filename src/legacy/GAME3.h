@@ -33,7 +33,6 @@ int sub_4A50A0();
 int sub_4A50D0();
 int sub_4A5E90();
 unsigned char* sub_4A61E0(uint32_t* a1, int a2, unsigned char* a3);
-void sub_4A62B0();
 int sub_4A6890();
 int sub_4A6B50(wchar2_t* a1);
 int sub_4A6C90();

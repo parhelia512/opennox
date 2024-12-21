@@ -116,11 +116,6 @@ func init() {
 	server.RegisterModifEngageEffect("RegenerationDisengage", C.sub_4E0170, nil)
 }
 
-//export nox_xxx_modifGetModifListByType_4133B0
-func nox_xxx_modifGetModifListByType_4133B0(a1 int) unsafe.Pointer {
-	return GetServer().S().Modif.Nox_xxx_modifGetModifListByType_4133B0(a1)
-}
-
 //export nox_xxx_modifGetDescById_413330
 func nox_xxx_modifGetDescById_413330(a1 int32) unsafe.Pointer {
 	return GetServer().S().Modif.Nox_xxx_modifGetDescById413330(int(a1)).C()

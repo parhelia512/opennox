@@ -68,15 +68,30 @@ func RegisterModifEngageEffect(name string, fnc unsafe.Pointer, parse ModifierPa
 
 type serverModifiers struct {
 	sm                  *strman.StringManager
-	byte_5D4594_251584  [3]*ModifierEff // EFFECTIVENESS, MATERIAL, ENCHANTMENT
-	byte_5D4594_251596  uint32
+	types               [3]*ModifierEff // EFFECTIVENESS, MATERIAL, ENCHANTMENT
+	cnt                 uint32
 	Dword_5d4594_251600 *Modifier
 	Dword_5d4594_251608 *Modifier
+	Colors              [3][32]ModColor
 	ready               bool
 }
 
 func (s *serverModifiers) init(sm *strman.StringManager) {
 	s.sm = sm
+}
+
+func (s *serverModifiers) initColors() {
+	for i := range len(s.Colors[0]) {
+		name := fmt.Sprintf("UserColor%d", i+1)
+		for m := s.types[2]; m != nil; m = m.Next() {
+			if name == m.Name() {
+				s.Colors[0][i] = m.Color24
+				break
+			}
+		}
+	}
+	copy(s.Colors[1][:], modColorsOne[:])
+	copy(s.Colors[2][:], modColorsTwo[:])
 }
 
 func (s *Server) Nox_xxx_equipWeapon_4131A0() {
@@ -207,6 +222,10 @@ func (p *ModifierEff) Desc() string {
 	return alloc.GoString16(p.desc8)
 }
 
+func (p *ModifierEff) Next() *ModifierEff {
+	return p.next136
+}
+
 func (p *ModifierEff) CallUpdateNil(obj *Object) {
 	if p.Update100.Fnc != nil {
 		ccall.CallVoidPtr3(p.Update100.Fnc, p.C(), obj.CObj(), nil)
@@ -318,15 +337,15 @@ func (s *serverModifiers) nox_xxx_parseWeaponOrArmorDef412D40(head **Modifier, a
 func (s *serverModifiers) nox_xxx_parseModifDesc_412AE0(typ int, arr []modifiers.Effect) error {
 	for _, v := range arr {
 		p, _ := alloc.New(ModifierEff{})
-		p.ind4 = s.byte_5D4594_251596
-		s.byte_5D4594_251596++
+		p.ind4 = s.cnt
+		s.cnt++
 
 		p.prev140 = nil
-		p.next136 = s.byte_5D4594_251584[typ]
-		if s.byte_5D4594_251584[typ] != nil {
-			s.byte_5D4594_251584[typ].prev140 = p
+		p.next136 = s.types[typ]
+		if s.types[typ] != nil {
+			s.types[typ].prev140 = p
 		}
-		s.byte_5D4594_251584[typ] = p
+		s.types[typ] = p
 
 		p.name0, _ = alloc.CString(v.Name)
 		if v.Desc != "" {
@@ -381,10 +400,10 @@ func (s *serverModifiers) nox_xxx_parseModifDesc_412AE0(typ int, arr []modifiers
 }
 
 func (s *serverModifiers) Nox_xxx_parseModifierBin_412930(fname string) error {
-	s.byte_5D4594_251584[0] = nil
-	s.byte_5D4594_251584[1] = nil
-	s.byte_5D4594_251584[2] = nil
-	s.byte_5D4594_251596 = 0
+	s.types[0] = nil
+	s.types[1] = nil
+	s.types[2] = nil
+	s.cnt = 0
 	s.Dword_5d4594_251600 = nil
 	s.Dword_5d4594_251608 = nil
 	f, err := modifiers.ReadFile(datapath.Data(fname))
@@ -408,22 +427,23 @@ func (s *serverModifiers) Nox_xxx_parseModifierBin_412930(fname string) error {
 	}
 	cnt := 0
 	for k := 0; k < 3; k++ {
-		for l := s.byte_5D4594_251584[k]; l != nil; l = l.next136 {
+		for l := s.types[k]; l != nil; l = l.next136 {
 			cnt++
 		}
 	}
+	s.initColors()
 	return nil
 }
 
-func (s *serverModifiers) Nox_xxx_modifGetModifListByType_4133B0(a1 int) unsafe.Pointer {
-	return s.byte_5D4594_251584[a1].C()
+func (s *serverModifiers) ListByType(i int) *ModifierEff {
+	return s.types[i]
 }
 
 func (s *serverModifiers) Nox_xxx_modifGetDescById413330(a1 int) *ModifierEff {
 	if a1 == math.MaxUint8 {
 		return nil
 	}
-	for _, head := range s.byte_5D4594_251584 {
+	for _, head := range s.types {
 		for it := head; it != nil; it = it.next136 {
 			if it.ind4 == uint32(a1) {
 				return it
@@ -437,7 +457,7 @@ func (s *serverModifiers) Nox_xxx_modifGetIdByName413290(name string) int {
 	if name == "" {
 		return math.MaxUint8
 	}
-	for _, head := range s.byte_5D4594_251584 {
+	for _, head := range s.types {
 		for it := head; it != nil; it = it.next136 {
 			if alloc.GoString(it.name0) == name {
 				return int(it.ind4)
@@ -523,10 +543,10 @@ func (s *serverModifiers) Nox_xxx_freeWeaponArmorDefAndModifs_413060() {
 	sub_413100(s.Dword_5d4594_251608)
 	s.Dword_5d4594_251608 = nil
 	for i := int32(0); i < 3; i++ {
-		nox_xxx_modifFreeOne_413140(s.byte_5D4594_251584[i])
-		s.byte_5D4594_251584[i] = nil
+		nox_xxx_modifFreeOne_413140(s.types[i])
+		s.types[i] = nil
 	}
-	s.byte_5D4594_251596 = 0
+	s.cnt = 0
 }
 
 type ModParseTarg struct {
