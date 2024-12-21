@@ -8,6 +8,7 @@ import (
 	"unsafe"
 
 	noxcolor "github.com/opennox/libs/color"
+	"github.com/opennox/libs/types"
 
 	"github.com/opennox/opennox/v1/client"
 	"github.com/opennox/opennox/v1/client/noxrender"
@@ -380,7 +381,7 @@ func sub_4B8CA0(earr *server.EquipArmorData, bit uint32) {
 	for i := 0; i < 4; i++ {
 		p := found.Field4[i]
 		if p != nil {
-			cl := *(*server.ModColor)(unsafe.Add(p, 24))
+			cl := *(*types.RGB)(unsafe.Add(p, 24))
 			c.r.Data().SetMaterialRGB(int(inds[i]), int(cl.R), int(cl.G), int(cl.B))
 		}
 	}
@@ -435,7 +436,7 @@ func (c *Client) sub_4B8E10(earr *[server.PlayerWeaponCnt]server.EquipmentData, 
 	for i := 0; i < 4; i++ {
 		p := found.Field4[i]
 		if p != nil {
-			cl := *(*server.ModColor)(unsafe.Add(p, 24))
+			cl := *(*types.RGB)(unsafe.Add(p, 24))
 			c.r.Data().SetMaterialRGB(int(inds[i]), int(cl.R), int(cl.G), int(cl.B))
 		}
 	}

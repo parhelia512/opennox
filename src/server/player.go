@@ -950,31 +950,30 @@ var (
 	_ = [1]struct{}{}[89-unsafe.Offsetof(PlayerInfo{}.nameSuff)]
 )
 
+type PlayerColors struct {
+	Hair     types.RGB // 2253 (+68, +0), hair color
+	Skin     types.RGB // 2256 (+71, +3), skin color
+	Mustache types.RGB // 2259 (+74, +6), mustache color
+	Goatee   types.RGB // 2262 (+77, +9), goatee color
+	Beard    types.RGB // 2265 (+80, +12), beard color
+	Pants    byte      // 2268 (+83, +15), pants color
+	Shirt1   byte      // 2269 (+84, +16), shirt color 1
+	Shirt2   byte      // 2270 (+85, +17), shirt color 2
+	Shoes1   byte      // 2271 (+86, +18), shoes color 1
+	Shoes2   byte      // 2272 (+87, +19), shoes color 2
+}
+
 type PlayerInfo struct {
-	name        [50]byte // 2185 (+0) // TODO: size is a guess
-	field2235   [4]byte  // 2235 (+50)
-	field2239   [4]byte  // 2239 (+54)
-	field2243   [4]byte  // 2243 (+58)
-	field2247   [4]byte  // 2247 (+62)
-	playerClass byte     // 562, 2251 (+66)
-	isFemale    byte     // 562, 2252 (+67)
-	field2253   [2]byte  // 2253 (+68)
-	Field2255   byte     // 2255 (+70)
-	field2256   [2]byte  // 2256 (+71)
-	Field2258   byte     // 2258 (+73)
-	field2259   [2]byte  // 2259 (+74)
-	Field2261   byte     // 2261 (+76)
-	field2262   [2]byte  // 2262 (+77)
-	Field2264   byte     // 2264 (+79)
-	field2265   [2]byte  // 2265 (+80)
-	Field2267   byte     // 2267 (+82)
-	Field2268   byte     // 2268 (+83)
-	Field2269   byte     // 2269 (+84)
-	Field2270   byte     // 2270 (+85)
-	Field2271   byte     // 2271 (+86)
-	Field2272   byte     // 2272 (+87)
-	Field2273   byte     // 2273 (+88)
-	nameSuff    [8]byte  // 2274 (+89)
+	name        [50]byte     // 2185 (+0) // TODO: size is a guess
+	field2235   [4]byte      // 2235 (+50)
+	field2239   [4]byte      // 2239 (+54)
+	field2243   [4]byte      // 2243 (+58)
+	field2247   [4]byte      // 2247 (+62)
+	playerClass byte         // 562, 2251 (+66)
+	isFemale    byte         // 562, 2252 (+67)
+	Colors      PlayerColors // 2253 (+68)
+	Field2273   byte         // 2273 (+88)
+	nameSuff    [8]byte      // 2274 (+89)
 }
 
 func (p *PlayerInfo) C() unsafe.Pointer {
@@ -1039,52 +1038,12 @@ func (p *PlayerInfo) Field2247() uint32 {
 	return *(*uint32)(unsafe.Pointer(&p.field2247))
 }
 
-func (p *PlayerInfo) Field2253() uint16 {
-	return *(*uint16)(unsafe.Pointer(&p.field2253))
-}
-
-func (p *PlayerInfo) Field2256() uint16 {
-	return *(*uint16)(unsafe.Pointer(&p.field2256))
-}
-
-func (p *PlayerInfo) Field2259() uint16 {
-	return *(*uint16)(unsafe.Pointer(&p.field2259))
-}
-
-func (p *PlayerInfo) Field2262() uint16 {
-	return *(*uint16)(unsafe.Pointer(&p.field2262))
-}
-
-func (p *PlayerInfo) Field2265() uint16 {
-	return *(*uint16)(unsafe.Pointer(&p.field2265))
-}
-
 func (p *PlayerInfo) SetField2235(v uint32) {
 	*(*uint32)(unsafe.Pointer(&p.field2235)) = v
 }
 
 func (p *PlayerInfo) SetField2239(v uint32) {
 	*(*uint32)(unsafe.Pointer(&p.field2239)) = v
-}
-
-func (p *PlayerInfo) SetField2253(v uint16) {
-	*(*uint16)(unsafe.Pointer(&p.field2253)) = v
-}
-
-func (p *PlayerInfo) SetField2256(v uint16) {
-	*(*uint16)(unsafe.Pointer(&p.field2256)) = v
-}
-
-func (p *PlayerInfo) SetField2259(v uint16) {
-	*(*uint16)(unsafe.Pointer(&p.field2259)) = v
-}
-
-func (p *PlayerInfo) SetField2262(v uint16) {
-	*(*uint16)(unsafe.Pointer(&p.field2262)) = v
-}
-
-func (p *PlayerInfo) SetField2265(v uint16) {
-	*(*uint16)(unsafe.Pointer(&p.field2265)) = v
 }
 
 type debugPlayerInfo struct {

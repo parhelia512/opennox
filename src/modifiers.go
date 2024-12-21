@@ -5,6 +5,7 @@ import (
 	"unsafe"
 
 	"github.com/opennox/libs/spell"
+	"github.com/opennox/libs/types"
 
 	"github.com/opennox/opennox/v1/common/memmap"
 	"github.com/opennox/opennox/v1/legacy"
@@ -30,7 +31,7 @@ func sub_4A5E90_A() {
 
 func sub_4A62B0() {
 	s := noxServer
-	arr := memmap.PtrT[[3][32]server.ModColor](0x5D4594, 1307796)
+	arr := memmap.PtrT[[3][32]types.RGB](0x5D4594, 1307796)
 	copy(arr[:], s.Modif.Colors[:])
 }
 

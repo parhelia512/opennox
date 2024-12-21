@@ -11,6 +11,7 @@ import (
 	"github.com/opennox/libs/modifiers"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/strman"
+	"github.com/opennox/libs/types"
 
 	noxflags "github.com/opennox/opennox/v1/common/flags"
 	"github.com/opennox/opennox/v1/common/sound"
@@ -72,7 +73,7 @@ type serverModifiers struct {
 	cnt                 uint32
 	Dword_5d4594_251600 *Modifier
 	Dword_5d4594_251608 *Modifier
-	Colors              [3][32]ModColor
+	Colors              [3][32]types.RGB
 	ready               bool
 }
 
@@ -125,31 +126,27 @@ func (s *Server) Nox_xxx_equipWeapon_4131A0() {
 	s.Modif.ready = true
 }
 
-type ModColor struct {
-	R, G, B byte
-}
-
 type Modifier struct {
-	Name0                *byte       // 0, 0
-	TypeInd              uint32      // 1, 4
-	Desc8                *uint16     // 2, 8
-	Colors12             [8]ModColor // 3, 12
-	Effectiveness36      int32       // 9, 36
-	Material40           int32       // 10, 40
-	PriEnchant44         int32       // 11, 44
-	SecEnchant48         int32       // 12, 48
-	Durability52         uint32      // 13, 52
-	Field56              uint32      // 14, 56
-	ReqStrength60        uint16      // 15, 60
-	Classes62            byte        // 15, 62
-	Field63              byte        // 15, 63
-	DamageCoeffOrArmor64 float32     // 16, 64
-	Range68              float32     // 17, 68
-	DamageMin72          uint16      // 18, 72
-	Field74              uint16      // 18, 74
-	DamageType76         uint32      // 19, 76
-	Next80               *Modifier   // 20, 80
-	Prev84               *Modifier   // 21, 84
+	Name0                *byte        // 0, 0
+	TypeInd              uint32       // 1, 4
+	Desc8                *uint16      // 2, 8
+	Colors12             [8]types.RGB // 3, 12
+	Effectiveness36      int32        // 9, 36
+	Material40           int32        // 10, 40
+	PriEnchant44         int32        // 11, 44
+	SecEnchant48         int32        // 12, 48
+	Durability52         uint32       // 13, 52
+	Field56              uint32       // 14, 56
+	ReqStrength60        uint16       // 15, 60
+	Classes62            byte         // 15, 62
+	Field63              byte         // 15, 63
+	DamageCoeffOrArmor64 float32      // 16, 64
+	Range68              float32      // 17, 68
+	DamageMin72          uint16       // 18, 72
+	Field74              uint16       // 18, 74
+	DamageType76         uint32       // 19, 76
+	Next80               *Modifier    // 20, 80
+	Prev84               *Modifier    // 21, 84
 }
 
 func (p *Modifier) C() unsafe.Pointer {
@@ -185,7 +182,7 @@ type ModifierEff struct { // obj_412ae0_t
 	secdesc12         *uint16        // 3, 12
 	identdesc16       *uint16        // 4, 16
 	Price20           int32          // 5, 20
-	Color24           ModColor       // 6, 24
+	Color24           types.RGB      // 6, 24
 	_                 byte           // 6, 27
 	AllowWeapons28    uint32         // 7, 28
 	AllowArmor32      uint32         // 8, 32
@@ -287,11 +284,11 @@ func (s *serverModifiers) nox_xxx_parseWeaponOrArmorDef412D40(head **Modifier, a
 			p.Desc8, _ = alloc.CString16(s.sm.GetStringInFile(strman.ID(w.Desc), "Modifier.c"))
 		}
 		for i := range p.Colors12 {
-			p.Colors12[i] = ModColor{R: 0xff, G: 0xff, B: 0xff}
+			p.Colors12[i] = types.RGB{R: 0xff, G: 0xff, B: 0xff}
 		}
 		for i, c := range w.Colors {
 			cl := c.Color
-			p.Colors12[i+1] = ModColor{R: byte(cl.R), G: byte(cl.G), B: byte(cl.B)}
+			p.Colors12[i+1] = types.RGB{R: byte(cl.R), G: byte(cl.G), B: byte(cl.B)}
 		}
 		if w.Effectiveness >= 0 {
 			p.Effectiveness36 = int32(w.Effectiveness) + 1
@@ -360,7 +357,7 @@ func (s *serverModifiers) nox_xxx_parseModifDesc_412AE0(typ int, arr []modifiers
 			p.identdesc16, _ = alloc.CString16(s.sm.GetStringInFile(strman.ID(v.IdentifyDesc), "Modifier.c"))
 		}
 		p.Price20 = int32(v.Price)
-		p.Color24 = ModColor{R: byte(v.Color.R), G: byte(v.Color.G), B: byte(v.Color.B)}
+		p.Color24 = types.RGB{R: byte(v.Color.R), G: byte(v.Color.G), B: byte(v.Color.B)}
 		for _, d := range []struct {
 			text  string
 			table map[string]modFuncs

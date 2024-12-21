@@ -1,6 +1,8 @@
 package server
 
-var modColorsOne = [32]ModColor{
+import "github.com/opennox/libs/types"
+
+var modColorsOne = [32]types.RGB{
 	{243, 183, 159},
 	{199, 132, 58},
 	{255, 170, 86},
@@ -35,7 +37,7 @@ var modColorsOne = [32]ModColor{
 	{87, 53, 53},
 }
 
-var modColorsTwo = [32]ModColor{
+var modColorsTwo = [32]types.RGB{
 	{233, 222, 205},
 	{222, 182, 168},
 	{218, 154, 110},

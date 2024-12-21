@@ -14,6 +14,7 @@ import (
 	"github.com/opennox/libs/datapath"
 	"github.com/opennox/libs/env"
 	"github.com/opennox/libs/log"
+	"github.com/opennox/libs/types"
 
 	"github.com/opennox/opennox/v1/client/gui"
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -407,21 +408,16 @@ func CONNECT_OR_HOST() error {
 	info.SetName(name)
 	info.SetPlayerClass(getPlayerClass())
 	info.SetIsFemale(memmap.Uint8(0x85B3FC, 12255))
-	info.SetField2253(memmap.Uint16(0x85B3FC, 12187))
-	info.Field2255 = memmap.Uint8(0x85B3FC, 12189)
-	info.SetField2256(memmap.Uint16(0x85B3FC, 12184))
-	info.Field2258 = memmap.Uint8(0x85B3FC, 12186)
-	info.SetField2259(memmap.Uint16(0x85B3FC, 12190))
-	info.Field2261 = memmap.Uint8(0x85B3FC, 12192)
-	info.SetField2262(memmap.Uint16(0x85B3FC, 12193))
-	info.Field2264 = memmap.Uint8(0x85B3FC, 12195)
-	info.SetField2265(memmap.Uint16(0x85B3FC, 12196))
-	info.Field2267 = memmap.Uint8(0x85B3FC, 12198)
-	info.Field2268 = memmap.Uint8(0x85B3FC, 12199)
-	info.Field2269 = memmap.Uint8(0x85B3FC, 12200)
-	info.Field2270 = memmap.Uint8(0x85B3FC, 12201)
-	info.Field2271 = memmap.Uint8(0x85B3FC, 12202)
-	info.Field2272 = memmap.Uint8(0x85B3FC, 12203)
+	info.Colors.Hair = *memmap.PtrT[types.RGB](0x85B3FC, 12187)
+	info.Colors.Skin = *memmap.PtrT[types.RGB](0x85B3FC, 12184)
+	info.Colors.Mustache = *memmap.PtrT[types.RGB](0x85B3FC, 12190)
+	info.Colors.Goatee = *memmap.PtrT[types.RGB](0x85B3FC, 12193)
+	info.Colors.Beard = *memmap.PtrT[types.RGB](0x85B3FC, 12196)
+	info.Colors.Pants = memmap.Uint8(0x85B3FC, 12199)
+	info.Colors.Shirt1 = memmap.Uint8(0x85B3FC, 12200)
+	info.Colors.Shirt2 = memmap.Uint8(0x85B3FC, 12201)
+	info.Colors.Shoes1 = memmap.Uint8(0x85B3FC, 12202)
+	info.Colors.Shoes2 = memmap.Uint8(0x85B3FC, 12203)
 	legacy.Sub_48D740()
 
 	var popts PlayerOpts
