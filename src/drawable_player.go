@@ -136,8 +136,8 @@ func (c *Client) DrawPlayer(vp *noxrender.Viewport, dr *client.Drawable) int {
 	}
 	var colors [6]noxcolor.RGBA5551
 	for i, v := range [6]uint32{
-		// Despite the names, the layout in the Player structure is not sequential!
-		pl.Color0, pl.Color1, pl.Color2, pl.Color3, pl.Color4, pl.Color5,
+		// The layout of these fields is not sequential!
+		pl.Colors.Hair, pl.Colors.Goatee, pl.Colors.UnkColor, pl.Colors.Beard, pl.Colors.Mustache, pl.Colors.Skin,
 	} {
 		colors[i] = noxcolor.RGBA5551(v)
 	}

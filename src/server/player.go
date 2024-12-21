@@ -6,6 +6,7 @@ import (
 	"image"
 	"unsafe"
 
+	noxcolor "github.com/opennox/libs/color"
 	"github.com/opennox/libs/common"
 	"github.com/opennox/libs/object"
 	"github.com/opennox/libs/player"
@@ -666,19 +667,14 @@ type Player struct {
 	Field2168           uint32 // 542, 2168
 	Field2172           byte   // 543, 2172
 	_                   [12]byte
-	info                [97]byte        // 2185
-	Field2282           uint16          // 2282
-	CursorVec           image.Point     // 2284
-	Color5              uint32          // 573, 2292
-	Color0              uint32          // 574, 2296
-	Color4              uint32          // 575, 2300
-	Color1              uint32          // 576, 2304
-	Color3              uint32          // 577, 2308
-	Color2              uint32          // 578, 2312
-	Field2316           uint32          // 579, 2316
-	Field2320           uint32          // 580, 2320
-	Weapon              EquipWeaponData // 581, 2324
-	Armor               EquipArmorData  // 743, 2972
+	info                [97]byte         // 2185
+	Field2282           uint16           // 2282
+	CursorVec           image.Point      // 2284
+	Colors              PlayerUnitColors // 573, 2292
+	Field2316           uint32           // 579, 2316
+	Field2320           uint32           // 580, 2320
+	Weapon              EquipWeaponData  // 581, 2324
+	Armor               EquipArmorData   // 743, 2972
 	Frame3596           uint32
 	Field3600           uint32         // 900, 3600
 	Field3604           uint32         // 901, 3604
@@ -941,6 +937,28 @@ func (p *Player) Sub422140() {
 		p.field3660 = 0xDEADFACE
 		p.field3664 = 0xDEADFACE
 	}
+}
+
+func (p *Player) InitColors() {
+	p.Colors.Set(&p.Info().Colors)
+}
+
+type PlayerUnitColors struct {
+	Skin     uint32 // 573, 2292
+	Hair     uint32 // 574, 2296
+	Mustache uint32 // 575, 2300
+	Goatee   uint32 // 576, 2304
+	Beard    uint32 // 577, 2308
+	UnkColor uint32 // 578, 2312
+}
+
+func (p *PlayerUnitColors) Set(c *PlayerColors) {
+	p.Skin = noxcolor.RGB5551Color(c.Skin.R, c.Skin.G, c.Skin.B).Color32()
+	p.Hair = noxcolor.RGB5551Color(c.Hair.R, c.Hair.G, c.Hair.B).Color32()
+	p.Mustache = noxcolor.RGB5551Color(c.Mustache.R, c.Mustache.G, c.Mustache.B).Color32()
+	p.Goatee = noxcolor.RGB5551Color(c.Goatee.R, c.Goatee.G, c.Goatee.B).Color32()
+	p.Beard = noxcolor.RGB5551Color(c.Beard.R, c.Beard.G, c.Beard.B).Color32()
+	p.UnkColor = nox_color_white_2523948.Color32()
 }
 
 var (

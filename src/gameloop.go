@@ -406,10 +406,10 @@ func CONNECT_OR_HOST() error {
 	info := legacy.Nox_xxx_getHostInfoPtr_431770()
 	name := alloc.GoString16((*uint16)(memmap.PtrOff(0x85B3FC, 12204)))
 	info.SetName(name)
-	info.SetPlayerClass(getPlayerClass())
+	info.SetPlayerClass(getPlayerClass()) // 0x85B3FC, 12254
 	info.SetIsFemale(memmap.Uint8(0x85B3FC, 12255))
-	info.Colors.Hair = *memmap.PtrT[types.RGB](0x85B3FC, 12187)
 	info.Colors.Skin = *memmap.PtrT[types.RGB](0x85B3FC, 12184)
+	info.Colors.Hair = *memmap.PtrT[types.RGB](0x85B3FC, 12187)
 	info.Colors.Mustache = *memmap.PtrT[types.RGB](0x85B3FC, 12190)
 	info.Colors.Goatee = *memmap.PtrT[types.RGB](0x85B3FC, 12193)
 	info.Colors.Beard = *memmap.PtrT[types.RGB](0x85B3FC, 12196)
