@@ -2110,16 +2110,16 @@ int sub_4161E0() {
 		*getMemU8Ptr(0x5D4594, 371380 + 56) = sub_40A180(*getMemI16Ptr(0x5D4594, 371380 + 52));
 		dword_5d4594_371692 = 1;
 	}
-	strncpy(v14, (const char*)getMemAt(0x5D4594, 371380 + 9), 0xFu);
+	strncpy(v14, (const char*)getMemAt(0x5D4594, 371380 + 9), 15);
 	v14[15] = 0;
-	if (strcmp(v14, nox_xxx_serverOptionsGetServername_40A4C0())) {
+	if (strncmp(v14, nox_xxx_serverOptionsGetServername_40A4C0(), 15)) {
 		v5 = nox_xxx_serverOptionsGetServername_40A4C0();
-		strncpy((char*)getMemAt(0x5D4594, 371380 + 9), v5, 0xFu);
+		strncpy((char*)getMemAt(0x5D4594, 371380 + 9), v5, 15);
 		dword_5d4594_371692 = 1;
 	}
-	strcpy(v13, (const char*)getMemAt(0x5D4594, 371380));
-	if (strcmp(v13, nox_xxx_mapGetMapName_409B40())) {
-		strcpy((char*)getMemAt(0x5D4594, 371380), nox_xxx_mapGetMapName_409B40());
+	strncpy(v13, (const char*)getMemAt(0x5D4594, 371380), 12);
+	if (strncmp(v13, nox_xxx_mapGetMapName_409B40(), 12)) {
+		strncpy((char*)getMemAt(0x5D4594, 371380), nox_xxx_mapGetMapName_409B40(), 12);
 		dword_5d4594_371692 = 1;
 	}
 	v6 = 0;
