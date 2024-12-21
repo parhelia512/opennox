@@ -141,7 +141,6 @@ var (
 			return true
 		}},
 		{Token: "ban", HelpID: "banhelp", Flags: console.Server, LegacyFunc: legacy.WrapCommandC(legacy.Nox_cmd_ban)},
-		{Token: "execrul", HelpID: "execrulhelp", Flags: console.ClientServer, LegacyFunc: legacy.WrapCommandC(legacy.Nox_cmd_exec_rul)},
 		{Token: "exit", HelpID: "exithelp", Flags: console.ClientServer, Func: func(ctx context.Context, c *console.Console, tokens []string) bool {
 			if noxflags.HasGame(noxflags.GameModeQuest) && noxflags.HasGame(noxflags.GameHost) {
 				noxServer.sub_4D6B10(false)

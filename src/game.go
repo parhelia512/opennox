@@ -1,6 +1,7 @@
 package opennox
 
 import (
+	"bufio"
 	"context"
 	"errors"
 	"fmt"
@@ -697,6 +698,24 @@ func execServerCmd(cmd string) {
 	}
 	ctx = console.WithCheats(ctx)
 	noxConsole.Exec(ctx, cmd)
+}
+
+func execRuleFile(ctx context.Context, c *console.Console, path string) bool {
+	f, err := ifs.Open(path)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+	sc := bufio.NewScanner(f)
+	for sc.Scan() {
+		line := strings.TrimSpace(sc.Text())
+		if line == "" {
+			continue
+		}
+		c.Printf(console.ColorWhite, "> %s", line)
+		execConsoleCmd(ctx, line)
+	}
+	return true
 }
 
 func serverCmdLoadMap(name string) {

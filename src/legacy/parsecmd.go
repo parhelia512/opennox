@@ -24,7 +24,6 @@ int nox_cmd_set_spellpts(int, int, wchar2_t**);
 int nox_cmd_list_users(int, int, wchar2_t**);
 int nox_cmd_unmute(int, int, wchar2_t**);
 int nox_cmd_mute(int, int, wchar2_t**);
-int nox_cmd_exec_rul(int, int, wchar2_t**);
 int nox_cmd_offonly1(int, int, wchar2_t**);
 int nox_cmd_offonly2(int, int, wchar2_t**);
 int nox_cmd_set_net_debug(int, int, wchar2_t**);
@@ -125,9 +124,6 @@ func Nox_cmd_unmute(i C.int, n C.int, arr **wchar2_t) C.int {
 }
 func Nox_cmd_mute(i C.int, n C.int, arr **wchar2_t) C.int {
 	return C.nox_cmd_mute(i, n, arr)
-}
-func Nox_cmd_exec_rul(i C.int, n C.int, arr **wchar2_t) C.int {
-	return C.nox_cmd_exec_rul(i, n, arr)
 }
 func Nox_cmd_offonly1(i C.int, n C.int, arr **wchar2_t) C.int {
 	return C.nox_cmd_offonly1(i, n, arr)

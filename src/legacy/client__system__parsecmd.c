@@ -565,22 +565,6 @@ int nox_cmd_mute(int tokInd, int tokCnt, wchar2_t** tokens) {
 	return 1;
 }
 
-//----- (00443810) --------------------------------------------------------
-int nox_cmd_exec_rul(int tokInd, int tokCnt, wchar2_t** tokens) {
-	if (tokCnt != 2) {
-		return 0;
-	}
-	wchar2_t buf[128];
-	nox_wcscpy(buf, tokens[1]);
-	if (!nox_wcschr(buf, 0x2Eu)) {
-		nox_wcscat(buf, L".rul");
-	}
-	wchar2_t* s = nox_strman_loadString_40F1D0("ExecutingRul", 0, "C:\\NoxPost\\src\\Client\\System\\parsecmd.c", 4002);
-	nox_gui_console_Printf_450C00(NOX_CONSOLE_RED, s, buf);
-	nox_xxx_doExecrul_4438A0(buf);
-	return 1;
-}
-
 //----- (00443E90) --------------------------------------------------------
 int nox_xxx_serverHandleClientConsole_443E90(nox_playerInfo* pl, char a2, wchar2_t* a3) {
 	int v3;        // ecx

@@ -493,46 +493,6 @@ void sub_4417E0(wchar2_t* a1, const char* a2) {
 }
 // 4417E0: using guessed type char var_C0[64];
 
-//----- (004438A0) --------------------------------------------------------
-int nox_xxx_doExecrul_4438A0(int a1) {
-	FILE* v1;        // eax
-	FILE* v2;        // esi
-	char* v3;        // eax
-	char v5[256];    // [esp+8h] [ebp-400h]
-	char v6[256];    // [esp+108h] [ebp-300h]
-	wchar2_t v7[128]; // [esp+208h] [ebp-200h]
-
-	if (!a1) {
-		return 0;
-	}
-	v6[0] = 0;
-	nox_sprintf(v6, "%S", a1);
-	v1 = nox_fs_open_text(v6);
-	v2 = v1;
-	if (!v1) {
-		return 0;
-	}
-	if (!nox_fs_feof(v1)) {
-		do {
-			memset(v5, 0, 0xFCu);
-			*(uint16_t*)&v5[252] = 0;
-			v5[254] = 0;
-			nox_fs_fgets(v2, v5, 255);
-			v3 = strchr(v5, 10);
-			if (v3) {
-				*v3 = 0;
-			}
-			if (v5[0]) {
-				nox_swprintf(v7, L"%S", v5);
-				nox_gui_console_Printf_450C00(NOX_CONSOLE_WHITE, (wchar2_t*)getMemAt(0x587000, 106956), v7);
-				nox_server_parseCmdText_443C80(v7, 1);
-			}
-		} while (!nox_fs_feof(v2));
-	}
-	nox_fs_close(v2);
-	return 1;
-}
-
 //----- (00445450) --------------------------------------------------------
 wchar2_t* sub_445450() {
 	unsigned char* v0; // esi

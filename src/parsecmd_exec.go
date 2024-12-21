@@ -88,4 +88,23 @@ func init() {
 			return true
 		},
 	})
+	noxConsole.Register(&console.Command{
+		Token:  "execrul",
+		HelpID: "execrulhelp",
+		Flags:  console.ClientServer,
+		Func: func(ctx context.Context, c *console.Console, tokens []string) bool {
+			if len(tokens) != 1 {
+				return false
+			}
+			path := strings.ToLower(tokens[0])
+			if !strings.HasSuffix(strings.ToLower(path), ".rul") {
+				path += ".rul"
+			}
+			str := c.Strings().GetStringInFile("ExecutingRul", "parsecmd.c")
+			str = strings.ReplaceAll(str, "%S", "%s")
+			c.Printf(console.ColorRed, str, path)
+			execRuleFile(ctx, c, path)
+			return true
+		},
+	})
 }
