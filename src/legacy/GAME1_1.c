@@ -727,7 +727,7 @@ int sub_41A000(char* a1, nox_savegame_xxx* sv) {
 			}
 		LABEL_10:
 			memcpy(sv, getMemAt(0x85B3FC, 10980), sizeof(nox_savegame_xxx));
-			memcpy(getMemAt(0x85B3FC, 10980), v12, 0x4FCu);
+			memcpy(getMemAt(0x85B3FC, 10980), v12, 1276);
 			*getMemU16Ptr(0x85B3FC, 12256) = v13;
 		} else {
 			nox_xxx_cryptSeekCur_40E0A0(v11);
@@ -2354,7 +2354,7 @@ int sub_41CEE0(void* a1p, int a2) {
 	int v6;            // edi
 	int v8;            // eax
 
-	memcpy(getMemAt(0x85B3FC, 10980), a1, sizeof(nox_savegame_xxx));
+	memcpy(getMemAt(0x85B3FC, 10980), a1p, sizeof(nox_savegame_xxx));
 	if (!nox_xxx_cryptOpen_426910((char*)getMemAt(0x85B3FC, 10984), 0, 27)) {
 		return 0;
 	}

@@ -35,8 +35,8 @@ const NOX_SAVEGAME_XXX_MAX = 14
 
 var (
 	saveLog                   = log.New("save")
-	nox_xxx_saves_arr         []legacy.Nox_savegame_xxx
-	nox_savegame_arr_1064948  [NOX_SAVEGAME_XXX_MAX]legacy.Nox_savegame_xxx
+	nox_xxx_saves_arr         []server.SaveGameInfo
+	nox_savegame_arr_1064948  [NOX_SAVEGAME_XXX_MAX]server.SaveGameInfo
 	nox_savegame_name_1307752 string
 	nox_wnd_xxx_1307748       *gui.Anim
 	winSelSave                *gui.Window
@@ -167,7 +167,7 @@ func sub_43B670() {
 }
 
 func sub_46D6F0() int {
-	nox_savegame_arr_1064948 = [NOX_SAVEGAME_XXX_MAX]legacy.Nox_savegame_xxx{}
+	nox_savegame_arr_1064948 = [NOX_SAVEGAME_XXX_MAX]server.SaveGameInfo{}
 	win := dword_5d4594_1082856
 	if win.GetFlags().IsHidden() {
 		return 0
@@ -339,7 +339,7 @@ func nox_xxx_findAutosaves_4A5150() {
 	ifs.Mkdir(PathName)
 	if noxflags.HasGame(noxflags.GameModeCoop) {
 		saveLog.Printf("scanning path for coop saves: %q", PathName)
-		nox_xxx_saves_arr, _ = alloc.Make([]legacy.Nox_savegame_xxx{}, NOX_SAVEGAME_XXX_MAX)
+		nox_xxx_saves_arr, _ = alloc.Make([]server.SaveGameInfo{}, NOX_SAVEGAME_XXX_MAX)
 		nox_savegame_sub_46CE40(wlist, wnames, wstyle, nox_xxx_saves_arr)
 		return
 	}
@@ -353,7 +353,7 @@ func nox_xxx_findAutosaves_4A5150() {
 		}
 	}
 	if v0 != 0 {
-		nox_xxx_saves_arr, _ = alloc.Make([]legacy.Nox_savegame_xxx{}, v0)
+		nox_xxx_saves_arr, _ = alloc.Make([]server.SaveGameInfo{}, v0)
 	} else {
 		nox_xxx_saves_arr = nil
 	}
@@ -377,11 +377,11 @@ func nox_xxx_findAutosaves_4A5150() {
 	})
 	for i := 0; i < v9; i++ {
 		sv := &nox_xxx_saves_arr[i]
-		v28 := fmt.Sprintf("nox.str:%s", saveClasses[sv.Player_class])
-		v26 := strMan.GetStringInFile(strman.ID(v28), "C:\\NoxPost\\src\\client\\shell\\selchar.c")
-		v24 := alloc.GoString16S(sv.Player_name[:])
+		classStrID := strman.ID(fmt.Sprintf("nox.str:%s", saveClasses[sv.Player.PlayerClass()]))
+		classStr := strMan.GetStringInFile(classStrID, "C:\\NoxPost\\src\\client\\shell\\selchar.c")
+		pname := sv.Player.Name()
 		v14 := strMan.GetStringInFile("GuiInv.c:ElaborateNameFormat", "C:\\NoxPost\\src\\client\\shell\\selchar.c")
-		v30 := fmt.Sprintf(v14, v24, v26)
+		v30 := fmt.Sprintf(v14, pname, classStr)
 		if sv.Flags&0x4 != 0 {
 			v15 := int(sv.Stage)
 			if v15 < 1 {
@@ -427,7 +427,7 @@ func nox_xxx_findAutosaves_4A5150() {
 	}
 }
 
-func sub_4A5690(sv *legacy.Nox_savegame_xxx) int {
+func sub_4A5690(sv *server.SaveGameInfo) int {
 	if sv.Flags&4 == 0 {
 		if !noxServer.nox_xxx_isQuest_4D6F50() && !sub_4D6F70() {
 			return 1
@@ -447,7 +447,7 @@ func sub_4A5C70() {
 		deleteSaveDir(nox_savegame_name_1307752, true)
 	} else {
 		ind := memmap.Uint32(0x5D4594, 1307772)
-		path := alloc.GoStringS(nox_xxx_saves_arr[ind].Path[:])
+		path := alloc.GoStringS(nox_xxx_saves_arr[ind].PathBuf[:])
 		ifs.Remove(path)
 	}
 	winCharList.Func94(gui.AsWindowEvent(0x400F, 0, 0))
@@ -462,7 +462,7 @@ var saveClasses = []string{
 	"Conjurer",
 }
 
-func nox_savegame_sub_46CE40(wlist, wnames, wstyles *gui.Window, sarr []legacy.Nox_savegame_xxx) int {
+func nox_savegame_sub_46CE40(wlist, wnames, wstyles *gui.Window, sarr []server.SaveGameInfo) int {
 	const stringsFile = "C:\\NoxPost\\src\\client\\Gui\\GUISave.c"
 	PathName := datapath.Save()
 	ifs.Mkdir(PathName)
@@ -484,7 +484,7 @@ func nox_savegame_sub_46CE40(wlist, wnames, wstyles *gui.Window, sarr []legacy.N
 	swin := dword_5d4594_1082856
 	for v9 := 0; v9 < NOX_SAVEGAME_XXX_MAX; v9++ {
 		sv := &sarr[v9]
-		spath := alloc.GoStringS(sv.Path[:])
+		spath := alloc.GoStringS(sv.PathBuf[:])
 		if spath == "" {
 			wlist.Func94(&WindowEvent0x400d{Str: " ", Val: 3})
 			str := " "
@@ -495,9 +495,9 @@ func nox_savegame_sub_46CE40(wlist, wnames, wstyles *gui.Window, sarr []legacy.N
 			wstyles.Func94(&WindowEvent0x400d{Str: str, Val: 3})
 			continue
 		}
-		playerName := alloc.GoString16S(sv.Player_name[:])
+		playerName := sv.Player.Name()
 		sname := datapath.SaveNameFromPath(spath)
-		class := int(sv.Player_class)
+		class := sv.Player.PlayerClass()
 		classNameID := fmt.Sprintf("nox.str:%s", saveClasses[class])
 		v39 := strMan.GetStringInFile(strman.ID(classNameID), stringsFile)
 		v13 := strMan.GetStringInFile("the", stringsFile)
@@ -587,22 +587,22 @@ func nox_savegame_sub_46CE40(wlist, wnames, wstyles *gui.Window, sarr []legacy.N
 	return ind
 }
 
-func sub46CD70(sv *legacy.Nox_savegame_xxx) int {
+func sub46CD70(sv *server.SaveGameInfo) int {
 	if sv.Flags&0x8 != 0 {
 		return 10
 	}
-	buf := datapath.SaveNameFromPath(alloc.GoStringS(sv.Path[:]))
+	buf := datapath.SaveNameFromPath(alloc.GoStringS(sv.PathBuf[:]))
 	return bool2int(buf != common.SaveAuto) + (NOX_SAVEGAME_XXX_MAX - 1)
 }
 
-func nox_savegame_findLatestSave_46CDC0(sarr []legacy.Nox_savegame_xxx) int {
+func nox_savegame_findLatestSave_46CDC0(sarr []server.SaveGameInfo) int {
 	var (
 		ind    = -1
 		latest time.Time
 	)
 	for i := 0; i < len(sarr); i++ {
 		sv := &sarr[i]
-		spath := alloc.GoStringS(sv.Path[:])
+		spath := alloc.GoStringS(sv.PathBuf[:])
 		if spath == "" {
 			continue
 		}
@@ -632,7 +632,7 @@ func nox_savegame_sub_46D580() {
 	if noxflags.HasGame(noxflags.GameModeQuest) {
 		return
 	}
-	nox_savegame_arr_1064948 = [NOX_SAVEGAME_XXX_MAX]legacy.Nox_savegame_xxx{}
+	nox_savegame_arr_1064948 = [NOX_SAVEGAME_XXX_MAX]server.SaveGameInfo{}
 	nox_savegame_sub_46CE40(dword_5d4594_1082860, dword_5d4594_1082864, dword_5d4594_1082868, nox_savegame_arr_1064948[:])
 	win1 := dword_5d4594_1082856
 	win1.ShowModal()
@@ -697,7 +697,7 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *gui.Window, e gui.WindowEvent) gui.Win
 				break
 			}
 			sv := &nox_xxx_saves_arr[v10]
-			spath := alloc.GoStringS(sv.Path[:])
+			spath := alloc.GoStringS(sv.PathBuf[:])
 			if spath == "" {
 				saveLog.Printf("save path is empty for slot %d", v10)
 				clientPlaySoundSpecial(sound.SoundNoCanDo, 100)
@@ -705,14 +705,14 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *gui.Window, e gui.WindowEvent) gui.Win
 				return gui.RawEventResp(1)
 			}
 			v20 := datapath.SaveNameFromPath(spath)
-			saveLog.Printf("loading slot %d: %q (%q, %q)", v10, v20, spath, alloc.GoStringS(sv.Map_name[:]))
-			var v23 legacy.Nox_savegame_xxx
-			if (!noxflags.HasGame(noxflags.GameModeCoop) || copySaveDir(v20, common.SaveTmp) == nil) && legacy.Sub_41A000(alloc.GoStringS(sv.Path[:]), &v23) != 0 {
+			saveLog.Printf("loading slot %d: %q (%q, %q)", v10, v20, spath, alloc.GoStringS(sv.MapNameBuf[:]))
+			var v23 server.SaveGameInfo
+			if (!noxflags.HasGame(noxflags.GameModeCoop) || copySaveDir(v20, common.SaveTmp) == nil) && legacy.Sub_41A000(alloc.GoStringS(sv.PathBuf[:]), &v23) != 0 {
 
-				v23d := memmap.PtrT[legacy.Nox_savegame_xxx](0x85B3FC, 10980)
+				v23d := clientCurSave()
 				*v23d = v23
 				noxClient.GamePopState()
-				switch getPlayerClass() {
+				switch clientPlayerInfo().PlayerClass() {
 				case player.Warrior:
 					noxServer.nox_xxx_gameSetMapPath_409D70("war01a.map")
 				case player.Wizard:
@@ -723,7 +723,7 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *gui.Window, e gui.WindowEvent) gui.Win
 				if noxflags.HasGame(noxflags.GameModeCoop) {
 					nox_xxx_gameSetSwitchSolo_4DB220(1)
 					nox_xxx_gameSetNoMPFlag_4DB230(1)
-					mname := alloc.GoStringS(sv.Map_name[:])
+					mname := alloc.GoStringS(sv.MapNameBuf[:])
 					fbase := fmt.Sprintf("%s.map", mname)
 					v22, err := nox_client_checkSaveMapExistsTmp(fbase)
 					if err != nil {
@@ -732,12 +732,12 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *gui.Window, e gui.WindowEvent) gui.Win
 					nox_xxx_gameSetSoloSavePath_4DB270(v22)
 					noxServer.nox_xxx_gameSetMapPath_409D70(fbase)
 					legacy.Nox_xxx_mapLoadOrSaveMB_4DCC70(1)
-					v13, _ := sub41D090(alloc.GoStringS(sv.Path[:]))
+					v13, _ := sub41D090(alloc.GoStringS(sv.PathBuf[:]))
 					noxServer.Objs.SetFirstObjectScriptID(server.ObjectScriptID(v13))
 				} else if sub4D6F30() {
 					sub_4DCE60(int(sv.Stage))
-					noxServer.setQuestMapName(alloc.GoStringS(sv.Map_name[:]))
-					v14, _ := sub41D090(alloc.GoStringS(sv.Path[:]))
+					noxServer.setQuestMapName(alloc.GoStringS(sv.MapNameBuf[:]))
+					v14, _ := sub41D090(alloc.GoStringS(sv.PathBuf[:]))
 					noxServer.Objs.SetFirstObjectScriptID(server.ObjectScriptID(v14))
 				}
 				sub4A24C0(false)
@@ -751,7 +751,7 @@ func nox_xxx_windowSelCharProc_4A5710(a1 *gui.Window, e gui.WindowEvent) gui.Win
 				break
 			}
 			sv := &nox_xxx_saves_arr[v5]
-			spath := alloc.GoStringS(sv.Path[:])
+			spath := alloc.GoStringS(sv.PathBuf[:])
 			var (
 				v17     func()
 				v16     gui.DialogFlags
@@ -903,8 +903,8 @@ func nox_savegame_sub_46C920(win1 *gui.Window, ev gui.WindowEvent) gui.WindowEve
 				legacy.Nox_xxx_wnd_46ABB0(v10, 0)
 				return nil
 			}
-			if alloc.GoStringS(nox_savegame_arr_1064948[saveNum].Path[:]) != "" {
-				path := datapath.SaveNameFromPath(alloc.GoStringS(nox_savegame_arr_1064948[saveNum].Path[:]))
+			if alloc.GoStringS(nox_savegame_arr_1064948[saveNum].PathBuf[:]) != "" {
+				path := datapath.SaveNameFromPath(alloc.GoStringS(nox_savegame_arr_1064948[saveNum].PathBuf[:]))
 				pathArr := memmap.PtrT[[16]byte](0x5D4594, 1082840)
 				alloc.StrCopy(pathArr[:], path)
 				dword_5d4594_1082856.Capture(false)
@@ -928,7 +928,7 @@ func nox_savegame_sub_46C920(win1 *gui.Window, ev gui.WindowEvent) gui.WindowEve
 			return nil
 		case 502:
 			v6 := *(*int32)(unsafe.Add(dword_5d4594_1082864.WidgetData, 48))
-			if v6 >= 0 && alloc.GoStringS(nox_savegame_arr_1064948[v6].Path[:]) != "" {
+			if v6 >= 0 && alloc.GoStringS(nox_savegame_arr_1064948[v6].PathBuf[:]) != "" {
 				if legacy.Nox_xxx_playerAnimCheck_4372B0() != 0 {
 					nox_savegame_sub_46CBD0()
 					return nil
@@ -959,10 +959,10 @@ func nox_savegame_sub_46C920(win1 *gui.Window, ev gui.WindowEvent) gui.WindowEve
 
 func nox_savegame_sub_46CBD0() {
 	i := *(*int32)(unsafe.Add(dword_5d4594_1082864.WidgetData, 48))
-	if alloc.GoStringS(nox_savegame_arr_1064948[i].Path[:]) == "" {
+	if alloc.GoStringS(nox_savegame_arr_1064948[i].PathBuf[:]) == "" {
 		return
 	}
-	v3 := datapath.SaveNameFromPath(alloc.GoStringS(nox_savegame_arr_1064948[i].Path[:]))
+	v3 := datapath.SaveNameFromPath(alloc.GoStringS(nox_savegame_arr_1064948[i].PathBuf[:]))
 	if !clientLoadCoopGame(v3) {
 		v1 := strMan.GetStringInFile("SaveErrorTitle", "GUISave.c")
 		NewDialogWindow(nil, v1, v1, gui.DialogOKButton|gui.DialogFlag6, nil, nil)

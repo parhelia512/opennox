@@ -14,7 +14,6 @@ import (
 	"github.com/opennox/libs/datapath"
 	"github.com/opennox/libs/env"
 	"github.com/opennox/libs/log"
-	"github.com/opennox/libs/types"
 
 	"github.com/opennox/opennox/v1/client/gui"
 	noxflags "github.com/opennox/opennox/v1/common/flags"
@@ -403,21 +402,22 @@ func CONNECT_OR_HOST() error {
 		}()
 	}
 	mode := noxClient.videoGetGameMode()
+	save := clientCurSave()
 	info := legacy.Nox_xxx_getHostInfoPtr_431770()
-	name := alloc.GoString16((*uint16)(memmap.PtrOff(0x85B3FC, 12204)))
-	info.SetName(name)
-	info.SetPlayerClass(getPlayerClass()) // 0x85B3FC, 12254
-	info.SetIsFemale(memmap.Uint8(0x85B3FC, 12255))
-	info.Colors.Skin = *memmap.PtrT[types.RGB](0x85B3FC, 12184)
-	info.Colors.Hair = *memmap.PtrT[types.RGB](0x85B3FC, 12187)
-	info.Colors.Mustache = *memmap.PtrT[types.RGB](0x85B3FC, 12190)
-	info.Colors.Goatee = *memmap.PtrT[types.RGB](0x85B3FC, 12193)
-	info.Colors.Beard = *memmap.PtrT[types.RGB](0x85B3FC, 12196)
-	info.Colors.Pants = memmap.Uint8(0x85B3FC, 12199)
-	info.Colors.Shirt1 = memmap.Uint8(0x85B3FC, 12200)
-	info.Colors.Shirt2 = memmap.Uint8(0x85B3FC, 12201)
-	info.Colors.Shoes1 = memmap.Uint8(0x85B3FC, 12202)
-	info.Colors.Shoes2 = memmap.Uint8(0x85B3FC, 12203)
+	ci := &save.Player
+	info.SetName(ci.Name())
+	info.SetPlayerClass(ci.PlayerClass())
+	info.SetIsFemale(ci.IsFemaleVal)
+	info.Colors.Skin = ci.SkinColor
+	info.Colors.Hair = ci.HairColor
+	info.Colors.Mustache = ci.MustacheColor
+	info.Colors.Goatee = ci.GoateeColor
+	info.Colors.Beard = ci.BeardColor
+	info.Colors.Pants = ci.PantsColor
+	info.Colors.Shirt1 = ci.Shirt1Color
+	info.Colors.Shirt2 = ci.Shirt2Color
+	info.Colors.Shoes1 = ci.Shoes1Color
+	info.Colors.Shoes2 = ci.Shoes2Color
 	legacy.Sub_48D740()
 
 	var popts PlayerOpts
@@ -426,7 +426,7 @@ func CONNECT_OR_HOST() error {
 		popts.Serial = s
 	}
 	popts.Byte152 = byte(bool2int(!nox_xxx_checkHasSoloMaps()))
-	if memmap.Uint8(0x85B3FC, 10980)&4 != 0 {
+	if save.Flags&0x4 != 0 {
 		popts.Byte152 |= 0x80
 	}
 	popts.Field2072 = memmap.String(0x85B3FC, 10395)

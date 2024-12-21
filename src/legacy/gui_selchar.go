@@ -23,7 +23,11 @@ package legacy
 #include "client__shell__mainmenu.h"
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+
+	"github.com/opennox/opennox/v1/server"
+)
 
 var (
 	Sub_4A1BE0                             func(a1 int) int
@@ -39,23 +43,6 @@ var (
 	Sub_450580                             func()
 	Sub_4DB170                             func(a1 bool, a2 unsafe.Pointer, a3 int)
 )
-
-var _ = [1]struct{}{}[1277-unsafe.Offsetof(Nox_savegame_xxx{}.Stage)]
-var _ = [1]struct{}{}[1280-unsafe.Sizeof(Nox_savegame_xxx{})] // FIXME: should be 1278
-
-type Nox_savegame_xxx struct {
-	Flags        uint32     // 0
-	Path         [1024]byte // 4
-	Field_1028   [128]byte  // 1028
-	Map_name     [32]byte   // 1156
-	Timestamp    SYSTEMTIME // 1188
-	Field_1204   [20]byte   // 1204
-	Player_name  [25]uint16 // 1224
-	Player_class byte       // 1274
-	Field_1275   byte       // 1275
-	Field_1276   byte       // 1276
-	Stage        byte       // 1277
-}
 
 var _ = [1]struct{}{}[52-unsafe.Sizeof(Nox_screenParticle{})]
 
@@ -151,7 +138,7 @@ func Sub_4AD9B0(a1 int) {
 func Nox_xxx_bookShowMB_45AD70(a1 int) {
 	C.nox_xxx_bookShowMB_45AD70(C.int(a1))
 }
-func Sub_41A000(a1 string, a2 *Nox_savegame_xxx) int {
+func Sub_41A000(a1 string, a2 *server.SaveGameInfo) int {
 	cstr := CString(a1)
 	defer StrFree(cstr)
 	return int(C.sub_41A000(cstr, (*C.nox_savegame_xxx)(unsafe.Pointer(a2))))

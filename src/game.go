@@ -511,10 +511,6 @@ func (s *Server) maybeStopRegister() {
 	}
 }
 
-func getString10984() string {
-	return alloc.GoString((*byte)(memmap.PtrOff(0x85B3FC, 10984)))
-}
-
 func initGameSession435CC0() error {
 	c := noxClient
 	ctx := context.Background()
@@ -587,7 +583,7 @@ func initGameSession435CC0() error {
 	v1 := nox_video_getCutSize()
 	c.nox_draw_setCutSize(v1, 0)
 	if noxflags.HasGame(noxflags.GameModeCoop) {
-		sub_41CC00(getString10984())
+		sub_41CC00(clientCurSave().Path())
 	} else if c.srv.nox_xxx_isQuest_4D6F50() || sub_4D6F70() {
 		if c.srv.nox_xxx_isQuest_4D6F50() || sub_4D6F70() {
 			legacy.Sub_460380()
@@ -595,11 +591,11 @@ func initGameSession435CC0() error {
 			legacy.Nox_xxx_cliPrepareGameplay2_4721D0()
 		}
 		if !noxflags.HasGame(noxflags.GameHost) {
-			sub_41CC00(getString10984())
+			sub_41CC00(clientCurSave().Path())
 		}
 	}
 	if !isServer {
-		legacy.Nox_xxx_plrLoad_41A480(getString10984())
+		legacy.Nox_xxx_plrLoad_41A480(clientCurSave().Path())
 	}
 	if isServer && !isDedicatedServer {
 		c.srv.PlayerGoObserver(c.Server.Players.List()[0], false, true)

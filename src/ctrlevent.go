@@ -96,7 +96,7 @@ func (c *CtrlEventHandler) nox_xxx_clientControl_42D6B0(mpos image.Point, a4 *Ct
 	}
 	c.nox_xxx_clientControl_42D6B0_A(a4)
 	c.nox_xxx_clientControl_42D6B0_orientation(mpos)
-	if getPlayerClass() != player.Warrior {
+	if clientPlayerInfo().PlayerClass() != player.Warrior {
 		legacy.Nox_xxx_guiSpellTargetClickCheckSend_45DBB0()
 	}
 	if c.flags754064&4 != 0 {
@@ -660,7 +660,7 @@ func (c *CtrlEventHandler) nox_ctrlevent_action_42E670(code player.CtrlCode, dat
 			return
 		}
 	}
-	if getPlayerClass() != player.Warrior || !code.IsMagicRelated() {
+	if clientPlayerInfo().PlayerClass() != player.Warrior || !code.IsMagicRelated() {
 		j := c.indA
 		if noxflags.HasGame(noxflags.GameHost) && code.CanPauseMode() {
 			for i := c.indB; i != c.indA; i = (i + 1) % cap(c.bufA) {

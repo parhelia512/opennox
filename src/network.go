@@ -111,12 +111,11 @@ func nox_client_joinGame() error {
 	if s, ok := serial.Serial(); ok {
 		copy(buf[56:], s)
 	}
-	wstr := memmap.PtrOff(0x85B3FC, 12204)
-	if n := alloc.StrLen((*uint16)(wstr)); n != 0 {
-		copy(buf[4:54], unsafe.Slice((*byte)(wstr), n*2))
-	}
-	buf[54] = byte(getPlayerClass())
-	buf[55] = memmap.Uint8(0x85B3FC, 12256)
+	save := clientCurSave()
+	ci := &save.Player
+	alloc.StrCopy16B(buf[4:54], ci.Name())
+	buf[54] = byte(ci.PlayerClass())
+	buf[55] = save.Field1276
 	endianess.PutUint32(buf[80:], uint32(NOX_CLIENT_VERS_CODE))
 	endianess.PutUint32(buf[84:], uint32(legacy.Get_dword_5d4594_2660032()))
 

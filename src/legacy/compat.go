@@ -37,28 +37,3 @@ func noxGetLocalTime(p *C.noxSYSTEMTIME) {
 	p.wSecond = C.ushort(tm.Second())
 	p.wMilliseconds = C.ushort(tm.Nanosecond() / 1e6)
 }
-
-var _ = [1]struct{}{}[16-unsafe.Sizeof(SYSTEMTIME{})]
-
-type SYSTEMTIME struct {
-	Year         uint16
-	Month        uint16
-	DayOfWeek    uint16
-	Day          uint16
-	Hour         uint16
-	Minute       uint16
-	Second       uint16
-	Milliseconds uint16
-}
-
-func (ts *SYSTEMTIME) Time() time.Time {
-	if ts == nil {
-		return time.Time{}
-	}
-	return time.Date(
-		int(ts.Year), time.Month(ts.Month), int(ts.Day),
-		int(ts.Hour), int(ts.Minute), int(ts.Second),
-		int(ts.Milliseconds)*int(time.Millisecond),
-		time.Local,
-	)
-}

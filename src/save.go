@@ -144,7 +144,7 @@ func sub_41A000_check0(path string) byte {
 	path = ifs.Denormalize(path)
 	save, freeSave := alloc.Make([]byte{}, 1280)
 	defer freeSave()
-	legacy.Sub_41A000(path, (*legacy.Nox_savegame_xxx)(unsafe.Pointer(&save[0])))
+	legacy.Sub_41A000(path, (*server.SaveGameInfo)(unsafe.Pointer(&save[0])))
 	return save[0]
 }
 
@@ -175,10 +175,11 @@ func clientSavePlayerChar(path string, data []byte) int {
 	}
 	f.Close()
 
+	save := clientCurSave()
 	if noxflags.HasGame(noxflags.GameModeQuest) {
-		*memmap.PtrUint8(0x85B3FC, 12257) = byte(legacy.Get_dword_5d4594_1049844())
+		save.Stage = byte(legacy.Get_dword_5d4594_1049844())
 	} else {
-		*memmap.PtrUint8(0x85B3FC, 12257) = 0
+		save.Stage = 0
 	}
 	if !legacy.Nox_xxx_mapSavePlayerDataMB_41A230(path) {
 		networkLogPrint("SavePlayerOnClient: Unable to save client data to file\n")
@@ -380,7 +381,7 @@ func xferDataCallback40AF90(ind ntype.PlayerInd, data netxfer.Data) {
 	case server.NetXferMOTD:
 		xferSet446520(1, data.Data)
 	case server.NetXferSavedata:
-		path := getString10984()
+		path := clientCurSave().Path()
 		clientSavePlayerChar(path, data.Data)
 		if noxflags.HasGame(noxflags.GameModeQuest) {
 			if sub_4460B0() {
@@ -773,11 +774,12 @@ func saveCoopGame(name string) bool {
 	}
 	legacy.Nox_xxx_monstersAllBelongToHost_4DB6A0()
 	ppath := datapath.Save(common.SaveTmp, common.PlayerFile)
-	*memmap.PtrUint32(0x85B3FC, 10980) &= 0xFFFFFFF7
+	save := clientCurSave()
+	save.Flags &^= 0x8
 	if memmap.Uint32(0x5D4594, 1563076) != 0 {
-		*memmap.PtrUint32(0x85B3FC, 10980) |= 8
+		save.Flags |= 8
 	}
-	*memmap.PtrUint8(0x85B3FC, 12257) = sub_450750()
+	save.Stage = sub_450750()
 	if !savePlayerData(ppath, pl.PlayerIndex()) {
 		return false
 	}

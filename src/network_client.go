@@ -61,7 +61,7 @@ func (c *Client) nox_xxx_netOnPacketRecvCli48EA70_switch(ind ntype.PlayerInd, op
 	}
 	if n, ok, err := c.Client.OnClientPacketOpSub(ind, op, data, localFrame, localFrame16, client.CurPlayerInfo{
 		Connected: nox_client_isConnected(),
-		Class:     getPlayerClass(),
+		Class:     clientPlayerInfo().PlayerClass(),
 	}); err != nil {
 		return -1
 	} else if ok {

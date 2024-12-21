@@ -11,7 +11,6 @@ import (
 	"github.com/opennox/libs/noxnet"
 	"github.com/opennox/libs/noxnet/netmsg"
 	"github.com/opennox/libs/object"
-	"github.com/opennox/libs/player"
 	"github.com/opennox/libs/spell"
 	"github.com/opennox/libs/things"
 	"github.com/opennox/libs/types"
@@ -50,8 +49,12 @@ func clientPlayer() *server.Player {
 	return noxServer.Players.ByID(legacy.ClientPlayerNetCode())
 }
 
-func getPlayerClass() player.Class {
-	return player.Class(memmap.Uint8(0x85B3FC, 12254))
+func clientCurSave() *server.SaveGameInfo {
+	return memmap.PtrT[server.SaveGameInfo](0x85B3FC, 10980)
+}
+
+func clientPlayerInfo() *server.SavePlayerInfo {
+	return &clientCurSave().Player
 }
 
 func BlindPlayers(blind bool) {
