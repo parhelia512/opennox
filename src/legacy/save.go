@@ -12,6 +12,9 @@ extern uint32_t dword_5d4594_1049844;
 extern uint32_t dword_5d4594_1563096;
 void nox_xxx_monstersAllBelongToHost_4DB6A0();
 void nox_xxx_unitsNewAddToList_4DAC00();
+int sub_41C280(void* a1);
+int nox_xxx_parseFileInfoData_41C3B0(int a1);
+int sub_41C780(int a1);
 */
 import "C"
 import (
@@ -84,9 +87,6 @@ func Nox_xxx_quickBarClose_4606B0() {
 }
 func Nox_xxx_monstersAllBelongToHost_4DB6A0() {
 	C.nox_xxx_monstersAllBelongToHost_4DB6A0()
-}
-func Nox_xxx_mapSavePlayerDataMB_41A230(a1 string) bool {
-	return C.nox_xxx_mapSavePlayerDataMB_41A230(internCStr(a1)) != 0
 }
 func Nox_xxx_mapSaveMap_51E010(a1 string, a2 int) bool {
 	return C.nox_xxx_mapSaveMap_51E010(internCStr(a1), C.int(a2)) != 0
@@ -167,6 +167,36 @@ func Sub_41C080(cf *cryptfile.CryptFile, u *server.Object, pinfo *server.PlayerI
 	cryptfile.SetGlobal(cf)
 	defer cryptfile.SetGlobal(old)
 	if C.sub_41C080(u.CObj(), pinfo.C()) == 0 {
+		return errors.New("failed")
+	}
+	return nil
+}
+
+func Sub_41C280(cf *cryptfile.CryptFile) error {
+	old := cryptfile.Global()
+	cryptfile.SetGlobal(cf)
+	defer cryptfile.SetGlobal(old)
+	if C.sub_41C280(nil) == 0 {
+		return errors.New("failed")
+	}
+	return nil
+}
+
+func Nox_xxx_parseFileInfoData_41C3B0(cf *cryptfile.CryptFile) error {
+	old := cryptfile.Global()
+	cryptfile.SetGlobal(cf)
+	defer cryptfile.SetGlobal(old)
+	if C.nox_xxx_parseFileInfoData_41C3B0(0) == 0 {
+		return errors.New("failed")
+	}
+	return nil
+}
+
+func Sub_41C780(cf *cryptfile.CryptFile) error {
+	old := cryptfile.Global()
+	cryptfile.SetGlobal(cf)
+	defer cryptfile.SetGlobal(old)
+	if C.sub_41C780(0) == 0 {
 		return errors.New("failed")
 	}
 	return nil

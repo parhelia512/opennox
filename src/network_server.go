@@ -243,7 +243,7 @@ func (s *Server) onPacketOp(pli ntype.PlayerInd, op netmsg.Op, data []byte, pl *
 		} else {
 			fname := datapath.Save("_temp_.dat")
 			defer ifs.Remove(fname)
-			if savePlayerData(fname, pl.PlayerIndex()) {
+			if savePlayerServerData(fname, pl.PlayerIndex()) {
 				sub41CFA0(fname, pl.PlayerIndex())
 			}
 		}

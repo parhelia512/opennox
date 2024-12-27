@@ -181,7 +181,7 @@ func clientSavePlayerChar(path string, data []byte) int {
 	} else {
 		save.Stage = 0
 	}
-	if !legacy.Nox_xxx_mapSavePlayerDataMB_41A230(path) {
+	if !savePlayerClientData(path) {
 		networkLogPrint("SavePlayerOnClient: Unable to save client data to file\n")
 		return 0
 	}
@@ -518,7 +518,7 @@ func sub_4DCD40() {
 		ud := u.UpdateDataPlayer()
 		pl := ud.Player
 		if pl.Field4792 != 0 && ud.Field138 != 1 {
-			if savePlayerData(path, pl.PlayerIndex()) {
+			if savePlayerServerData(path, pl.PlayerIndex()) {
 				sub41CFA0(path, pl.PlayerIndex())
 			}
 			ifs.Remove(path)
@@ -544,7 +544,7 @@ func sub_4DCFB0(a1p *server.Object) {
 		}
 		FileName := datapath.Save("_temp_.dat")
 		v2 := true
-		if savePlayerData(FileName, pl.PlayerIndex()) {
+		if savePlayerServerData(FileName, pl.PlayerIndex()) {
 			v2 = sub41CFA0(FileName, pl.PlayerIndex())
 		}
 		ifs.Remove(FileName)
@@ -579,6 +579,16 @@ var playerSaveSects = []struct {
 		}
 		return nil
 	}},
+}
+
+var playerSaveCliSects = []struct {
+	name string
+	ind  int
+	fnc  func(cf *cryptfile.CryptFile) error
+}{
+	{"GUI Data", 7, legacy.Sub_41C280},
+	{"File Info Data", 1, legacy.Nox_xxx_parseFileInfoData_41C3B0},
+	{"Music Data", 12, legacy.Sub_41C780},
 }
 
 func nox_xxx_computeServerPlayerDataBufferSize_41CC50(path string) int64 {
@@ -625,6 +635,34 @@ func nox_xxx_computeServerPlayerDataBufferSize_41CC50(path string) int64 {
 }
 
 func savePlayerData(path string, ind ntype.PlayerInd) bool {
+	cf, err := cryptfile.OpenFile(path, cryptfile.WriteOnly, crypt.SaveKey)
+	if err != nil {
+		networkLogPrintf("SavePlayerData: Can't open file '%s': %v\n", path, err)
+		return false
+	}
+	defer cf.Close()
+
+	if !savePlayerServerDataTo(cf, ind) {
+		return false
+	}
+	if !savePlayerClientDataTo(cf) {
+		return false
+	}
+	return true
+}
+
+func savePlayerServerData(path string, ind ntype.PlayerInd) bool {
+	cf, err := cryptfile.OpenFile(path, cryptfile.WriteOnly, crypt.SaveKey)
+	if err != nil {
+		networkLogPrintf("SavePlayerData: Can't open file '%s': %v\n", path, err)
+		return false
+	}
+	defer cf.Close()
+
+	return savePlayerServerDataTo(cf, ind)
+}
+
+func savePlayerServerDataTo(cf *cryptfile.CryptFile, ind ntype.PlayerInd) bool {
 	s := noxServer
 	pl := s.Players.ByInd(ind)
 	if pl == nil {
@@ -637,13 +675,6 @@ func savePlayerData(path string, ind ntype.PlayerInd) bool {
 	}
 	pinfo := pl.Info()
 
-	cf, err := cryptfile.OpenFile(path, cryptfile.WriteOnly, crypt.SaveKey)
-	if err != nil {
-		networkLogPrintf("SavePlayerData: Can't open file '%s': %v\n", path, err)
-		return false
-	}
-	defer cf.Close()
-
 	for _, sec := range playerSaveSects {
 		cf.WriteU32(uint32(sec.ind))
 		cf.SectionStart()
@@ -654,6 +685,36 @@ func savePlayerData(path string, ind ntype.PlayerInd) bool {
 			return false
 		}
 	}
+	return true
+}
+
+func savePlayerClientData(path string) bool {
+	cf, err := cryptfile.OpenFile(path, cryptfile.Append, crypt.SaveKey)
+	if err != nil {
+		networkLogPrintf("SavePlayerDataClient: Can't open file '%s': %v\n", path, err)
+		return false
+	}
+	defer cf.Close()
+
+	return savePlayerClientDataTo(cf)
+}
+
+func savePlayerClientDataTo(cf *cryptfile.CryptFile) bool {
+	if legacy.Sub_45D9B0() != 0 {
+		legacy.Sub_45D870()
+	}
+
+	for _, sec := range playerSaveCliSects {
+		cf.WriteU32(uint32(sec.ind))
+		cf.SectionStart()
+		err := sec.fnc(cf)
+		cf.SectionEnd()
+		if err != nil {
+			networkLogPrintf("SavePlayerDataClient: Error saving player data '%s': %v\n", sec.name, err)
+			return false
+		}
+	}
+	cf.WriteU32(0) // TODO: is it required?
 	return true
 }
 
@@ -781,9 +842,6 @@ func saveCoopGame(name string) bool {
 	}
 	save.Stage = sub_450750()
 	if !savePlayerData(ppath, pl.PlayerIndex()) {
-		return false
-	}
-	if !legacy.Nox_xxx_mapSavePlayerDataMB_41A230(ppath) {
 		return false
 	}
 	if name != common.SaveTmp {

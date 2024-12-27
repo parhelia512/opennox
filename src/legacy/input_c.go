@@ -16,6 +16,7 @@ package legacy
 #include "client__gui__tooltip.h"
 #include "client__gui__gamewin__gamewin.h"
 
+void sub_45D870();
 static bool iswalpha_go(wchar2_t r) { return iswalpha(r); }
 */
 import "C"
@@ -191,6 +192,9 @@ func Nox_xxx_cursor_430B00() int {
 }
 func Sub_45D9B0() int {
 	return int(C.sub_45D9B0())
+}
+func Sub_45D870() {
+	C.sub_45D870()
 }
 func Nox_xxx_sprite_4C3220(a1 *client.Drawable) int {
 	return int(C.nox_xxx_sprite_4C3220((*nox_drawable)(a1.C())))

@@ -865,7 +865,7 @@ func (s *Server) maybeInitPlayerUnits() {
 					ud := u.UpdateDataPlayer()
 					plx := ud.Player
 					pi := plx.PlayerIndex()
-					if plx.Field4792 == 1 && ud.Field138 == 0 && savePlayerData(fname, pi) {
+					if plx.Field4792 == 1 && ud.Field138 == 0 && savePlayerServerData(fname, pi) {
 						v5 := sub_419EE0(pi)
 						s.Nox_xxx_sendGauntlet_4DCF80(pi, 1)
 						if !sub41CFA0(fname, pi) && !v5 {
